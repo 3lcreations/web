@@ -31,7 +31,7 @@
         @keyframes float { from { transform: translate(0, 0); } to { transform: translate(40px, 60px); } }
 
         /* MENU LATERALE E CATEGORIE */
-        .sidebar { height: 100%; width: 0; position: fixed; z-index: 30; top: 0; left: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
+        .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
         .sidebar a { padding: 12px 30px; text-decoration: none; font-size: 17px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
         .sidebar a:hover { color: var(--fucsia); background-color: #fff0f5; padding-left: 45px; }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; background: none; color: var(--testo-scuro); padding: 0;}
@@ -39,7 +39,7 @@
         .menu-title { font-size: 13px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 5px 30px; }
 
         /* CARRELLO LATERALE DESTRO */
-        .cart-sidebar { height: 100%; width: 0; position: fixed; z-index: 40; top: 0; right: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 20px; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
+        .cart-sidebar { height: 100%; width: 0; position: fixed; z-index: 110; top: 0; right: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 20px; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .cart-header h2 { margin: 0; font-size: 22px; color: var(--testo-scuro); border: none; }
         .cart-sidebar .closebtn { font-size: 30px; cursor: pointer; color: var(--testo-scuro); }
@@ -59,7 +59,7 @@
         .cart-total-line { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--testo-scuro);}
         
         /* BOTTONI PRINCIPALI */
-        .checkout-btn { background-color: var(--fucsia); color: white; border: none; padding: 15px; font-size: 16px; border-radius: 30px; cursor: pointer; width: 100%; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(216, 27, 96, 0.3); text-align: center;}
+        .checkout-btn { background-color: var(--fucsia); color: white; border: none; padding: 15px; font-size: 16px; border-radius: 30px; cursor: pointer; width: 100%; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(216, 27, 96, 0.3); text-align: center; text-decoration: none;}
         .checkout-btn:hover { background-color: #ad144d; transform: translateY(-2px); }
 
         /* STILI DEL FORM DI SPEDIZIONE */
@@ -72,19 +72,19 @@
         .form-group input:focus { border-color: var(--fucsia); background-color: #fff;}
         .form-row { display: flex; gap: 10px; }
 
-        .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 20; transition: 0.3s;}
+        .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 90; transition: 0.3s;}
         .floating-cart:hover { transform: scale(1.1); }
-        .cart-badge { position: absolute; top: -5px; right: -5px; background-color: white; color: var(--fucsia); font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
+        .cart-badge { position: absolute; top: -5px; right: -5px; background-color: white; color: var(--fucsia); font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid var(--fucsia);}
 
         #main { transition: margin-left .5s; padding: 20px; max-width: 1000px; margin: auto; position: relative; z-index: 1;}
         .openbtn { font-size: 16px; cursor: pointer; background-color: white; color: var(--fucsia); border: 2px solid var(--fucsia); padding: 10px 25px; border-radius: 30px; margin-bottom: 20px; font-weight: 600; transition: all 0.3s ease; }
         .openbtn:hover { background-color: var(--fucsia); color: white; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); }
 
-        .content-section { display: none; animation: slideUpFade 0.7s ease forwards; opacity: 0; transform: translateY(30px); }
+        .content-section { display: none; animation: slideUpFade 0.6s ease forwards; opacity: 0; transform: translateY(20px); }
         .content-section.active { display: block; }
         @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
 
-        h2 { color: var(--fucsia); font-weight: 600; margin-bottom: 30px; font-size: 28px; position: relative; display: inline-block; }
+        h2 { color: var(--fucsia); font-weight: 600; margin-bottom: 30px; font-size: 28px; position: relative; display: inline-block; text-align: center;}
         h2::after { content: ''; width: 40px; height: 3px; background-color: var(--rosa-chiaro); position: absolute; bottom: -5px; left: 0; border-radius: 2px; }
 
         header { text-align: center; padding: 60px 20px; background: var(--panna-video); border-radius: 30px; margin-bottom: 40px; position: relative; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06); border: 3px dashed var(--rosa-chiaro); }
@@ -271,7 +271,7 @@
         </div>
 
         <div id="acquista" class="content-section">
-            <h2>I Nostri Prodotti</h2>
+            <h2 style="display:block; text-align:center;">I Nostri Prodotti</h2>
             
             <div class="category-tabs">
                 <button class="cat-btn active" onclick="cambiaCategoria('collane', this)">📿 Collane</button>
@@ -292,73 +292,86 @@
         </div>
 
         <div id="crea-maglietta" class="content-section">
-            <h2>Crea la tua Maglietta</h2>
+            <h2 style="display:block; text-align:center;">Crea la tua Maglietta</h2>
             
             <div class="photo-notice">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
                 <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni e idee nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
-            <div class="componi-box">
-                <h3 style="text-align: center;">1. Scegli il Colore</h3>
+            <div class="componi-box" style="max-width: 500px; margin: 0 auto;">
+                <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
                 <div class="opzioni-catenina">
-                    <label><input type="radio" name="col-maglia" value="Bianco" checked onchange="aggiornaAnteprima('img-maglia', 'bianco-tshirt.png')"> Bianco</label>
-                    <label><input type="radio" name="col-maglia" value="Nero" onchange="aggiornaAnteprima('img-maglia', 'nero-tshirt.png')"> Nero</label>
+                    <label>
+                        <input type="radio" name="col-maglia" value="Bianco" checked onchange="aggiornaAnteprima('img-maglia', 'bianco-tshirt.png')"> 
+                        Bianco
+                    </label>
+                    <label>
+                        <input type="radio" name="col-maglia" value="Nero" onchange="aggiornaAnteprima('img-maglia', 'nero-tshirt.png')"> 
+                        Nero
+                    </label>
                 </div>
-                <img id="img-maglia" src="bianco-tshirt.png" class="product-image" style="display:block; margin:auto; width:180px;" onerror="this.src='logo.png'">
+                <img id="img-maglia" src="bianco-tshirt.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
-                <h3 style="text-align: center;">2. Dettagli Personalizzazione</h3>
-                <textarea id="nota-maglietta" class="custom-textarea" placeholder="Inserisci taglia e cosa vuoi ricamare/stampare..."></textarea>
-                <button onclick="aggiungiPersonalizzatoCompleto('Maglietta', 20.00, 'nota-maglietta', 'col-maglia', 'img-maglia')" class="buy-button-paypal">Aggiungi al Carrello €20.00</button>
+                <h3 style="text-align: center; color: var(--testo-scuro);">2. Dettagli Personalizzazione</h3>
+                <textarea id="nota-maglietta" class="custom-textarea" placeholder="Inserisci taglia e cosa vuoi ricamare o stampare..."></textarea>
+                <button onclick="aggiungiPersonalizzatoCompleto('Maglietta', 20.00, 'nota-maglietta', 'col-maglia', 'img-maglia')" class="checkout-btn">
+                    Aggiungi al Carrello €20.00 <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
         </div>
 
         <div id="crea-pochette" class="content-section">
-            <h2>Crea la tua Pochette</h2>
+            <h2 style="display:block; text-align:center;">Crea la tua Pochette</h2>
             
             <div class="photo-notice">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
                 <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni e idee nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
-            <div class="componi-box">
-                <h3 style="text-align: center;">1. Scegli il Colore</h3>
+            <div class="componi-box" style="max-width: 500px; margin: 0 auto;">
+                <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
                 <div class="opzioni-catenina">
                     <label><input type="radio" name="col-pochette" value="Azzurro" checked onchange="aggiornaAnteprima('img-pochette', 'azzurro-p.png')"> Azzurro</label>
                     <label><input type="radio" name="col-pochette" value="Rosa" onchange="aggiornaAnteprima('img-pochette', 'rosa-p.png')"> Rosa</label>
                     <label><input type="radio" name="col-pochette" value="Nero" onchange="aggiornaAnteprima('img-pochette', 'nero-p.png')"> Nero</label>
                 </div>
-                <img id="img-pochette" src="azzurro-p.png" class="product-image" style="display:block; margin:auto; width:180px;" onerror="this.src='logo.png'">
+                <img id="img-pochette" src="azzurro-p.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
-                <h3 style="text-align: center;">2. Dettagli Personalizzazione</h3>
-                <textarea id="nota-pochette" class="custom-textarea" placeholder="Descrivi il tuo ricamo..."></textarea>
-                <button onclick="aggiungiPersonalizzatoCompleto('Pochette', 15.00, 'nota-pochette', 'col-pochette', 'img-pochette')" class="buy-button-paypal">Aggiungi al Carrello €15.00</button>
+                <h3 style="text-align: center; color: var(--testo-scuro);">2. Dettagli Personalizzazione</h3>
+                <textarea id="nota-pochette" class="custom-textarea" placeholder="Descrivi il tuo ricamo qui..."></textarea>
+                <button onclick="aggiungiPersonalizzatoCompleto('Pochette', 15.00, 'nota-pochette', 'col-pochette', 'img-pochette')" class="checkout-btn">
+                    Aggiungi al Carrello €15.00 <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
         </div>
 
         <div id="crea-borsa" class="content-section">
-            <h2>Crea la tua Borsa</h2>
+            <h2 style="display:block; text-align:center;">Crea la tua Borsa</h2>
             
             <div class="photo-notice">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
                 <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni e idee nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
-            <div class="componi-box">
-                <h3 style="text-align: center;">Colore Unico: Bianco</h3>
-                <img src="bianco-borsa.png" class="product-image" style="display:block; margin:auto; width:180px;" onerror="this.src='logo.png'">
+            <div class="componi-box" style="max-width: 500px; margin: 0 auto;">
+                <h3 style="text-align: center; color: var(--testo-scuro);">Colore Unico: Bianco</h3>
+                <img src="bianco-borsa.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
-                <h3 style="text-align: center;">Dettagli Personalizzazione</h3>
+                <h3 style="text-align: center; color: var(--testo-scuro);">Dettagli Personalizzazione</h3>
                 <textarea id="nota-borsa" class="custom-textarea" placeholder="Descrivi il tuo ricamo per la borsa..."></textarea>
-                <button onclick="aggiungiPersonalizzatoCompleto('Borsa', 25.00, 'nota-borsa', null, 'bianco-borsa.png', 'Bianco')" class="buy-button-paypal">Aggiungi al Carrello €25.00</button>
+                <button onclick="aggiungiPersonalizzatoCompleto('Borsa', 25.00, 'nota-borsa', null, 'bianco-borsa.png', 'Bianco')" class="checkout-btn">
+                    Aggiungi al Carrello €25.00 <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
         </div>
 
         <div id="componi" class="content-section">
-            <h2>Crea la tua Collana Unica</h2>
+            <h2 style="display:block; text-align:center;">Crea la tua Collana Unica</h2>
+            
             <div class="componi-box">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il colore della catenina (Inclusa: €5.00)</h3>
                 <div class="opzioni-catenina">
@@ -384,7 +397,7 @@
         </div>
 
         <div id="contatti" class="content-section">
-            <h2>Mettiti in Contatto</h2>
+            <h2 style="display:block; text-align:center;">Mettiti in Contatto</h2>
             <div class="contact-card">
                 <p>Seguici sui nostri canali social o contattaci per l'invio di foto per prodotti personalizzati:</p>
                 <br>
@@ -413,7 +426,6 @@
             if (window.instgrm) { window.instgrm.Embeds.process(); }
         }
         
-        // Funzione per cambiare categoria nei prodotti pronti
         function cambiaCategoria(catId, btnElement) {
             document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.cat-content').forEach(content => content.classList.remove('active'));
@@ -426,7 +438,7 @@
             document.getElementById('cat-' + catId).classList.add('active');
         }
 
-        // Recupero e Salvataggio dei Dati
+        // === 2. LOCAL STORAGE (SALVATAGGIO DATI SPEDIZIONE) ===
         function caricaDatiSpedizioneSalvata() {
             const salvati = localStorage.getItem('datiSpedizione3L');
             if(salvati) {
@@ -461,15 +473,17 @@
             showSection(hash || 'home', false);
         });
 
-        // === 2. IMPOSTAZIONI ===
-        const googleSheetPRODOTTI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTChc9qUuZv7PYOwwQReUb9uRiKbPZINyd-UVZg32J-7nf4yA5cENjh8kkvtD96lRqzlju3z6TodfUZ/pub?output=csv';
+        // === 3. IMPOSTAZIONI SITO ===
+        const googleSheetCOLLANE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTChc9qUuZv7PYOwwQReUb9uRiKbPZINyd-UVZg32J-7nf4yA5cENjh8kkvtD96lRqzlju3z6TodfUZ/pub?output=csv';
+        const googleSheetFIOCCHI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQkWteQfpUAIPq95EgKnzqU2yZcMobrYgbMsx1XFT_Mju0DuCDqI4hA9HSQ_RybRi14GPBcG6Ark5GE/pub?output=csv';
         const googleSheetCIONDOLI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRl2ORNAWbnaRGglufp8VlsF-AO1rV2xX3cN9ki3yiLqXfaH943s2SuQ41QKgFk4rks3fsckw5-ZQuB/pub?output=csv';
+        
         const emailPayPal = 'luciaxxxo@alice.it'; 
         const costoSpedizioneFisso = 8.00;
         const urlDelSito = 'https://3lcreations.github.io/web/';
         const nomeNegozio = '3L Creations';
 
-        // === 3. LOGICA DEL CARRELLO E DEL FORM ===
+        // === 4. LOGICA CARRELLO ===
         let carrello = [];
 
         function openCart() {
@@ -581,56 +595,63 @@
             window.location.href = paypalUrl;
         }
 
-        // === 4. CARICAMENTO PRODOTTI NORMALI E FIOCCHI DA SINGOLO FOGLIO ===
-        Papa.parse(googleSheetPRODOTTI, {
-            download: true, header: true,
-            transformHeader: function(h) { return h.trim().toLowerCase(); },
-            complete: function(risultato) {
-                var prodotti = risultato.data;
-                var contenitoreCollane = document.getElementById('lista-prodotti');
-                var contenitoreFiocchi = document.getElementById('lista-fiocchi');
-                
-                if (contenitoreCollane) contenitoreCollane.innerHTML = '';
-                if (contenitoreFiocchi) contenitoreFiocchi.innerHTML = '';
-
-                prodotti.forEach(function(riga) {
-                    if (riga.titolo && riga.titolo.trim() !== "") {
-                        var immagine = riga.immagine ? riga.immagine : 'logo.png';
-                        var prezzoNum = parseFloat(riga.prezzo) || 0;
-                        var cat = riga.categoria ? riga.categoria.toLowerCase().trim() : 'c'; // 'c' di default per le collane
-                        var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-
-                        var cardHTML = `
-                            <div class="product-card">
-                                <img src="${immagine}" alt="${titoloPulito}" class="product-image" onerror="this.src='logo.png'">
-                                <h3>${riga.titolo}</h3>
-                                <p>${riga.descrizione || ''}</p>
-                                <div class="price">€${prezzoNum.toFixed(2)}</div>
-                                <button onclick="aggiungiProdotto('${titoloPulito}', ${prezzoNum}, '${immagine}')" class="buy-button-paypal">
-                                    Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
-                                </button>
-                            </div>`;
-                        
-                        // Smistamento logico
-                        if (cat === 'f') {
-                            if (contenitoreFiocchi) contenitoreFiocchi.innerHTML += cardHTML;
-                        } else {
-                            if (contenitoreCollane) contenitoreCollane.innerHTML += cardHTML;
-                        }
+        // === 5. CARICAMENTO DATI DA GOOGLE SHEETS ===
+        
+        // Funzione per caricare i prodotti pronti
+        function caricaProdottiGenerico(urlSheet, idContenitore, messaggioVuoto) {
+            Papa.parse(urlSheet, {
+                download: true, header: true,
+                transformHeader: function(h) { return h.trim().toLowerCase(); },
+                complete: function(risultato) {
+                    var prodotti = risultato.data;
+                    var contenitore = document.getElementById(idContenitore);
+                    if (!contenitore) return;
+                    
+                    if (!prodotti || prodotti.length === 0) {
+                        contenitore.innerHTML = `<p class="loading-text">${messaggioVuoto}</p>`;
+                        return;
                     }
-                });
-                
-                // Messaggi se le categorie sono vuote
-                if (contenitoreFiocchi && contenitoreFiocchi.innerHTML === '') {
-                    contenitoreFiocchi.innerHTML = '<p class="loading-text">Nessun fiocco disponibile al momento.</p>';
-                }
-                if (contenitoreCollane && contenitoreCollane.innerHTML === '') {
-                    contenitoreCollane.innerHTML = '<p class="loading-text">Nessuna collana disponibile al momento.</p>';
-                }
-            }
-        });
+                    
+                    contenitore.innerHTML = '';
+                    let count = 0;
+                    
+                    prodotti.forEach(function(riga) {
+                        if (riga.titolo && riga.titolo.trim() !== "") {
+                            count++;
+                            var immagine = riga.immagine ? riga.immagine : 'logo.png';
+                            var prezzoNum = parseFloat(riga.prezzo) || 0;
+                            var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
 
-        // === 5. CARICAMENTO CIONDOLI ===
+                            var cardHTML = `
+                                <div class="product-card">
+                                    <img src="${immagine}" alt="${titoloPulito}" class="product-image" onerror="this.src='logo.png'">
+                                    <h3>${riga.titolo}</h3>
+                                    <p>${riga.descrizione || ''}</p>
+                                    <div class="price">€${prezzoNum.toFixed(2)}</div>
+                                    <button onclick="aggiungiProdotto('${titoloPulito}', ${prezzoNum}, '${immagine}')" class="buy-button-paypal">
+                                        Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
+                                    </button>
+                                </div>`;
+                            contenitore.innerHTML += cardHTML;
+                        }
+                    });
+                    
+                    if(count === 0) {
+                        contenitore.innerHTML = `<p class="loading-text">${messaggioVuoto}</p>`;
+                    }
+                },
+                error: function() {
+                     var contenitore = document.getElementById(idContenitore);
+                     if (contenitore) contenitore.innerHTML = `<p class="loading-text">${messaggioVuoto}</p>`;
+                }
+            });
+        }
+
+        // Lancio i caricamenti per le due sheet separate
+        caricaProdottiGenerico(googleSheetCOLLANE, 'lista-prodotti', 'Nessuna collana disponibile al momento.');
+        caricaProdottiGenerico(googleSheetFIOCCHI, 'lista-fiocchi', 'Nessun fiocco disponibile al momento.');
+
+        // Caricamento Ciondoli (Componi Collana)
         Papa.parse(googleSheetCIONDOLI, {
             download: true, header: true,
             transformHeader: function(h) { return h.trim().toLowerCase(); },
@@ -656,19 +677,25 @@
             }
         });
 
-        // === FUNZIONI PER PRODOTTI PERSONALIZZABILI E COLLANE ===
+        // === 6. FUNZIONI PER PRODOTTI PERSONALIZZATI ===
+        
+        // Cambia l'immagine quando si seleziona un colore
         function aggiornaAnteprima(idImg, srcNuova) {
             document.getElementById(idImg).src = srcNuova;
         }
 
+        // Aggiunge la maglietta/pochette/borsa al carrello
         function aggiungiPersonalizzatoCompleto(nomeBase, prezzo, textAreaId, radioName, imgId, coloreFisso = null) {
             let note = document.getElementById(textAreaId).value.trim();
             let colore = coloreFisso;
+            
+            // Se c'è una scelta di colori, trova quello selezionato
             if (!colore && radioName) {
                 let radioSelezionato = document.querySelector(`input[name="${radioName}"]:checked`);
                 if(radioSelezionato) colore = radioSelezionato.value;
             }
             
+            // Prendi l'immagine visualizzata
             let immagineUrl = imgId;
             if (typeof imgId === 'string' && document.getElementById(imgId)) {
                 immagineUrl = document.getElementById(imgId).src;
@@ -680,9 +707,13 @@
             }
 
             aggiungiProdotto(nomeFinale, prezzo, immagineUrl);
-            document.getElementById(textAreaId).value = ""; // Svuota il campo note
+            document.getElementById(textAreaId).value = ""; // Svuota la textarea per la prossima volta
+            
+            // Un piccolo feedback all'utente
+            alert(nomeBase + " aggiunto al carrello!");
         }
 
+        // === 7. CERVELLO COMPONI COLLANA ===
         function calcolaTotaleCiondoli(event) {
             let prezzoBaseCatenina = 5.00;
             let totale = prezzoBaseCatenina;
@@ -730,7 +761,5 @@
             calcolaTotaleCiondoli(); 
         }
     </script>
-</body>
-</html>
 </body>
 </html>
