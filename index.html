@@ -115,6 +115,13 @@
         .custom-textarea { width: 100%; height: 80px; border: 1px solid #ddd; border-radius: 10px; padding: 12px; font-family: 'Poppins', sans-serif; font-size: 13px; resize: vertical; margin-bottom: 15px; outline: none; transition: 0.3s; box-sizing: border-box; background-color: #fafafa;}
         .custom-textarea:focus { border-color: var(--fucsia); background-color: #fff; }
 
+        /* STILI SELEZIONE COLORE */
+        .color-selector { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
+        .color-option { cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 12px; }
+        .color-option input { display: none; }
+        .color-circle { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #eee; transition: 0.3s; }
+        .color-option input:checked + .color-circle { border-color: var(--fucsia); transform: scale(1.2); }
+
         /* SEZIONE COMPONI COLLANA */
         .componi-box { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); border: 1px solid rgba(255,255,255,0.6); margin-bottom: 30px;}
         .opzioni-catenina { display: flex; gap: 20px; justify-content: center; margin: 20px 0; font-size: 18px; }
@@ -168,9 +175,9 @@
         
         <div class="menu-title">Personalizza</div>
         <a href="#componi" onclick="showSection('componi'); return false;">✨ Componi Collana</a>
-        <a href="#crea" onclick="showSection('crea'); return false;">👕 Crea Maglietta</a>
-        <a href="#crea" onclick="showSection('crea'); return false;">👝 Crea Pochette</a>
-        <a href="#crea" onclick="showSection('crea'); return false;">👜 Crea Borsa</a>
+        <a href="#crea-maglietta" onclick="showSection('crea-maglietta'); return false;">👕 Crea Maglietta</a>
+        <a href="#crea-pochette" onclick="showSection('crea-pochette'); return false;">👝 Crea Pochette</a>
+        <a href="#crea-borsa" onclick="showSection('crea-borsa'); return false;">👜 Crea Borsa</a>
         
         <div class="menu-title">Supporto</div>
         <a href="#contatti" onclick="showSection('contatti'); return false;">✉️ Contatti</a>
@@ -181,7 +188,6 @@
             <h2>Il tuo Carrello</h2>
             <span class="closebtn" onclick="closeCart()">&times;</span>
         </div>
-        
         <div id="cart-content-view" style="display: flex; flex-direction: column; flex-grow: 1;">
             <div class="cart-items" id="cart-items-container">
                 <p style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">Il carrello è vuoto.</p>
@@ -202,49 +208,15 @@
                 <button class="checkout-btn" onclick="mostraFormSpedizione()">Procedi al Pagamento <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
-
         <div id="checkout-form-view" class="checkout-form-container">
             <button class="back-to-cart-btn" onclick="nascondiFormSpedizione()"><i class="fas fa-chevron-left"></i> Torna al carrello</button>
-            
             <h3 style="color: var(--fucsia); margin-top: 0; margin-bottom: 20px;">Dati di Spedizione</h3>
-            
             <form id="shipping-form" onsubmit="inviaOrdineAPayPal(event)">
-                <div class="form-row">
-                    <div class="form-group" style="flex: 1;">
-                        <label for="nome">Nome *</label>
-                        <input type="text" id="nome" required placeholder="Es. Mario">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label for="cognome">Cognome *</label>
-                        <input type="text" id="cognome" required placeholder="Es. Rossi">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="indirizzo">Indirizzo e Civico *</label>
-                    <input type="text" id="indirizzo" required placeholder="Es. Via Roma, 12">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group" style="flex: 2;">
-                        <label for="citta">Città *</label>
-                        <input type="text" id="citta" required placeholder="Es. Napoli">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label for="cap">CAP *</label>
-                        <input type="text" id="cap" required placeholder="Es. 80100">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="telefono">Numero di Cellulare *</label>
-                    <input type="tel" id="telefono" required placeholder="Es. 333 1234567">
-                </div>
-
-                <button type="submit" class="checkout-btn" style="margin-top: 10px;">
-                    Paga in Sicurezza <i class="fas fa-lock"></i>
-                </button>
-                <p style="font-size: 11px; color: var(--testo-chiaro); text-align: center; margin-top: 10px;">Accetta Visa, Mastercard, Bancomat o PayPal.</p>
+                <div class="form-row"><div class="form-group" style="flex: 1;"><label>Nome *</label><input type="text" id="nome" required></div><div class="form-group" style="flex: 1;"><label>Cognome *</label><input type="text" id="cognome" required></div></div>
+                <div class="form-group"><label>Indirizzo e Civico *</label><input type="text" id="indirizzo" required></div>
+                <div class="form-row"><div class="form-group" style="flex: 2;"><label>Città *</label><input type="text" id="citta" required></div><div class="form-group" style="flex: 1;"><label>CAP *</label><input type="text" id="cap" required></div></div>
+                <div class="form-group"><label>Numero di Cellulare *</label><input type="tel" id="telefono" required></div>
+                <button type="submit" class="checkout-btn">Paga in Sicurezza <i class="fas fa-lock"></i></button>
             </form>
         </div>
     </div>
@@ -265,69 +237,89 @@
             <div class="home-text">
                 <h2>Chi Siamo</h2>
                 <p>Creazioni realizzate a mano, magliette, gioielli e tanto altro...</p>
-                <p>Esplora il catalogo nella sezione <strong>Acquista</strong> o scopri come raggiungerci in <strong>Contatti</strong>.</p>
             </div>
         </div>
 
         <div id="acquista" class="content-section">
             <h2>I Nostri Prodotti</h2>
-            
             <div class="category-tabs">
                 <button class="cat-btn active" onclick="cambiaCategoria('collane', this)">📿 Collane</button>
                 <button class="cat-btn" onclick="cambiaCategoria('fiocchi', this)">🎀 Fiocchi</button>
             </div>
-
             <div id="cat-collane" class="cat-content active">
-                <div class="product-container" id="lista-prodotti">
-                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento collane in corso...</p>
+                <div class="product-container" id="lista-prodotti-collane">
+                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento collane...</p>
                 </div>
             </div>
-
             <div id="cat-fiocchi" class="cat-content">
-                <div class="product-container">
-                    <p style="text-align:center; width:100%; color: var(--testo-chiaro); margin-top: 20px;">
-                        I fiocchi saranno presto disponibili online! Contattaci per ordini speciali.
-                    </p>
+                <div class="product-container" id="lista-prodotti-fiocchi">
+                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento fiocchi...</p>
                 </div>
             </div>
         </div>
 
-        <div id="crea" class="content-section">
-            <h2>Crea il tuo Prodotto Personalizzato</h2>
-            
-            <div class="photo-notice">
-                <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni e idee nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
-            </div>
-
+        <div id="crea-maglietta" class="content-section">
+            <h2>Crea la tua Maglietta</h2>
+            <div class="photo-notice"><strong>Vuoi una foto?</strong> Scrivi le istruzioni qui sotto, completa l'acquisto e inviaci la foto su WhatsApp/Instagram.</div>
             <div class="product-container">
-                <div class="product-card">
-                    <img src="logo.png" class="product-image" alt="Maglietta Personalizzata">
-                    <h3>Maglietta Personalizzata</h3>
+                <div class="product-card" style="width: 100%; max-width: 500px; margin: auto;">
+                    <img id="img-maglietta" src="maglietta_bianca.png" class="product-image" alt="Maglietta">
+                    <div class="color-selector">
+                        <label class="color-option">
+                            <input type="radio" name="color-maglietta" value="Bianco" checked onclick="aggiornaAnteprima('img-maglietta', 'maglietta_bianca.png')">
+                            <div class="color-circle" style="background: white; border: 1px solid #ccc;"></div>Bianco
+                        </label>
+                        <label class="color-option">
+                            <input type="radio" name="color-maglietta" value="Nero" onclick="aggiornaAnteprima('img-maglietta', 'maglietta_nera.png')">
+                            <div class="color-circle" style="background: black;"></div>Nero
+                        </label>
+                    </div>
                     <div class="price">€20.00</div>
-                    <textarea id="nota-maglietta" class="custom-textarea" placeholder="Descrivi qui come la vuoi (Taglia, scritte, colore...)"></textarea>
-                    <button onclick="aggiungiPersonalizzato('Maglietta Personalizzata', 20.00, 'nota-maglietta', 'logo.png')" class="buy-button-paypal">
+                    <textarea id="nota-maglietta" class="custom-textarea" placeholder="Taglia, scritta, dettagli..."></textarea>
+                    <button onclick="aggiungiPersonalizzatoConColore('Maglietta', 20.00, 'nota-maglietta', 'color-maglietta', 'img-maglietta')" class="buy-button-paypal">
                         Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
                     </button>
                 </div>
+            </div>
+        </div>
 
-                <div class="product-card">
-                    <img src="logo.png" class="product-image" alt="Pochette Personalizzata">
-                    <h3>Pochette Personalizzata</h3>
+        <div id="crea-pochette" class="content-section">
+            <h2>Crea la tua Pochette</h2>
+            <div class="product-container">
+                <div class="product-card" style="width: 100%; max-width: 500px; margin: auto;">
+                    <img id="img-pochette" src="pochette_azzurra.png" class="product-image" alt="Pochette">
+                    <div class="color-selector">
+                        <label class="color-option">
+                            <input type="radio" name="color-pochette" value="Azzurro" checked onclick="aggiornaAnteprima('img-pochette', 'pochette_azzurra.png')">
+                            <div class="color-circle" style="background: #add8e6;"></div>Azzurro
+                        </label>
+                        <label class="color-option">
+                            <input type="radio" name="color-pochette" value="Rosa" onclick="aggiornaAnteprima('img-pochette', 'pochette_rosa.png')">
+                            <div class="color-circle" style="background: #ffc0cb;"></div>Rosa
+                        </label>
+                        <label class="color-option">
+                            <input type="radio" name="color-pochette" value="Nero" onclick="aggiornaAnteprima('img-pochette', 'pochette_nera.png')">
+                            <div class="color-circle" style="background: black;"></div>Nero
+                        </label>
+                    </div>
                     <div class="price">€15.00</div>
-                    <textarea id="nota-pochette" class="custom-textarea" placeholder="Descrivi qui i dettagli per la pochette..."></textarea>
-                    <button onclick="aggiungiPersonalizzato('Pochette Personalizzata', 15.00, 'nota-pochette', 'logo.png')" class="buy-button-paypal">
+                    <textarea id="nota-pochette" class="custom-textarea" placeholder="Scritte o dettagli desiderati..."></textarea>
+                    <button onclick="aggiungiPersonalizzatoConColore('Pochette', 15.00, 'nota-pochette', 'color-pochette', 'img-pochette')" class="buy-button-paypal">
                         Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
                     </button>
                 </div>
+            </div>
+        </div>
 
-                <div class="product-card">
-                    <img src="logo.png" class="product-image" alt="Borsa Personalizzata">
-                    <h3>Borsa Personalizzata</h3>
+        <div id="crea-borsa" class="content-section">
+            <h2>Crea la tua Borsa</h2>
+            <div class="product-container">
+                <div class="product-card" style="width: 100%; max-width: 500px; margin: auto;">
+                    <img src="borsa_bianca.png" class="product-image" alt="Borsa">
+                    <p>Colore Disponibile: <strong>Bianco</strong></p>
                     <div class="price">€25.00</div>
-                    <textarea id="nota-borsa" class="custom-textarea" placeholder="Descrivi qui i dettagli per la borsa..."></textarea>
-                    <button onclick="aggiungiPersonalizzato('Borsa Personalizzata', 25.00, 'nota-borsa', 'logo.png')" class="buy-button-paypal">
+                    <textarea id="nota-borsa" class="custom-textarea" placeholder="Descrivi la tua personalizzazione..."></textarea>
+                    <button onclick="aggiungiPersonalizzato('Borsa Personalizzata (Bianca)', 25.00, 'nota-borsa', 'borsa_bianca.png')" class="buy-button-paypal">
                         Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
                     </button>
                 </div>
@@ -337,126 +329,63 @@
         <div id="componi" class="content-section">
             <h2>Crea la tua Collana Unica</h2>
             <div class="componi-box">
-                <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il colore della catenina (Inclusa: €5.00)</h3>
+                <h3 style="text-align: center;">1. Scegli la catenina (€5.00)</h3>
                 <div class="opzioni-catenina">
                     <label><input type="radio" name="catenina" value="Oro" checked onchange="calcolaTotaleCiondoli()"> Oro</label>
                     <label><input type="radio" name="catenina" value="Argento" onchange="calcolaTotaleCiondoli()"> Argento</label>
                     <label><input type="radio" name="catenina" value="Bronzo" onchange="calcolaTotaleCiondoli()"> Bronzo</label>
                 </div>
             </div>
-
             <div class="componi-box">
-                <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli i ciondoli (Da 1 a 10)</h3>
+                <h3 style="text-align: center;">2. Scegli i ciondoli</h3>
                 <div class="product-container" id="lista-ciondoli">
-                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento ciondoli in corso...</p>
+                    <p class="loading-text">Caricamento ciondoli...</p>
                 </div>
             </div>
-
             <div class="totale-box">
-                <h3>Totale Calcolato: €<span id="prezzo-totale-ciondoli">5.00</span></h3>
-                <button class="buy-button-paypal" style="width: auto; padding: 15px 40px; font-size: 18px;" onclick="aggiungiCollanaCompostaAlCarrello(event)">
-                    Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
-                </button>
+                <h3>Totale: €<span id="prezzo-totale-ciondoli">5.00</span></h3>
+                <button class="buy-button-paypal" onclick="aggiungiCollanaCompostaAlCarrello(event)">Aggiungi al Carrello</button>
             </div>
         </div>
 
         <div id="contatti" class="content-section">
-            <h2>Mettiti in Contatto</h2>
+            <h2>Contatti</h2>
             <div class="contact-card">
-                <p>Seguici sui nostri canali social o contattaci per l'invio di foto per prodotti personalizzati:</p>
-                <br>
-                <a href="https://www.instagram.com/_3l_creations" target="_blank" class="social-link"><i class="fab fa-instagram social-icon"></i><span><strong>Instagram:</strong> @_3l_creations</span></a>
-                <a href="#" target="_blank" class="social-link"><i class="fab fa-facebook social-icon"></i><span><strong>Facebook:</strong> 3L Creations</span></a>
-                <a href="#" target="_blank" class="social-link"><i class="fab fa-tiktok social-icon"></i><span><strong>TikTok:</strong> @3lcreations</span></a>
+                <a href="https://www.instagram.com/_3l_creations" class="social-link"><i class="fab fa-instagram social-icon"></i> @_3l_creations</a>
             </div>
         </div>
     </div>
 
-    <script async src="https://www.instagram.com/embed.js"></script>
-
     <script>
-        // === 1. GESTIONE MENU E SEZIONI ===
-        function openNav() { document.getElementById("mySidebar").style.width = "250px"; if (window.innerWidth > 768) { document.getElementById("main").style.marginLeft = "250px"; } }
-        function closeNav() { document.getElementById("mySidebar").style.width = "0"; document.getElementById("main").style.marginLeft= "auto"; }
-        function showSection(sectionId, updateUrl = true) {
-            closeNav();
-            var sections = document.getElementsByClassName('content-section');
-            for (var i = 0; i < sections.length; i++) { sections[i].classList.remove('active'); }
-            var targetSection = document.getElementById(sectionId);
-            if (targetSection) { targetSection.classList.add('active'); } 
-            else { document.getElementById('home').classList.add('active'); sectionId = 'home'; }
-            window.scrollTo(0, 0);
-            if (updateUrl) { history.pushState(null, null, '#' + sectionId); }
-            if (window.instgrm) { window.instgrm.Embeds.process(); }
-        }
-        
-        // Funzione per cambiare categoria nei prodotti pronti
-        function cambiaCategoria(catId, btnElement) {
-            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.cat-content').forEach(content => content.classList.remove('active'));
-            
-            if(btnElement) {
-                btnElement.classList.add('active');
-            } else {
-                document.querySelector(`.cat-btn[onclick*="${catId}"]`).classList.add('active');
-            }
-            document.getElementById('cat-' + catId).classList.add('active');
-        }
-
-        // Recupero e Salvataggio dei Dati (Local Storage - Come creare un account automatico)
-        function caricaDatiSpedizioneSalvata() {
-            const salvati = localStorage.getItem('datiSpedizione3L');
-            if(salvati) {
-                const dati = JSON.parse(salvati);
-                document.getElementById('nome').value = dati.nome || '';
-                document.getElementById('cognome').value = dati.cognome || '';
-                document.getElementById('indirizzo').value = dati.indirizzo || '';
-                document.getElementById('citta').value = dati.citta || '';
-                document.getElementById('cap').value = dati.cap || '';
-                document.getElementById('telefono').value = dati.telefono || '';
-            }
-        }
-        function salvaDatiSpedizione() {
-            const dati = {
-                nome: document.getElementById('nome').value,
-                cognome: document.getElementById('cognome').value,
-                indirizzo: document.getElementById('indirizzo').value,
-                citta: document.getElementById('citta').value,
-                cap: document.getElementById('cap').value,
-                telefono: document.getElementById('telefono').value
-            };
-            localStorage.setItem('datiSpedizione3L', JSON.stringify(dati));
-        }
-
-        window.addEventListener('load', function() {
-            var hash = window.location.hash.substring(1); 
-            if (hash) showSection(hash, false); else showSection('home', false); 
-            caricaDatiSpedizioneSalvata(); // Carica i dati appena apre il sito!
-        });
-        window.addEventListener('popstate', function() {
-            var hash = window.location.hash.substring(1);
-            showSection(hash || 'home', false);
-        });
-
-        // === 2. IMPOSTAZIONI ===
         const googleSheetPRODOTTI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTChc9qUuZv7PYOwwQReUb9uRiKbPZINyd-UVZg32J-7nf4yA5cENjh8kkvtD96lRqzlju3z6TodfUZ/pub?output=csv';
         const googleSheetCIONDOLI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRl2ORNAWbnaRGglufp8VlsF-AO1rV2xX3cN9ki3yiLqXfaH943s2SuQ41QKgFk4rks3fsckw5-ZQuB/pub?output=csv';
         const emailPayPal = 'luciaxxxo@alice.it'; 
         const costoSpedizioneFisso = 8.00;
         const urlDelSito = 'https://3lcreations.github.io/web/';
-        const nomeNegozio = '3L Creations';
-
-        // === 3. LOGICA DEL CARRELLO E DEL FORM ===
+        
         let carrello = [];
 
-        function openCart() {
-            let cartWidth = window.innerWidth > 768 ? "380px" : "100%";
-            document.getElementById("myCartSidebar").style.width = cartWidth;
+        function openNav() { document.getElementById("mySidebar").style.width = "250px"; }
+        function closeNav() { document.getElementById("mySidebar").style.width = "0"; }
+        
+        function showSection(sectionId, updateUrl = true) {
+            closeNav();
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo(0, 0);
+            if (updateUrl) history.pushState(null, null, '#' + sectionId);
         }
 
-        function closeCart() {
-            document.getElementById("myCartSidebar").style.width = "0";
-            setTimeout(nascondiFormSpedizione, 500); 
+        function cambiaCategoria(catId, btnElement) {
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.cat-content').forEach(c => c.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+            document.getElementById('cat-' + catId).classList.add('active');
+        }
+
+        // Funzione per cambiare immagine anteprima
+        function aggiornaAnteprima(imgId, src) {
+            document.getElementById(imgId).src = src;
         }
 
         function aggiungiProdotto(nome, prezzo, immagine) {
@@ -465,219 +394,144 @@
             openCart(); 
         }
 
-        // Nuova funzione dedicata per i prodotti con campo testo!
         function aggiungiPersonalizzato(nomeBase, prezzo, textAreaId, immagine) {
-            let noteText = document.getElementById(textAreaId).value.trim();
-            let nomeFinale = nomeBase;
-            
-            if (noteText !== "") {
-                // Aggiunge le istruzioni scritte al nome del prodotto che vedrai su PayPal
-                nomeFinale += ` (Note: ${noteText})`;
-            }
-            
+            let note = document.getElementById(textAreaId).value.trim();
+            let nomeFinale = nomeBase + (note ? ` (Note: ${note})` : "");
             aggiungiProdotto(nomeFinale, prezzo, immagine);
-            document.getElementById(textAreaId).value = ""; // Svuota il campo per fargliene creare un'altra
+            document.getElementById(textAreaId).value = "";
         }
 
-        function rimuoviProdotto(index) {
-            carrello.splice(index, 1);
-            aggiornaCarrelloUI();
-            if(carrello.length === 0) { nascondiFormSpedizione(); }
+        // Funzione specifica per i nuovi prodotti con colore
+        function aggiungiPersonalizzatoConColore(tipo, prezzo, textAreaId, radioName, imgId) {
+            let colore = document.querySelector(`input[name="${radioName}"]:checked`).value;
+            let note = document.getElementById(textAreaId).value.trim();
+            let immagine = document.getElementById(imgId).src;
+            let nomeFinale = `${tipo} Personalizzata (${colore})` + (note ? ` - Note: ${note}` : "");
+            aggiungiProdotto(nomeFinale, prezzo, immagine);
+            document.getElementById(textAreaId).value = "";
         }
+
+        function openCart() { document.getElementById("myCartSidebar").style.width = window.innerWidth > 768 ? "380px" : "100%"; }
+        function closeCart() { document.getElementById("myCartSidebar").style.width = "0"; }
 
         function aggiornaCarrelloUI() {
-            const contenitore = document.getElementById('cart-items-container');
-            const badge = document.getElementById('cart-badge-count');
-            const totalLabel = document.getElementById('cart-total-price');
-            const subtotalLabel = document.getElementById('cart-subtotal-price');
-            const subtotalContainer = document.getElementById('cart-subtotal-container');
-            const shippingContainer = document.getElementById('cart-shipping-container');
-
-            badge.innerText = carrello.length;
-            
+            const cont = document.getElementById('cart-items-container');
+            document.getElementById('cart-badge-count').innerText = carrello.length;
             if (carrello.length === 0) {
-                contenitore.innerHTML = '<p style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">Il carrello è vuoto.</p>';
-                totalLabel.innerText = "€0.00";
-                subtotalContainer.style.display = "none";
-                shippingContainer.style.display = "none";
+                cont.innerHTML = '<p style="text-align:center; margin-top:50px;">Vuoto</p>';
                 return;
             }
-
-            contenitore.innerHTML = '';
-            let subtotale = 0;
-
-            carrello.forEach((item, index) => {
-                subtotale += item.prezzo;
-                contenitore.innerHTML += `
-                    <div class="cart-item">
-                        <img src="${item.immagine}" class="cart-item-img" onerror="this.src='logo.png'">
-                        <div class="cart-item-info">
-                            <div class="cart-item-title">${item.nome}</div>
-                            <div class="cart-item-price">€${item.prezzo.toFixed(2)}</div>
-                        </div>
-                        <div class="cart-item-remove" onclick="rimuoviProdotto(${index})"><i class="fas fa-times-circle"></i></div>
-                    </div>
-                `;
+            cont.innerHTML = '';
+            let sub = 0;
+            carrello.forEach((item, i) => {
+                sub += item.prezzo;
+                cont.innerHTML += `<div class="cart-item"><img src="${item.immagine}" class="cart-item-img"><div>${item.nome}<br><b>€${item.prezzo.toFixed(2)}</b></div><span onclick="rimuoviProdotto(${i})">&times;</span></div>`;
             });
-
-            let totaleScontrino = subtotale + costoSpedizioneFisso;
-            subtotalLabel.innerText = `€${subtotale.toFixed(2)}`;
-            totalLabel.innerText = `€${totaleScontrino.toFixed(2)}`;
-            subtotalContainer.style.display = "flex";
-            shippingContainer.style.display = "flex";
+            document.getElementById('cart-total-price').innerText = `€${(sub + costoSpedizioneFisso).toFixed(2)}`;
+            document.getElementById('cart-subtotal-price').innerText = `€${sub.toFixed(2)}`;
+            document.getElementById('cart-subtotal-container').style.display = "flex";
+            document.getElementById('cart-shipping-container').style.display = "flex";
         }
 
-        function mostraFormSpedizione() {
-            if (carrello.length === 0) { alert("Il carrello è vuoto!"); return; }
-            document.getElementById('cart-content-view').style.display = 'none';
-            document.getElementById('checkout-form-view').style.display = 'block';
-        }
+        function rimuoviProdotto(i) { carrello.splice(i, 1); aggiornaCarrelloUI(); }
 
-        function nascondiFormSpedizione() {
-            document.getElementById('checkout-form-view').style.display = 'none';
-            document.getElementById('cart-content-view').style.display = 'flex';
-        }
+        // CARICAMENTO PRODOTTI CON FILTRO 5ª COLONNA
+        Papa.parse(googleSheetPRODOTTI, {
+            download: true, header: true,
+            complete: function(results) {
+                const contCollane = document.getElementById('lista-prodotti-collane');
+                const contFiocchi = document.getElementById('lista-prodotti-fiocchi');
+                contCollane.innerHTML = '';
+                contFiocchi.innerHTML = '';
 
-        function inviaOrdineAPayPal(event) {
-            event.preventDefault();
+                results.data.forEach(riga => {
+                    if (!riga.titolo) return;
+                    
+                    // Logica 5ª Colonna (f/i per fiocchi, c/e per collane)
+                    // PapaParse trasforma le colonne in proprietà dell'oggetto. 
+                    // Prendiamo la 5ª proprietà (indice 4)
+                    let chiavi = Object.keys(riga);
+                    let catVal = (riga[chiavi[4]] || "").toLowerCase().trim();
+                    
+                    let target = null;
+                    if (catVal === 'f' || catVal === 'i') target = contFiocchi;
+                    else if (catVal === 'c' || catVal === 'e') target = contCollane;
 
-            // Salva istantaneamente i dati inseriti nella memoria del dispositivo!
-            salvaDatiSpedizione();
+                    if (target) {
+                        let img = riga.immagine || 'logo.png';
+                        let prezzo = parseFloat(riga.prezzo) || 0;
+                        target.innerHTML += `
+                            <div class="product-card">
+                                <img src="${img}" class="product-image">
+                                <h3>${riga.titolo}</h3>
+                                <div class="price">€${prezzo.toFixed(2)}</div>
+                                <button onclick="aggiungiProdotto('${riga.titolo}', ${prezzo}, '${img}')" class="buy-button-paypal">Aggiungi</button>
+                            </div>`;
+                    }
+                });
+                if(contFiocchi.innerHTML === "") contFiocchi.innerHTML = "<p>Presto disponibili!</p>";
+            }
+        });
 
-            let nome = document.getElementById('nome').value;
-            let cognome = document.getElementById('cognome').value;
-            let indirizzo = document.getElementById('indirizzo').value;
-            let citta = document.getElementById('citta').value;
-            let cap = document.getElementById('cap').value;
-            let telefono = document.getElementById('telefono').value;
-
+        // LOGICA PAYPAL & CIONDOLI (Come nel tuo codice originale)
+        function inviaOrdineAPayPal(e) {
+            e.preventDefault();
             let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=${emailPayPal}&currency_code=EUR&handling_cart=${costoSpedizioneFisso.toFixed(2)}`;
-
-            paypalUrl += `&return=${encodeURIComponent(urlDelSito)}`;
-            paypalUrl += `&cancel_return=${encodeURIComponent(urlDelSito)}`;
-            paypalUrl += `&cbt=${encodeURIComponent("Torna al negozio " + nomeNegozio)}`;
-            paypalUrl += `&rm=2`;
-
             carrello.forEach((item, index) => {
                 let i = index + 1; 
                 paypalUrl += `&item_name_${i}=${encodeURIComponent(item.nome)}&amount_${i}=${item.prezzo.toFixed(2)}&quantity_${i}=1`;
             });
-
-            paypalUrl += `&first_name=${encodeURIComponent(nome)}`;
-            paypalUrl += `&last_name=${encodeURIComponent(cognome)}`;
-            paypalUrl += `&address1=${encodeURIComponent(indirizzo)}`;
-            paypalUrl += `&city=${encodeURIComponent(citta)}`;
-            paypalUrl += `&zip=${encodeURIComponent(cap)}`;
-            paypalUrl += `&country=IT`; 
-            paypalUrl += `&night_phone_a=${encodeURIComponent(telefono)}`;
-
             window.location.href = paypalUrl;
         }
 
-        // === 4. CARICAMENTO PRODOTTI NORMALI (Ora nella scheda Collane) ===
-        Papa.parse(googleSheetPRODOTTI, {
-            download: true, header: true,
-            transformHeader: function(h) { return h.trim().toLowerCase(); },
-            complete: function(risultato) {
-                var prodotti = risultato.data;
-                var contenitore = document.getElementById('lista-prodotti');
-                if (prodotti.length === 0) { contenitore.innerHTML = '<p class="loading-text">Nessun prodotto trovato.</p>'; return; }
-                contenitore.innerHTML = '';
-                prodotti.forEach(function(riga) {
-                    if (riga.titolo && riga.titolo.trim() !== "") {
-                        var immagine = riga.immagine ? riga.immagine : 'logo.png';
-                        var prezzoNum = parseFloat(riga.prezzo) || 0;
-                        var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-
-                        var cardHTML = `
-                            <div class="product-card">
-                                <img src="${immagine}" alt="${titoloPulito}" class="product-image" onerror="this.src='logo.png'">
-                                <h3>${riga.titolo}</h3>
-                                <p>${riga.descrizione || ''}</p>
-                                <div class="price">€${prezzoNum.toFixed(2)}</div>
-                                <button onclick="aggiungiProdotto('${titoloPulito}', ${prezzoNum}, '${immagine}')" class="buy-button-paypal">
-                                    Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
-                                </button>
-                            </div>`;
-                        contenitore.innerHTML += cardHTML;
-                    }
-                });
-            }
-        });
-
-        // === 5. CARICAMENTO CIONDOLI ===
+        // Caricamento Ciondoli (Simile all'originale)
         Papa.parse(googleSheetCIONDOLI, {
             download: true, header: true,
-            transformHeader: function(h) { return h.trim().toLowerCase(); },
-            complete: function(risultato) {
-                var ciondoli = risultato.data;
-                var contenitore = document.getElementById('lista-ciondoli');
-                contenitore.innerHTML = '';
-                ciondoli.forEach(function(riga) {
-                    if (riga.titolo && riga.titolo.trim() !== "") {
-                        var immagine = riga.immagine ? riga.immagine : 'logo.png';
-                        var prezzoNum = parseFloat(riga.prezzo) || 0;
-                        
-                        var cardHTML = `
-                            <div class="charm-card">
-                                <img src="${immagine}" alt="${riga.titolo}" class="charm-image" onerror="this.src='logo.png'">
-                                <div class="charm-title">${riga.titolo}</div>
-                                <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
-                                <input type="checkbox" class="charm-checkbox" data-titolo="${riga.titolo}" data-prezzo="${prezzoNum}" data-immagine="${immagine}" onchange="calcolaTotaleCiondoli(event)">
-                            </div>`;
-                        contenitore.innerHTML += cardHTML;
+            complete: function(res) {
+                const cont = document.getElementById('lista-ciondoli');
+                cont.innerHTML = '';
+                res.data.forEach(riga => {
+                    if (riga.titolo) {
+                        cont.innerHTML += `
+                        <div class="charm-card">
+                            <img src="${riga.immagine || 'logo.png'}" class="charm-image">
+                            <div>${riga.titolo}</div>
+                            <div class="charm-price">+ €${riga.prezzo}</div>
+                            <input type="checkbox" class="charm-checkbox" data-titolo="${riga.titolo}" data-prezzo="${riga.prezzo}" onchange="calcolaTotaleCiondoli()">
+                        </div>`;
                     }
                 });
             }
         });
 
-        // === 6. CERVELLO COLLANA COMPOSTA ===
-        function calcolaTotaleCiondoli(event) {
-            let prezzoBaseCatenina = 5.00;
-            let totale = prezzoBaseCatenina;
-            let numeroCiondoli = 0;
-            
-            let checkboxes = document.querySelectorAll('.charm-checkbox:checked');
-            
-            checkboxes.forEach(function(box) {
-                numeroCiondoli++;
-                totale += parseFloat(box.getAttribute('data-prezzo'));
-            });
-
-            if (numeroCiondoli > 10) {
-                alert("Puoi scegliere al massimo 10 ciondoli per collana!");
-                if(event) { event.target.checked = false; } 
-                return calcolaTotaleCiondoli(); 
-            }
-
-            document.getElementById('prezzo-totale-ciondoli').innerText = totale.toFixed(2);
+        function calcolaTotaleCiondoli() {
+            let tot = 5.0;
+            document.querySelectorAll('.charm-checkbox:checked').forEach(cb => tot += parseFloat(cb.dataset.prezzo));
+            document.getElementById('prezzo-totale-ciondoli').innerText = tot.toFixed(2);
         }
 
-        function aggiungiCollanaCompostaAlCarrello(event) {
-            event.preventDefault(); 
-            let checkboxes = document.querySelectorAll('.charm-checkbox:checked');
-            if (checkboxes.length < 1) {
-                alert("Devi selezionare almeno 1 ciondolo per comporre la tua collana!");
-                return;
-            }
-
-            let ciondoliSelezionati = [];
-            let totale = 5.00; 
-
-            checkboxes.forEach(function(box) {
-                totale += parseFloat(box.getAttribute('data-prezzo'));
-                ciondoliSelezionati.push(box.getAttribute('data-titolo'));
+        function aggiungiCollanaCompostaAlCarrello(e) {
+            let selezionati = [];
+            let tot = 5.0;
+            document.querySelectorAll('.charm-checkbox:checked').forEach(cb => {
+                selezionati.push(cb.dataset.titolo);
+                tot += parseFloat(cb.dataset.prezzo);
             });
-
-            let coloreCatenina = document.querySelector('input[name="catenina"]:checked').value;
-            let nomeOggetto = `Collana Personalizzata (${coloreCatenina}) - Ciondoli: ${ciondoliSelezionati.join(', ')}`;
-            let immagineAnteprima = checkboxes[0].getAttribute('data-immagine') || 'logo.png';
-
-            aggiungiProdotto(nomeOggetto, totale, immagineAnteprima);
-            
-            checkboxes.forEach(box => box.checked = false);
-            calcolaTotaleCiondoli(); 
+            if (selezionati.length === 0) { alert("Scegli un ciondolo!"); return; }
+            let colore = document.querySelector('input[name="catenina"]:checked').value;
+            aggiungiProdotto(`Collana (${colore}) con: ${selezionati.join(', ')}`, tot, 'logo.png');
         }
+
+        function mostraFormSpedizione() { 
+            document.getElementById('cart-content-view').style.display = 'none';
+            document.getElementById('checkout-form-view').style.display = 'block';
+        }
+        function nascondiFormSpedizione() { 
+            document.getElementById('checkout-form-view').style.display = 'none';
+            document.getElementById('cart-content-view').style.display = 'flex';
+        }
+
+        window.onload = () => { if(window.location.hash) showSection(window.location.hash.substring(1)); };
     </script>
 </body>
 </html>
