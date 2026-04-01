@@ -30,11 +30,38 @@
 
         @keyframes float { from { transform: translate(0, 0); } to { transform: translate(40px, 60px); } }
 
+        /* MENU LATERALE SINISTRO */
         .sidebar { height: 100%; width: 0; position: fixed; z-index: 30; top: 0; left: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
         .sidebar a { padding: 15px 30px; text-decoration: none; font-size: 18px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
         .sidebar a:hover { color: var(--fucsia); background-color: #fff0f5; padding-left: 45px; }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; background: none; color: var(--testo-scuro); padding: 0;}
         .sidebar-logo { width: 120px; display: block; margin: 0 auto 30px auto; }
+
+        /* CARRELLO LATERALE DESTRO (NUOVO) */
+        .cart-sidebar { height: 100%; width: 0; position: fixed; z-index: 40; top: 0; right: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 20px; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .cart-header h2 { margin: 0; font-size: 22px; color: var(--testo-scuro); border: none; }
+        .cart-sidebar .closebtn { font-size: 30px; cursor: pointer; color: var(--testo-scuro); }
+        .cart-items { padding: 20px; flex-grow: 1; overflow-y: auto; }
+        
+        /* Stile singolo elemento nel carrello */
+        .cart-item { display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; position: relative;}
+        .cart-item-img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; }
+        .cart-item-info { flex-grow: 1; }
+        .cart-item-title { font-size: 14px; font-weight: 600; margin-bottom: 5px; line-height: 1.3;}
+        .cart-item-price { color: var(--fucsia); font-weight: bold; }
+        .cart-item-remove { position: absolute; right: 0; top: 0; color: #ccc; cursor: pointer; font-size: 18px; transition: 0.2s;}
+        .cart-item-remove:hover { color: var(--fucsia); }
+
+        .cart-footer { padding: 20px; border-top: 1px solid #eee; background: #fafafa; }
+        .cart-total-line { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--testo-scuro);}
+        .checkout-btn { background-color: var(--fucsia); color: white; border: none; padding: 15px; font-size: 16px; border-radius: 30px; cursor: pointer; width: 100%; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(216, 27, 96, 0.3); text-align: center;}
+        .checkout-btn:hover { background-color: #ad144d; transform: translateY(-2px); }
+
+        /* PULSANTE FLUTTUANTE CARRELLO */
+        .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 20; transition: 0.3s;}
+        .floating-cart:hover { transform: scale(1.1); }
+        .cart-badge { position: absolute; top: -5px; right: -5px; background-color: white; color: var(--fucsia); font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
 
         #main { transition: margin-left .5s; padding: 20px; max-width: 1000px; margin: auto; position: relative; z-index: 1;}
         .openbtn { font-size: 16px; cursor: pointer; background-color: white; color: var(--fucsia); border: 2px solid var(--fucsia); padding: 10px 25px; border-radius: 30px; margin-bottom: 20px; font-weight: 600; transition: all 0.3s ease; }
@@ -60,7 +87,6 @@
         .product-card h3 { margin: 10px 0; font-size: 20px; color: var(--testo-scuro); }
         .price { font-size: 24px; color: var(--fucsia); font-weight: 600; margin: 15px 0; }
         
-        /* BOTTONE ACQUISTO PRODOTTI NORMALI (Tornato Rosa Fucsia) */
         .buy-button-paypal { background-color: var(--fucsia); color: white; border: none; padding: 12px 10px; font-size: 15px; border-radius: 30px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: 600; transition: all 0.3s ease; width: 100%; box-sizing: border-box;}
         .buy-button-paypal:hover { background-color: #ad144d; transform: translateY(-2px); }
 
@@ -80,7 +106,6 @@
         .totale-box h3 { margin: 0 0 15px 0; font-size: 26px; color: var(--testo-scuro); }
         #prezzo-totale { color: var(--fucsia); }
 
-        /* BOTTONE ACQUISTO COMPONI COLLANA (Tornato Rosa Fucsia con ombra rosa) */
         .paypal-button { background-color: var(--fucsia); color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 30px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(216, 27, 96, 0.3);}
         .paypal-button:hover { background-color: #ad144d; transform: translateY(-2px); }
 
@@ -105,6 +130,9 @@
             .charm-title { font-size: 12px; }
             .charm-price { font-size: 14px; }
             .charm-checkbox { transform: scale(1.2); }
+
+            /* Carrello su telefono copre quasi tutto lo schermo */
+            .cart-sidebar { width: 0; max-width: 100%; }
         }
     </style>
 </head>
@@ -113,11 +141,33 @@
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <img src="logo.png" alt="Logo 3L Creations" class="sidebar-logo">
-        
         <a href="#home" onclick="showSection('home'); return false;">🏠 Home</a>
         <a href="#acquista" onclick="showSection('acquista'); return false;">🛍️ Acquista</a>
         <a href="#componi" onclick="showSection('componi'); return false;">✨ Componi la tua collana</a>
         <a href="#contatti" onclick="showSection('contatti'); return false;">✉️ Contatti</a>
+    </div>
+
+    <div id="myCartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>Il tuo Carrello</h2>
+            <span class="closebtn" onclick="closeCart()">&times;</span>
+        </div>
+        <div class="cart-items" id="cart-items-container">
+            <p style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">Il carrello è vuoto.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total-line">
+                <span>Totale:</span>
+                <span id="cart-total-price">€0.00</span>
+            </div>
+            <button class="checkout-btn" onclick="procediAlPagamento()">Procedi al Pagamento <i class="fas fa-credit-card"></i></button>
+            <p style="font-size: 11px; color: var(--testo-chiaro); text-align: center; margin-top: 10px;">Paga sicuro con Carte o PayPal.</p>
+        </div>
+    </div>
+
+    <div class="floating-cart" onclick="openCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <div class="cart-badge" id="cart-badge-count">0</div>
     </div>
 
     <div id="main">
@@ -128,7 +178,6 @@
                 <video src="logoanm.mp4" autoplay loop muted playsinline class="header-video"></video>
                 <p>Prodotti handmade per pelosetti e persone.</p>
             </header>
-
             <div class="home-text">
                 <h2>Chi Siamo</h2>
                 <p>Creazioni realizzate a mano, magliette, gioielli e tanto altro...</p>
@@ -165,12 +214,9 @@
             <div class="totale-box">
                 <h3>Totale Calcolato: €<span id="prezzo-totale">5.00</span></h3>
                 
-                <a href="#" id="btn-ordina-paypal" target="_blank" class="paypal-button" onclick="verificaOrdine(event)">
-                    Paga con Carta o PayPal <i class="fas fa-credit-card"></i>
-                </a>
-                <p style="font-size: 13px; color: var(--testo-chiaro); margin-top: 15px;">
-                    Puoi pagare in sicurezza con <b>Visa, Mastercard e Bancomat</b>. Clicca sul pulsante e seleziona "Paga con una carta". Non serve avere un conto PayPal!
-                </p>
+                <button id="btn-ordina-paypal" class="paypal-button" onclick="aggiungiCollanaCompostaAlCarrello(event)">
+                    Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
         </div>
 
@@ -220,7 +266,92 @@
         const googleSheetCIONDOLI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRl2ORNAWbnaRGglufp8VlsF-AO1rV2xX3cN9ki3yiLqXfaH943s2SuQ41QKgFk4rks3fsckw5-ZQuB/pub?output=csv';
         const emailPayPal = 'luciaxxxo@alice.it'; 
 
-        // === 3. CARICAMENTO PRODOTTI NORMALI ===
+        // === 3. IL NUOVO CERVELLO: IL CARRELLO ===
+        let carrello = [];
+
+        function openCart() {
+            let cartWidth = window.innerWidth > 768 ? "350px" : "100%";
+            document.getElementById("myCartSidebar").style.width = cartWidth;
+        }
+
+        function closeCart() {
+            document.getElementById("myCartSidebar").style.width = "0";
+        }
+
+        // Funzione per aggiungere un prodotto qualsiasi al carrello
+        function aggiungiProdotto(nome, prezzo, immagine) {
+            carrello.push({
+                nome: nome,
+                prezzo: parseFloat(prezzo),
+                immagine: immagine
+            });
+            aggiornaCarrelloUI();
+            openCart(); // Apre il carrello in automatico per far vedere che è stato aggiunto
+        }
+
+        // Funzione per rimuovere dal carrello
+        function rimuoviProdotto(index) {
+            carrello.splice(index, 1);
+            aggiornaCarrelloUI();
+        }
+
+        // Funzione che ridisegna la grafica del carrello
+        function aggiornaCarrelloUI() {
+            const contenitore = document.getElementById('cart-items-container');
+            const badge = document.getElementById('cart-badge-count');
+            const totalLabel = document.getElementById('cart-total-price');
+
+            badge.innerText = carrello.length;
+            
+            if (carrello.length === 0) {
+                contenitore.innerHTML = '<p style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">Il carrello è vuoto.</p>';
+                totalLabel.innerText = "€0.00";
+                return;
+            }
+
+            contenitore.innerHTML = '';
+            let totale = 0;
+
+            carrello.forEach((item, index) => {
+                totale += item.prezzo;
+                
+                contenitore.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.immagine}" class="cart-item-img" onerror="this.src='logo.png'">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.nome}</div>
+                            <div class="cart-item-price">€${item.prezzo.toFixed(2)}</div>
+                        </div>
+                        <div class="cart-item-remove" onclick="rimuoviProdotto(${index})"><i class="fas fa-times-circle"></i></div>
+                    </div>
+                `;
+            });
+
+            totalLabel.innerText = `€${totale.toFixed(2)}`;
+        }
+
+        // CREAZIONE DEL LINK PAYPAL PER CARRELLI MULTIPLI
+        function procediAlPagamento() {
+            if (carrello.length === 0) {
+                alert("Il carrello è vuoto!");
+                return;
+            }
+
+            // Inizializza il link con il comando speciale _cart e upload=1
+            let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=${emailPayPal}&currency_code=EUR`;
+
+            // Aggiunge ogni oggetto del carrello al link
+            carrello.forEach((item, index) => {
+                let i = index + 1; // PayPal vuole item_name_1, item_name_2, ecc.
+                paypalUrl += `&item_name_${i}=${encodeURIComponent(item.nome)}&amount_${i}=${item.prezzo.toFixed(2)}&quantity_${i}=1`;
+            });
+
+            // Reindirizza l'utente a PayPal
+            window.location.href = paypalUrl;
+        }
+
+
+        // === 4. CARICAMENTO PRODOTTI NORMALI (MODIFICATO PER IL CARRELLO) ===
         Papa.parse(googleSheetPRODOTTI, {
             download: true, header: true,
             transformHeader: function(h) { return h.trim().toLowerCase(); },
@@ -233,18 +364,19 @@
                     if (riga.titolo && riga.titolo.trim() !== "") {
                         var immagine = riga.immagine ? riga.immagine : 'logo.png';
                         var prezzoNum = parseFloat(riga.prezzo) || 0;
-                        var linkAcquisto = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${emailPayPal}&item_name=${encodeURIComponent(riga.titolo)}&amount=${prezzoNum.toFixed(2)}&currency_code=EUR`;
                         
+                        // Risolto problema apici nei nomi passando il titolo "pulito" al pulsante
+                        var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+
                         var cardHTML = `
                             <div class="product-card">
-                                <img src="${immagine}" alt="${riga.titolo}" class="product-image" onerror="this.src='logo.png'">
+                                <img src="${immagine}" alt="${titoloPulito}" class="product-image" onerror="this.src='logo.png'">
                                 <h3>${riga.titolo}</h3>
                                 <p>${riga.descrizione || ''}</p>
                                 <div class="price">€${prezzoNum.toFixed(2)}</div>
-                                <a href="${linkAcquisto}" target="_blank" class="buy-button-paypal">
-                                    Paga con Carta o PayPal <i class="fas fa-credit-card"></i>
-                                </a>
-                                <p style="font-size: 11px; color: var(--testo-chiaro); margin-top: 10px; margin-bottom: 0;">Accetta Visa, Mastercard, Bancomat.</p>
+                                <button onclick="aggiungiProdotto('${titoloPulito}', ${prezzoNum}, '${immagine}')" class="buy-button-paypal">
+                                    Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
+                                </button>
                             </div>`;
                         contenitore.innerHTML += cardHTML;
                     }
@@ -252,7 +384,7 @@
             }
         });
 
-        // === 4. CARICAMENTO CIONDOLI ===
+        // === 5. CARICAMENTO CIONDOLI ===
         Papa.parse(googleSheetCIONDOLI, {
             download: true, header: true,
             transformHeader: function(h) { return h.trim().toLowerCase(); },
@@ -270,7 +402,7 @@
                                 <img src="${immagine}" alt="${riga.titolo}" class="charm-image" onerror="this.src='logo.png'">
                                 <div class="charm-title">${riga.titolo}</div>
                                 <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
-                                <input type="checkbox" class="charm-checkbox" data-titolo="${riga.titolo}" data-prezzo="${prezzoNum}" onchange="calcolaTotale(event)">
+                                <input type="checkbox" class="charm-checkbox" data-titolo="${riga.titolo}" data-prezzo="${prezzoNum}" data-immagine="${immagine}" onchange="calcolaTotale(event)">
                             </div>`;
                         contenitore.innerHTML += cardHTML;
                     }
@@ -278,11 +410,10 @@
             }
         });
 
-        // === 5. IL CERVELLO CHE CREA IL LINK DI PAGAMENTO PAYPAL ===
+        // === 6. IL CERVELLO DELLA COLLANA COMPOSTA ===
         function calcolaTotale(event) {
             let prezzoBaseCatenina = 5.00;
             let totale = prezzoBaseCatenina;
-            let ciondoliSelezionati = [];
             let numeroCiondoli = 0;
             
             let checkboxes = document.querySelectorAll('.charm-checkbox:checked');
@@ -290,7 +421,6 @@
             checkboxes.forEach(function(box) {
                 numeroCiondoli++;
                 totale += parseFloat(box.getAttribute('data-prezzo'));
-                ciondoliSelezionati.push(box.getAttribute('data-titolo'));
             });
 
             if (numeroCiondoli > 10) {
@@ -300,22 +430,38 @@
             }
 
             document.getElementById('prezzo-totale').innerText = totale.toFixed(2);
-
-            let coloreCatenina = document.querySelector('input[name="catenina"]:checked').value;
-            let nomeOggettoPayPal = `Collana Personalizzata (${coloreCatenina}) - Ciondoli: ${ciondoliSelezionati.length > 0 ? ciondoliSelezionati.join(', ') : 'Nessuno'}`;
-
-            let linkPayPal = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${emailPayPal}&item_name=${encodeURIComponent(nomeOggettoPayPal)}&amount=${totale.toFixed(2)}&currency_code=EUR`;
-
-            document.getElementById('btn-ordina-paypal').href = linkPayPal;
         }
 
-        // === 6. VERIFICA MINIMO 1 CIONDOLO ===
-        function verificaOrdine(event) {
-            let numeroCiondoli = document.querySelectorAll('.charm-checkbox:checked').length;
-            if (numeroCiondoli < 1) {
-                event.preventDefault(); 
+        // === 7. AGGIUNGI LA COLLANA COMPOSTA AL CARRELLO ===
+        function aggiungiCollanaCompostaAlCarrello(event) {
+            event.preventDefault(); // Evita che la pagina faccia salti strani
+
+            let checkboxes = document.querySelectorAll('.charm-checkbox:checked');
+            if (checkboxes.length < 1) {
                 alert("Devi selezionare almeno 1 ciondolo per comporre la tua collana!");
+                return;
             }
+
+            let ciondoliSelezionati = [];
+            let totale = 5.00; // Prezzo base
+
+            checkboxes.forEach(function(box) {
+                totale += parseFloat(box.getAttribute('data-prezzo'));
+                ciondoliSelezionati.push(box.getAttribute('data-titolo'));
+            });
+
+            let coloreCatenina = document.querySelector('input[name="catenina"]:checked').value;
+            let nomeOggetto = `Collana Personalizzata (${coloreCatenina}) - Ciondoli: ${ciondoliSelezionati.join(', ')}`;
+            
+            // Per l'immagine nel carrello, usa quella del primo ciondolo scelto, altrimenti il logo
+            let immagineAnteprima = checkboxes[0].getAttribute('data-immagine') || 'logo.png';
+
+            // Chiama la funzione principale per inserire tutto nel carrello
+            aggiungiProdotto(nomeOggetto, totale, immagineAnteprima);
+            
+            // (Opzionale) Toglie le spunte dopo aver aggiunto al carrello per poter creare una nuova collana
+            checkboxes.forEach(box => box.checked = false);
+            calcolaTotale(); // resetta il totalino a schermo a 5.00
         }
     </script>
 </body>
