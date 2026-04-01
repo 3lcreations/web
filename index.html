@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3L Creations</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+    <style>
+        /* VARIABILI COLORI */
+        :root {
+            --fucsia: #d81b60;
+            --rosa-chiaro: #f48fb1;
+            --panna-video: #fefdf3;
+            --sfondo: #fffcfd;
+            --testo-scuro: #2c2c2c;
+            --testo-chiaro: #777777;
+        }
+
+        body { font-family: 'Poppins', sans-serif; background-color: var(--sfondo); color: var(--testo-scuro); margin: 0; padding: 0; overflow-x: hidden; position: relative;}
+
+        body::before, body::after { content: ''; position: fixed; border-radius: 50%; z-index: -2; filter: blur(80px); animation: float 15s infinite alternate ease-in-out; }
+        body::before { width: 400px; height: 400px; top: -150px; right: -100px; background: radial-gradient(circle, rgba(244,143,177,0.12) 0%, rgba(255,255,255,0) 80%); }
+        body::after { width: 500px; height: 500px; bottom: -150px; left: -150px; background: radial-gradient(circle, rgba(216,27,96,0.08) 0%, rgba(255,255,255,0) 80%); }
+
+        @keyframes float { from { transform: translate(0, 0); } to { transform: translate(40px, 60px); } }
+
+        .sidebar { height: 100%; width: 0; position: fixed; z-index: 30; top: 0; left: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
+        .sidebar a { padding: 15px 30px; text-decoration: none; font-size: 18px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
+        .sidebar a:hover { color: var(--fucsia); background-color: #fff0f5; padding-left: 45px; }
+        .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; background: none; color: var(--testo-scuro); padding: 0;}
+        .sidebar-logo { width: 120px; display: block; margin: 0 auto 30px auto; }
+
+        #main { transition: margin-left .5s; padding: 20px; max-width: 1000px; margin: auto; position: relative; z-index: 1;}
+        .openbtn { font-size: 16px; cursor: pointer; background-color: white; color: var(--fucsia); border: 2px solid var(--fucsia); padding: 10px 25px; border-radius: 30px; margin-bottom: 20px; font-weight: 600; transition: all 0.3s ease; }
+        .openbtn:hover { background-color: var(--fucsia); color: white; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); }
+
+        .content-section { display: none; animation: slideUpFade 0.7s ease forwards; opacity: 0; transform: translateY(30px); }
+        .content-section.active { display: block; }
+        @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
+
+        h2 { color: var(--fucsia); font-weight: 600; margin-bottom: 30px; font-size: 28px; position: relative; display: inline-block; }
+        h2::after { content: ''; width: 40px; height: 3px; background-color: var(--rosa-chiaro); position: absolute; bottom: -5px; left: 0; border-radius: 2px; }
+
+        header { text-align: center; padding: 60px 20px; background: var(--panna-video); border-radius: 30px; margin-bottom: 40px; position: relative; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06); border: 3px dashed var(--rosa-chiaro); }
+        header p { color: var(--testo-chiaro); font-size: 18px; margin-top: 25px; font-style: italic; position: relative; z-index: 1;}
+        .header-video { width: 400px; max-width: 100%; border-radius: 20px; margin-bottom: 0; border: none; outline: none; display: block; margin: 0 auto; position: relative; z-index: 1; }
+
+        /* --- CAROSELLO INSTAGRAM --- */
+        .instagram-section { margin-bottom: 40px; }
+        .instagram-slider { 
+            display: flex; 
+            overflow-x: auto; 
+            gap: 20px; 
+            padding-bottom: 10px; 
+            scroll-snap-type: x mandatory; 
+            -webkit-overflow-scrolling: touch; 
+            scrollbar-width: none; 
+            -ms-overflow-style: none;  
+        }
+        .instagram-slider::-webkit-scrollbar { display: none; }
+        
+        .instagram-item { 
+            flex: 0 0 280px; 
+            scroll-snap-align: center; 
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 5px 15px rgba(216, 27, 96, 0.05); 
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            border: 1px solid rgba(244, 143, 177, 0.2);
+            padding: 10px; 
+            box-sizing: border-box;
+        }
+        .instagram-item iframe { border-radius: 15px !important; margin: 0 !important; }
+
+        .home-text { font-size: 16px; line-height: 1.8; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: 1px solid rgba(255,255,255,0.6); }
+
+        .product-container { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+        .product-card { background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); text-align: center; width: 280px; transition: all 0.4s ease; border: 1px solid transparent; box-sizing: border-box;}
+        .product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(216, 27, 96, 0.15); border-color: var(--rosa-chiaro); }
+        .product-image { width: 100%; height: 220px; object-fit: cover; border-radius: 15px; margin-bottom: 20px; transition: transform 0.4s; }
+        .product-card h3 { margin: 10px 0; font-size: 20px; color: var(--testo-scuro); }
+        .price { font-size: 24px; color: var(--fucsia); font-weight: 600; margin: 15px 0; }
+        
+        .buy-button-paypal { background-color: #0070ba; color: white; border: none; padding: 12px 10px; font-size: 15px; border-radius: 30px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: 600; transition: all 0.3s ease; width: 100%; box-sizing: border-box;}
+        .buy-button-paypal:hover { background-color: #003087; transform: translateY(-2px); }
+
+        .componi-box { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); border: 1px solid rgba(255,255,255,0.6); margin-bottom: 30px;}
+        .opzioni-catenina { display: flex; gap: 20px; justify-content: center; margin: 20px 0; font-size: 18px; }
+        .opzioni-catenina label { cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .opzioni-catenina input[type="radio"] { accent-color: var(--fucsia); transform: scale(1.2); }
+        
+        .charm-card { background: white; padding: 15px; border-radius: 15px; width: 150px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; transition: 0.3s; box-sizing: border-box;}
+        .charm-card:hover { border-color: var(--rosa-chiaro); transform: translateY(-5px);}
+        .charm-image { width: 100%; height: 100px; object-fit: cover; border-radius: 10px; margin-bottom: 10px;}
+        .charm-title { font-size: 14px; margin-bottom: 5px; }
+        .charm-price { color: var(--fucsia); font-weight: bold; margin: 10px 0;}
+        .charm-checkbox { transform: scale(1.5); accent-color: var(--fucsia); cursor: pointer; }
+
+        .totale-box { background: var(--panna-video); padding: 20px; border-radius: 20px; text-align: center; margin-top: 30px; border: 3px dashed var(--rosa-chiaro); }
+        .totale-box h3 { margin: 0 0 15px 0; font-size: 26px; color: var(--testo-scuro); }
+        #prezzo-totale { color: var(--fucsia); }
+
+        .paypal-button { background-color: #0070ba; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 30px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 112, 186, 0.3);}
+        .paypal-button:hover { background-color: #003087; transform: translateY(-2px); }
+
+        .contact-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); text-align: center; border: 1px solid rgba(255,255,255,0.6); }
+        .social-link { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px; font-size: 18px; color: var(--testo-scuro); text-decoration: none; transition: transform 0.3s ease, color 0.3s ease; padding: 10px; border-radius: 10px; }
+        .social-link:hover { transform: scale(1.05); color: var(--fucsia); background: rgba(244, 143, 177, 0.1); }
+        .social-icon { font-size: 32px; color: var(--fucsia); }
+
+        .loading-text { font-size: 18px; color: var(--testo-chiaro); font-style: italic; width: 100%; text-align: center;}
+
+        @media (max-width: 768px) {
+            header { padding: 40px 15px; }
+            .header-video { width: 280px; } 
+            h2 { font-size: 22px; }
+            
+            .product-card { width: 100%; }
+            .opzioni-catenina { flex-direction: column; align-items: center; }
+
+            #lista-ciondoli { gap: 10px; }
+            .charm-card { width: calc(50% - 5px); padding: 10px; }
+            .charm-image { height: 80px; }
+            .charm-title { font-size: 12px; }
+            .charm-price { font-size: 14px; }
+            .charm-checkbox { transform: scale(1.2); }
+
+            .instagram-item { flex: 0 0 250px; } 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <img src="logo.png" alt="Logo 3L Creations" class="sidebar-logo">
+        
+        <a href="#home" onclick="showSection('home'); return false;">🏠 Home</a>
+        <a href="#acquista" onclick="showSection('acquista'); return false;">🛍️ Acquista</a>
+        <a href="#componi" onclick="showSection('componi'); return false;">✨ Componi la tua collana</a>
+        <a href="#contatti" onclick="showSection('contatti'); return false;">✉️ Contatti</a>
+    </div>
+
+    <div id="main">
+        <button class="openbtn" onclick="openNav()">Menu</button>
+
+        <div id="home" class="content-section active">
+            <header>
+                <video src="logoanm.mp4" autoplay loop muted playsinline class="header-video"></video>
+                <p>Prodotti handmade per pelosetti e persone.</p>
+            </header>
+
+            <div class="instagram-section">
+                <h2 style="display:block; text-align:center;">Seguici su Instagram 📸</h2>
+                <div class="instagram-slider">
+                    
+                    <div class="instagram-item">
+                        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DWloakLCAYT/" data-instgrm-version="14" style="background:#FFF; border:0; margin: 0; max-width:100%; width:100%;"></blockquote>
+                    </div>
+
+                    <div class="instagram-item">
+                         <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DWgenMqiGVK/" data-instgrm-version="14" style="background:#FFF; border:0; margin: 0; max-width:100%; width:100%;"></blockquote>
+                    </div>
+
+                    <div class="instagram-item">
+                         <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DWOgo7CiKYo/" data-instgrm-version="14" style="background:#FFF; border:0; margin: 0; max-width:100%; width:100%;"></blockquote>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="home-text">
+                <h2>Chi Siamo</h2>
+                <p>Creazioni realizzate a mano, magliette, gioielli e tanto altro...</p>
+                <p>Esplora il catalogo nella sezione <strong>Acquista</strong> o scopri come raggiungerci in <strong>Contatti</strong>.</p>
+            </div>
+        </div>
+
+        <div id="acquista" class="content-section">
+            <h2>I Nostri Prodotti</h2>
+            <div class="product-container" id="lista-prodotti">
+                <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento prodotti in corso...</p>
+            </div>
+        </div>
+
+        <div id="componi" class="content-section">
+            <h2>Crea la tua Collana Unica</h2>
+            
+            <div class="componi-box">
+                <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il colore della catenina (Inclusa: €5.00)</h3>
+                <div class="opzioni-catenina">
+                    <label><input type="radio" name="catenina" value="Oro" checked onchange="calcolaTotale()"> Oro</label>
+                    <label><input type="radio" name="catenina" value="Argento" onchange="calcolaTotale()"> Argento</label>
+                    <label><input type="radio" name="catenina" value="Bronzo" onchange="calcolaTotale()"> Bronzo</label>
+                </div>
+            </div>
+
+            <div class="componi-box">
+                <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli i ciondoli (Da 1 a 10)</h3>
+                <div class="product-container" id="lista-ciondoli">
+                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento ciondoli in corso...</p>
+                </div>
+            </div>
+
+            <div class="totale-box">
+                <h3>Totale Calcolato: €<span id="prezzo-totale">5.00</span></h3>
+                
+                <a href="#" id="btn-ordina-paypal" target="_blank" class="paypal-button" onclick="verificaOrdine(event)">
+                    Paga con Carta o PayPal <i class="fas fa-credit-card"></i>
+                </a>
+                <p style="font-size: 13px; color: var(--testo-chiaro); margin-top: 15px;">
+                    Puoi pagare in sicurezza con <b>Visa, Mastercard e Bancomat</b>. Clicca sul pulsante e seleziona "Paga con una carta". Non serve avere un conto PayPal!
+                </p>
+            </div>
+        </div>
+
+        <div id="contatti" class="content-section">
+            <h2>Mettiti in Contatto</h2>
+            <div class="contact-card">
+                <p>Seguici sui nostri canali social per non perderti le ultime creazioni:</p>
+                <br>
+                <a href="#" target="_blank" class="social-link"><i class="fab fa-instagram social-icon"></i><span><strong>Instagram:</strong> @_3l_creations</span></a>
+                <a href="#" target="_blank" class="social-link"><i class="fab fa-facebook social-icon"></i><span><strong>Facebook:</strong> 3L Creations</span></a>
+                <a href="#" target="_blank" class="social-link"><i class="fab fa-tiktok social-icon"></i><span><strong>TikTok:</strong> @3lcreations</span></a>
+            </div>
+        </div>
+    </div>
+
+    <script async src="https://www.instagram.com/embed.js"></script>
+
+    <script>
+        // === 1. GESTIONE MENU ===
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+            if (window.innerWidth > 768) { document.getElementById("main").style.marginLeft = "250px"; }
+        }
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft= "auto";
+        }
+        function showSection(sectionId, updateUrl = true) {
+            closeNav();
+            var sections = document.getElementsByClassName('content-section');
+            for (var i = 0; i < sections.length; i++) { sections[i].classList.remove('active'); }
+            var targetSection = document.getElementById(sectionId);
+            if (targetSection) { targetSection.classList.add('active'); } 
+            else { document.getElementById('home').classList.add('active'); sectionId = 'home'; }
+            window.scrollTo(0, 0);
+            if (updateUrl) { history.pushState(null, null, '#' + sectionId); }
+            
+            if (window.instgrm) { window.instgrm.Embeds.process(); }
+        }
+        window.addEventListener('load', function() {
+            var hash = window.location.hash.substring(1); 
+            if (hash) showSection(hash, false); else showSection('home', false); 
+        });
+        window.addEventListener('popstate', function() {
+            var hash = window.location.hash.substring(1);
+            showSection(hash || 'home', false);
+        });
+
+        // === 2. LE TUE IMPOSTAZIONI PERSONALI ===
+        const googleSheetPRODOTTI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTChc9qUuZv7PYOwwQReUb9uRiKbPZINyd-UVZg32J-7nf4yA5cENjh8kkvtD96lRqzlju3z6TodfUZ/pub?output=csv';
+        const googleSheetCIONDOLI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRl2ORNAWbnaRGglufp8VlsF-AO1rV2xX3cN9ki3yiLqXfaH943s2SuQ41QKgFk4rks3fsckw5-ZQuB/pub?output=csv';
+        const emailPayPal = 'luciaxxxo@alice.it'; 
+
+        // === 3. CARICAMENTO PRODOTTI NORMALI ===
+        Papa.parse(googleSheetPRODOTTI, {
+            download: true, header: true,
+            transformHeader: function(h) { return h.trim().toLowerCase(); },
+            complete: function(risultato) {
+                var prodotti = risultato.data;
+                var contenitore = document.getElementById('lista-prodotti');
+                if (prodotti.length === 0) { contenitore.innerHTML = '<p class="loading-text">Nessun prodotto trovato.</p>'; return; }
+                contenitore.innerHTML = '';
+                prodotti.forEach(function(riga) {
+                    if (riga.titolo && riga.titolo.trim() !== "") {
+                        var immagine = riga.immagine ? riga.immagine : 'logo.png';
+                        var prezzoNum = parseFloat(riga.prezzo) || 0;
+                        var linkAcquisto = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${emailPayPal}&item_name=${encodeURIComponent(riga.titolo)}&amount=${prezzoNum.toFixed(2)}&currency_code=EUR`;
+                        
+                        var cardHTML = `
+                            <div class="product-card">
+                                <img src="${immagine}" alt="${riga.titolo}" class="product-image" onerror="this.src='logo.png'">
+                                <h3>${riga.titolo}</h3>
+                                <p>${riga.descrizione || ''}</p>
+                                <div class="price">€${prezzoNum.toFixed(2)}</div>
+                                <a href="${linkAcquisto}" target="_blank" class="buy-button-paypal">
+                                    Paga con Carta o PayPal <i class="fas fa-credit-card"></i>
+                                </a>
+                                <p style="font-size: 11px; color: var(--testo-chiaro); margin-top: 10px; margin-bottom: 0;">Accetta Visa, Mastercard, Bancomat.</p>
+                            </div>`;
+                        contenitore.innerHTML += cardHTML;
+                    }
+                });
+            }
+        });
+
+        // === 4. CARICAMENTO CIONDOLI ===
+        Papa.parse(googleSheetCIONDOLI, {
+            download: true, header: true,
+            transformHeader: function(h) { return h.trim().toLowerCase(); },
+            complete: function(risultato) {
+                var ciondoli = risultato.data;
+                var contenitore = document.getElementById('lista-ciondoli');
+                contenitore.innerHTML = '';
+                ciondoli.forEach(function(riga) {
+                    if (riga.titolo && riga.titolo.trim() !== "") {
+                        var immagine = riga.immagine ? riga.immagine : 'logo.png';
+                        var prezzoNum = parseFloat(riga.prezzo) || 0;
+                        
+                        var cardHTML = `
+                            <div class="charm-card">
+                                <img src="${immagine}" alt="${riga.titolo}" class="charm-image" onerror="this.src='logo.png'">
+                                <div class="charm-title">${riga.titolo}</div>
+                                <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
+                                <input type="checkbox" class="charm-checkbox" data-titolo="${riga.titolo}" data-prezzo="${prezzoNum}" onchange="calcolaTotale(event)">
+                            </div>`;
+                        contenitore.innerHTML += cardHTML;
+                    }
+                });
+            }
+        });
+
+        // === 5. IL CERVELLO CHE CREA IL LINK DI PAGAMENTO PAYPAL ===
+        function calcolaTotale(event) {
+            let prezzoBaseCatenina = 5.00;
+            let totale = prezzoBaseCatenina;
+            let ciondoliSelezionati = [];
+            let numeroCiondoli = 0;
+            
+            let checkboxes = document.querySelectorAll('.charm-checkbox:checked');
+            
+            checkboxes.forEach(function(box) {
+                numeroCiondoli++;
+                totale += parseFloat(box.getAttribute('data-prezzo'));
+                ciondoliSelezionati.push(box.getAttribute('data-titolo'));
+            });
+
+            if (numeroCiondoli > 10) {
+                alert("Puoi scegliere al massimo 10 ciondoli per collana!");
+                if(event) { event.target.checked = false; } 
+                return calcolaTotale(); 
+            }
+
+            document.getElementById('prezzo-totale').innerText = totale.toFixed(2);
+
+            let coloreCatenina = document.querySelector('input[name="catenina"]:checked').value;
+            let nomeOggettoPayPal = `Collana Personalizzata (${coloreCatenina}) - Ciondoli: ${ciondoliSelezionati.length > 0 ? ciondoliSelezionati.join(', ') : 'Nessuno'}`;
+
+            let linkPayPal = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${emailPayPal}&item_name=${encodeURIComponent(nomeOggettoPayPal)}&amount=${totale.toFixed(2)}&currency_code=EUR`;
+
+            document.getElementById('btn-ordina-paypal').href = linkPayPal;
+        }
+
+        // === 6. VERIFICA MINIMO 1 CIONDOLO ===
+        function verificaOrdine(event) {
+            let numeroCiondoli = document.querySelectorAll('.charm-checkbox:checked').length;
+            if (numeroCiondoli < 1) {
+                event.preventDefault(); 
+                alert("Devi selezionare almeno 1 ciondolo per comporre la tua collana!");
+            }
+        }
+    </script>
+</body>
+</html>
