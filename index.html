@@ -60,14 +60,14 @@
         .checkout-btn { background-color: var(--fucsia); color: white; border: none; padding: 15px; font-size: 16px; border-radius: 30px; cursor: pointer; width: 100%; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(216, 27, 96, 0.3); text-align: center;}
         .checkout-btn:hover { background-color: #ad144d; transform: translateY(-2px); }
 
-        /* NUOVO: STILI DEL FORM DI SPEDIZIONE (CHECKOUT) */
+        /* STILI DEL FORM DI SPEDIZIONE */
         .checkout-form-container { display: none; padding: 20px; flex-grow: 1; overflow-y: auto; background-color: #ffffff; }
         .back-to-cart-btn { background: none; border: none; color: var(--testo-chiaro); font-family: 'Poppins', sans-serif; font-size: 14px; padding: 0; cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 20px; transition: 0.3s; }
         .back-to-cart-btn:hover { color: var(--fucsia); }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; color: var(--testo-chiaro); margin-bottom: 5px; }
-        .form-group input, .form-group select { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.3s; background-color: #fafafa;}
-        .form-group input:focus, .form-group select:focus { border-color: var(--fucsia); background-color: #fff;}
+        .form-group input { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.3s; background-color: #fafafa;}
+        .form-group input:focus { border-color: var(--fucsia); background-color: #fff;}
         .form-row { display: flex; gap: 10px; }
 
         .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 20; transition: 0.3s;}
@@ -171,7 +171,7 @@
                     <span>€8.00</span>
                 </div>
                 <div class="cart-total-line">
-                    <span>Totale (Spedizione inc.):</span>
+                    <span>Totale (Sped. inc.):</span>
                     <span id="cart-total-price">€0.00</span>
                 </div>
                 <button class="checkout-btn" onclick="mostraFormSpedizione()">Procedi al Pagamento <i class="fas fa-arrow-right"></i></button>
@@ -212,15 +212,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="nazione">Nazione *</label>
-                    <select id="nazione" required>
-                        <option value="IT" selected>Italia</option>
-                        <option value="SM">San Marino</option>
-                        <option value="CH">Svizzera</option>
-                        <option value="FR">Francia</option>
-                        <option value="DE">Francia</option>
-                        <option value="ES">Spagna</option>
-                    </select>
+                    <label for="telefono">Numero di Cellulare *</label>
+                    <input type="tel" id="telefono" required placeholder="Es. 333 1234567">
                 </div>
 
                 <button type="submit" class="checkout-btn" style="margin-top: 10px;">
@@ -327,6 +320,10 @@
         const emailPayPal = 'luciaxxxo@alice.it'; 
         const costoSpedizioneFisso = 8.00;
 
+        // RICORDATI DI INSERIRE IL LINK DEL TUO SITO QUI SOTTO
+        const urlDelSito = 'https://INSERISCI-QUI-IL-TUO-LINK.netlify.app';
+        const nomeNegozio = '3L Creations';
+
         // === 3. LOGICA DEL CARRELLO E DEL FORM ===
         let carrello = [];
 
@@ -337,7 +334,6 @@
 
         function closeCart() {
             document.getElementById("myCartSidebar").style.width = "0";
-            // Se si chiude il carrello, assicuriamoci che al prossimo riavvio si veda l'elenco e non il form
             setTimeout(nascondiFormSpedizione, 500); 
         }
 
@@ -350,7 +346,6 @@
         function rimuoviProdotto(index) {
             carrello.splice(index, 1);
             aggiornaCarrelloUI();
-            // Se si svuota il carrello mentre si guarda il form, torna indietro
             if(carrello.length === 0) { nascondiFormSpedizione(); }
         }
 
@@ -396,7 +391,6 @@
             shippingContainer.style.display = "flex";
         }
 
-        // Funzioni per nascondere/mostrare il form di spedizione nel carrello
         function mostraFormSpedizione() {
             if (carrello.length === 0) { alert("Il carrello è vuoto!"); return; }
             document.getElementById('cart-content-view').style.display = 'none';
@@ -408,37 +402,36 @@
             document.getElementById('cart-content-view').style.display = 'flex';
         }
 
-        // INVIO DATI A PAYPAL PRECOMPILATI
         function inviaOrdineAPayPal(event) {
-            // Blocca il caricamento standard del form
             event.preventDefault();
 
-            // Raccoglie i dati inseriti dall'utente
             let nome = document.getElementById('nome').value;
             let cognome = document.getElementById('cognome').value;
             let indirizzo = document.getElementById('indirizzo').value;
             let citta = document.getElementById('citta').value;
             let cap = document.getElementById('cap').value;
-            let nazione = document.getElementById('nazione').value;
+            let telefono = document.getElementById('telefono').value;
 
-            // Inizializza il link di PayPal
             let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=${emailPayPal}&currency_code=EUR&handling_cart=${costoSpedizioneFisso.toFixed(2)}`;
 
-            // Aggiunge i prodotti del carrello
+            paypalUrl += `&return=${encodeURIComponent(urlDelSito)}`;
+            paypalUrl += `&cancel_return=${encodeURIComponent(urlDelSito)}`;
+            paypalUrl += `&cbt=${encodeURIComponent("Torna a " + nomeNegozio)}`;
+
             carrello.forEach((item, index) => {
                 let i = index + 1; 
                 paypalUrl += `&item_name_${i}=${encodeURIComponent(item.nome)}&amount_${i}=${item.prezzo.toFixed(2)}&quantity_${i}=1`;
             });
 
-            // MAGIA: Aggiunge l'indirizzo di spedizione al link per PayPal
+            // Passa l'indirizzo a PayPal fissando la nazione a Italia (IT) e aggiungendo il telefono
             paypalUrl += `&first_name=${encodeURIComponent(nome)}`;
             paypalUrl += `&last_name=${encodeURIComponent(cognome)}`;
             paypalUrl += `&address1=${encodeURIComponent(indirizzo)}`;
             paypalUrl += `&city=${encodeURIComponent(citta)}`;
             paypalUrl += `&zip=${encodeURIComponent(cap)}`;
-            paypalUrl += `&country=${encodeURIComponent(nazione)}`;
+            paypalUrl += `&country=IT`; 
+            paypalUrl += `&night_phone_a=${encodeURIComponent(telefono)}`;
 
-            // Reindirizza finalmente al pagamento sicuro
             window.location.href = paypalUrl;
         }
 
