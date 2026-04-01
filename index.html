@@ -284,10 +284,10 @@
             </div>
 
             <div id="cat-fiocchi" class="cat-content">
-                <div class="product-container" id="lista-fiocchi">
-                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento fiocchi in corso...</p>
-                </div>
-            </div>
+    <div class="product-container" id="lista-fiocchi">
+        <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento fiocchi in corso...</p>
+    </div>
+</div>
         </div>
 
         <div id="crea" class="content-section">
@@ -364,8 +364,8 @@
                 <p>Seguici sui nostri canali social o contattaci per l'invio di foto per prodotti personalizzati:</p>
                 <br>
                 <a href="https://www.instagram.com/_3l_creations" target="_blank" class="social-link"><i class="fab fa-instagram social-icon"></i><span><strong>Instagram:</strong> @_3l_creations</span></a>
-                <a href="https://www.facebook.com/groups/974242766065881" target="_blank" class="social-link"><i class="fab fa-facebook social-icon"></i><span><strong>Facebook:</strong> 3L Creations</span></a>
-                <a href="https://www.tiktok.com/@3lcreations" target="_blank" class="social-link"><i class="fab fa-tiktok social-icon"></i><span><strong>TikTok:</strong> @3lcreations</span></a>
+                <a href="#" target="_blank" class="social-link"><i class="fab fa-facebook social-icon"></i><span><strong>Facebook:</strong> 3L Creations</span></a>
+                <a href="#" target="_blank" class="social-link"><i class="fab fa-tiktok social-icon"></i><span><strong>TikTok:</strong> @3lcreations</span></a>
             </div>
         </div>
     </div>
@@ -388,6 +388,7 @@
             if (window.instgrm) { window.instgrm.Embeds.process(); }
         }
         
+        // Funzione per cambiare categoria nei prodotti pronti
         function cambiaCategoria(catId, btnElement) {
             document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.cat-content').forEach(content => content.classList.remove('active'));
@@ -400,7 +401,7 @@
             document.getElementById('cat-' + catId).classList.add('active');
         }
 
-        // Recupero e Salvataggio dei Dati (Local Storage)
+        // Recupero e Salvataggio dei Dati (Local Storage - Come creare un account automatico)
         function caricaDatiSpedizioneSalvata() {
             const salvati = localStorage.getItem('datiSpedizione3L');
             if(salvati) {
@@ -428,7 +429,7 @@
         window.addEventListener('load', function() {
             var hash = window.location.hash.substring(1); 
             if (hash) showSection(hash, false); else showSection('home', false); 
-            caricaDatiSpedizioneSalvata();
+            caricaDatiSpedizioneSalvata(); // Carica i dati appena apre il sito!
         });
         window.addEventListener('popstate', function() {
             var hash = window.location.hash.substring(1);
@@ -436,6 +437,7 @@
         });
 
         // === 2. IMPOSTAZIONI ===
+		const googleSheetFIOCCHI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQkWteQfpUAIPq95EgKnzqU2yZcMobrYgbMsx1XFT_Mju0DuCDqI4hA9HSQ_RybRi14GPBcG6Ark5GE/pub?output=csv';
         const googleSheetPRODOTTI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTChc9qUuZv7PYOwwQReUb9uRiKbPZINyd-UVZg32J-7nf4yA5cENjh8kkvtD96lRqzlju3z6TodfUZ/pub?output=csv';
         const googleSheetCIONDOLI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRl2ORNAWbnaRGglufp8VlsF-AO1rV2xX3cN9ki3yiLqXfaH943s2SuQ41QKgFk4rks3fsckw5-ZQuB/pub?output=csv';
         const emailPayPal = 'luciaxxxo@alice.it'; 
@@ -462,12 +464,18 @@
             openCart(); 
         }
 
+        // Nuova funzione dedicata per i prodotti con campo testo!
         function aggiungiPersonalizzato(nomeBase, prezzo, textAreaId, immagine) {
             let noteText = document.getElementById(textAreaId).value.trim();
             let nomeFinale = nomeBase;
-            if (noteText !== "") { nomeFinale += ` (Note: ${noteText})`; }
+            
+            if (noteText !== "") {
+                // Aggiunge le istruzioni scritte al nome del prodotto che vedrai su PayPal
+                nomeFinale += ` (Note: ${noteText})`;
+            }
+            
             aggiungiProdotto(nomeFinale, prezzo, immagine);
-            document.getElementById(textAreaId).value = ""; 
+            document.getElementById(textAreaId).value = ""; // Svuota il campo per fargliene creare un'altra
         }
 
         function rimuoviProdotto(index) {
@@ -531,6 +539,8 @@
 
         function inviaOrdineAPayPal(event) {
             event.preventDefault();
+
+            // Salva istantaneamente i dati inseriti nella memoria del dispositivo!
             salvaDatiSpedizione();
 
             let nome = document.getElementById('nome').value;
@@ -541,41 +551,42 @@
             let telefono = document.getElementById('telefono').value;
 
             let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=${emailPayPal}&currency_code=EUR&handling_cart=${costoSpedizioneFisso.toFixed(2)}`;
-            paypalUrl += `&return=${encodeURIComponent(urlDelSito)}&cancel_return=${encodeURIComponent(urlDelSito)}&cbt=${encodeURIComponent("Torna al negozio " + nomeNegozio)}&rm=2`;
+
+            paypalUrl += `&return=${encodeURIComponent(urlDelSito)}`;
+            paypalUrl += `&cancel_return=${encodeURIComponent(urlDelSito)}`;
+            paypalUrl += `&cbt=${encodeURIComponent("Torna al negozio " + nomeNegozio)}`;
+            paypalUrl += `&rm=2`;
 
             carrello.forEach((item, index) => {
                 let i = index + 1; 
                 paypalUrl += `&item_name_${i}=${encodeURIComponent(item.nome)}&amount_${i}=${item.prezzo.toFixed(2)}&quantity_${i}=1`;
             });
 
-            paypalUrl += `&first_name=${encodeURIComponent(nome)}&last_name=${encodeURIComponent(cognome)}&address1=${encodeURIComponent(indirizzo)}&city=${encodeURIComponent(citta)}&zip=${encodeURIComponent(cap)}&country=IT&night_phone_a=${encodeURIComponent(telefono)}`;
+            paypalUrl += `&first_name=${encodeURIComponent(nome)}`;
+            paypalUrl += `&last_name=${encodeURIComponent(cognome)}`;
+            paypalUrl += `&address1=${encodeURIComponent(indirizzo)}`;
+            paypalUrl += `&city=${encodeURIComponent(citta)}`;
+            paypalUrl += `&zip=${encodeURIComponent(cap)}`;
+            paypalUrl += `&country=IT`; 
+            paypalUrl += `&night_phone_a=${encodeURIComponent(telefono)}`;
+
             window.location.href = paypalUrl;
         }
 
-        // === 4. CARICAMENTO PRODOTTI NORMALI (FILTRATI PER TIPO) ===
+        // === 4. CARICAMENTO PRODOTTI NORMALI (Ora nella scheda Collane) ===
         Papa.parse(googleSheetPRODOTTI, {
             download: true, header: true,
             transformHeader: function(h) { return h.trim().toLowerCase(); },
             complete: function(risultato) {
                 var prodotti = risultato.data;
-                var contCollane = document.getElementById('lista-prodotti');
-                var contFiocchi = document.getElementById('lista-fiocchi');
-                
-                if (prodotti.length === 0) { 
-                    contCollane.innerHTML = contFiocchi.innerHTML = '<p class="loading-text">Nessun prodotto trovato.</p>'; 
-                    return; 
-                }
-                
-                contCollane.innerHTML = '';
-                contFiocchi.innerHTML = '';
-                let cCount = 0, fCount = 0;
-
+                var contenitore = document.getElementById('lista-prodotti');
+                if (prodotti.length === 0) { contenitore.innerHTML = '<p class="loading-text">Nessun prodotto trovato.</p>'; return; }
+                contenitore.innerHTML = '';
                 prodotti.forEach(function(riga) {
                     if (riga.titolo && riga.titolo.trim() !== "") {
                         var immagine = riga.immagine ? riga.immagine : 'logo.png';
                         var prezzoNum = parseFloat(riga.prezzo) || 0;
                         var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                        var tipo = riga.tipo ? riga.tipo.toLowerCase().trim() : 'c'; // Default 'c' se vuoto
 
                         var cardHTML = `
                             <div class="product-card">
@@ -587,19 +598,9 @@
                                     Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
                                 </button>
                             </div>`;
-                        
-                        if(tipo === 'f') {
-                            contFiocchi.innerHTML += cardHTML;
-                            fCount++;
-                        } else {
-                            contCollane.innerHTML += cardHTML;
-                            cCount++;
-                        }
+                        contenitore.innerHTML += cardHTML;
                     }
                 });
-                
-                if(cCount === 0) contCollane.innerHTML = '<p class="loading-text">Nessuna collana disponibile.</p>';
-                if(fCount === 0) contFiocchi.innerHTML = '<p class="loading-text">Nessun fiocco disponibile.</p>';
             }
         });
 
@@ -615,6 +616,7 @@
                     if (riga.titolo && riga.titolo.trim() !== "") {
                         var immagine = riga.immagine ? riga.immagine : 'logo.png';
                         var prezzoNum = parseFloat(riga.prezzo) || 0;
+                        
                         var cardHTML = `
                             <div class="charm-card">
                                 <img src="${immagine}" alt="${riga.titolo}" class="charm-image" onerror="this.src='logo.png'">
@@ -630,33 +632,87 @@
 
         // === 6. CERVELLO COLLANA COMPOSTA ===
         function calcolaTotaleCiondoli(event) {
-            let totale = 5.00;
+            let prezzoBaseCatenina = 5.00;
+            let totale = prezzoBaseCatenina;
+            let numeroCiondoli = 0;
+            
             let checkboxes = document.querySelectorAll('.charm-checkbox:checked');
-            if (checkboxes.length > 10) {
-                alert("Puoi scegliere al massimo 10 ciondoli!");
+            
+            checkboxes.forEach(function(box) {
+                numeroCiondoli++;
+                totale += parseFloat(box.getAttribute('data-prezzo'));
+            });
+
+            if (numeroCiondoli > 10) {
+                alert("Puoi scegliere al massimo 10 ciondoli per collana!");
                 if(event) { event.target.checked = false; } 
                 return calcolaTotaleCiondoli(); 
             }
-            checkboxes.forEach(box => { totale += parseFloat(box.getAttribute('data-prezzo')); });
+
             document.getElementById('prezzo-totale-ciondoli').innerText = totale.toFixed(2);
         }
 
         function aggiungiCollanaCompostaAlCarrello(event) {
             event.preventDefault(); 
             let checkboxes = document.querySelectorAll('.charm-checkbox:checked');
-            if (checkboxes.length < 1) { alert("Scegli almeno 1 ciondolo!"); return; }
+            if (checkboxes.length < 1) {
+                alert("Devi selezionare almeno 1 ciondolo per comporre la tua collana!");
+                return;
+            }
+
             let ciondoliSelezionati = [];
             let totale = 5.00; 
-            checkboxes.forEach(box => {
+
+            checkboxes.forEach(function(box) {
                 totale += parseFloat(box.getAttribute('data-prezzo'));
                 ciondoliSelezionati.push(box.getAttribute('data-titolo'));
             });
+
             let coloreCatenina = document.querySelector('input[name="catenina"]:checked').value;
             let nomeOggetto = `Collana Personalizzata (${coloreCatenina}) - Ciondoli: ${ciondoliSelezionati.join(', ')}`;
-            aggiungiProdotto(nomeOggetto, totale, checkboxes[0].getAttribute('data-immagine') || 'logo.png');
+            let immagineAnteprima = checkboxes[0].getAttribute('data-immagine') || 'logo.png';
+
+            aggiungiProdotto(nomeOggetto, totale, immagineAnteprima);
+            
             checkboxes.forEach(box => box.checked = false);
             calcolaTotaleCiondoli(); 
         }
+		// === CARICAMENTO FIOCCHI ===
+Papa.parse(googleSheetFIOCCHI, {
+    download: true, 
+    header: true,
+    transformHeader: function(h) { return h.trim().toLowerCase(); },
+    complete: function(risultato) {
+        var fiocchi = risultato.data;
+        var contenitore = document.getElementById('lista-fiocchi');
+        
+        if (!fiocchi || fiocchi.length === 0) { 
+            contenitore.innerHTML = '<p class="loading-text">Nessun fiocco disponibile al momento.</p>'; 
+            return; 
+        }
+
+        contenitore.innerHTML = ''; // Svuota il caricamento
+        fiocchi.forEach(function(riga) {
+            if (riga.titolo && riga.titolo.trim() !== "") {
+                var immagine = riga.immagine ? riga.immagine : 'logo.png';
+                var prezzoNum = parseFloat(riga.prezzo) || 0;
+                var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+
+                var cardHTML = `
+                    <div class="product-card">
+                        <img src="${immagine}" alt="${titoloPulito}" class="product-image" onerror="this.src='logo.png'">
+                        <h3>${riga.titolo}</h3>
+                        <p>${riga.descrizione || ''}</p>
+                        <div class="price">€${prezzoNum.toFixed(2)}</div>
+                        <button onclick="aggiungiProdotto('${titoloPulito}', ${prezzoNum}, '${immagine}')" class="buy-button-paypal">
+                            Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </div>`;
+                contenitore.innerHTML += cardHTML;
+            }
+        });
+    }
+});
     </script>
 </body>
 </html>
