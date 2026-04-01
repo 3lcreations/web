@@ -130,6 +130,7 @@
 
         .totale-box { background: var(--panna-video); padding: 20px; border-radius: 20px; text-align: center; margin-top: 30px; border: 3px dashed var(--rosa-chiaro); }
         .totale-box h3 { margin: 0 0 15px 0; font-size: 26px; color: var(--testo-scuro); }
+        #prezzo-totale-ciondoli { color: var(--fucsia); }
 
         .contact-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); text-align: center; border: 1px solid rgba(255,255,255,0.6); }
         .social-link { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px; font-size: 18px; color: var(--testo-scuro); text-decoration: none; transition: transform 0.3s ease, color 0.3s ease; padding: 10px; border-radius: 10px; }
@@ -168,9 +169,9 @@
         
         <div class="menu-title">Personalizza</div>
         <a href="#componi" onclick="showSection('componi'); return false;">✨ Componi Collana</a>
-        <a href="#crea" onclick="showSection('crea'); return false;">👕 Crea Maglietta</a>
-        <a href="#crea" onclick="showSection('crea'); return false;">👝 Crea Pochette</a>
-        <a href="#crea" onclick="showSection('crea'); return false;">👜 Crea Borsa</a>
+        <a href="#crea-maglietta" onclick="showSection('crea-maglietta'); return false;">👕 Crea Maglietta</a>
+        <a href="#crea-pochette" onclick="showSection('crea-pochette'); return false;">👝 Crea Pochette</a>
+        <a href="#crea-borsa" onclick="showSection('crea-borsa'); return false;">👜 Crea Borsa</a>
         
         <div class="menu-title">Supporto</div>
         <a href="#contatti" onclick="showSection('contatti'); return false;">✉️ Contatti</a>
@@ -284,14 +285,14 @@
             </div>
 
             <div id="cat-fiocchi" class="cat-content">
-    <div class="product-container" id="lista-fiocchi">
-        <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento fiocchi in corso...</p>
-    </div>
-</div>
+                <div class="product-container" id="lista-fiocchi">
+                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento fiocchi in corso...</p>
+                </div>
+            </div>
         </div>
 
-        <div id="crea" class="content-section">
-            <h2>Crea il tuo Prodotto Personalizzato</h2>
+        <div id="crea-maglietta" class="content-section">
+            <h2>Crea la tua Maglietta</h2>
             
             <div class="photo-notice">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
@@ -299,36 +300,60 @@
                 È facilissimo! Scrivi le tue istruzioni e idee nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
-            <div class="product-container">
-                <div class="product-card">
-                    <img src="logo.png" class="product-image" alt="Maglietta Personalizzata">
-                    <h3>Maglietta Personalizzata</h3>
-                    <div class="price">€20.00</div>
-                    <textarea id="nota-maglietta" class="custom-textarea" placeholder="Descrivi qui come la vuoi (Taglia, scritte, colore...)"></textarea>
-                    <button onclick="aggiungiPersonalizzato('Maglietta Personalizzata', 20.00, 'nota-maglietta', 'logo.png')" class="buy-button-paypal">
-                        Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
-                    </button>
+            <div class="componi-box">
+                <h3 style="text-align: center;">1. Scegli il Colore</h3>
+                <div class="opzioni-catenina">
+                    <label><input type="radio" name="col-maglia" value="Bianco" checked onchange="aggiornaAnteprima('img-maglia', 'bianco-tshirt.png')"> Bianco</label>
+                    <label><input type="radio" name="col-maglia" value="Nero" onchange="aggiornaAnteprima('img-maglia', 'nero-tshirt.png')"> Nero</label>
                 </div>
+                <img id="img-maglia" src="bianco-tshirt.png" class="product-image" style="display:block; margin:auto; width:180px;" onerror="this.src='logo.png'">
+                
+                <h3 style="text-align: center;">2. Dettagli Personalizzazione</h3>
+                <textarea id="nota-maglietta" class="custom-textarea" placeholder="Inserisci taglia e cosa vuoi ricamare/stampare..."></textarea>
+                <button onclick="aggiungiPersonalizzatoCompleto('Maglietta', 20.00, 'nota-maglietta', 'col-maglia', 'img-maglia')" class="buy-button-paypal">Aggiungi al Carrello €20.00</button>
+            </div>
+        </div>
 
-                <div class="product-card">
-                    <img src="logo.png" class="product-image" alt="Pochette Personalizzata">
-                    <h3>Pochette Personalizzata</h3>
-                    <div class="price">€15.00</div>
-                    <textarea id="nota-pochette" class="custom-textarea" placeholder="Descrivi qui i dettagli per la pochette..."></textarea>
-                    <button onclick="aggiungiPersonalizzato('Pochette Personalizzata', 15.00, 'nota-pochette', 'logo.png')" class="buy-button-paypal">
-                        Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
-                    </button>
-                </div>
+        <div id="crea-pochette" class="content-section">
+            <h2>Crea la tua Pochette</h2>
+            
+            <div class="photo-notice">
+                <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
+                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
+                È facilissimo! Scrivi le tue istruzioni e idee nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+            </div>
 
-                <div class="product-card">
-                    <img src="logo.png" class="product-image" alt="Borsa Personalizzata">
-                    <h3>Borsa Personalizzata</h3>
-                    <div class="price">€25.00</div>
-                    <textarea id="nota-borsa" class="custom-textarea" placeholder="Descrivi qui i dettagli per la borsa..."></textarea>
-                    <button onclick="aggiungiPersonalizzato('Borsa Personalizzata', 25.00, 'nota-borsa', 'logo.png')" class="buy-button-paypal">
-                        Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
-                    </button>
+            <div class="componi-box">
+                <h3 style="text-align: center;">1. Scegli il Colore</h3>
+                <div class="opzioni-catenina">
+                    <label><input type="radio" name="col-pochette" value="Azzurro" checked onchange="aggiornaAnteprima('img-pochette', 'azzurro-p.png')"> Azzurro</label>
+                    <label><input type="radio" name="col-pochette" value="Rosa" onchange="aggiornaAnteprima('img-pochette', 'rosa-p.png')"> Rosa</label>
+                    <label><input type="radio" name="col-pochette" value="Nero" onchange="aggiornaAnteprima('img-pochette', 'nero-p.png')"> Nero</label>
                 </div>
+                <img id="img-pochette" src="azzurro-p.png" class="product-image" style="display:block; margin:auto; width:180px;" onerror="this.src='logo.png'">
+                
+                <h3 style="text-align: center;">2. Dettagli Personalizzazione</h3>
+                <textarea id="nota-pochette" class="custom-textarea" placeholder="Descrivi il tuo ricamo..."></textarea>
+                <button onclick="aggiungiPersonalizzatoCompleto('Pochette', 15.00, 'nota-pochette', 'col-pochette', 'img-pochette')" class="buy-button-paypal">Aggiungi al Carrello €15.00</button>
+            </div>
+        </div>
+
+        <div id="crea-borsa" class="content-section">
+            <h2>Crea la tua Borsa</h2>
+            
+            <div class="photo-notice">
+                <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
+                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
+                È facilissimo! Scrivi le tue istruzioni e idee nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+            </div>
+
+            <div class="componi-box">
+                <h3 style="text-align: center;">Colore Unico: Bianco</h3>
+                <img src="bianco-borsa.png" class="product-image" style="display:block; margin:auto; width:180px;" onerror="this.src='logo.png'">
+                
+                <h3 style="text-align: center;">Dettagli Personalizzazione</h3>
+                <textarea id="nota-borsa" class="custom-textarea" placeholder="Descrivi il tuo ricamo per la borsa..."></textarea>
+                <button onclick="aggiungiPersonalizzatoCompleto('Borsa', 25.00, 'nota-borsa', null, 'bianco-borsa.png', 'Bianco')" class="buy-button-paypal">Aggiungi al Carrello €25.00</button>
             </div>
         </div>
 
@@ -401,7 +426,7 @@
             document.getElementById('cat-' + catId).classList.add('active');
         }
 
-        // Recupero e Salvataggio dei Dati (Local Storage - Come creare un account automatico)
+        // Recupero e Salvataggio dei Dati
         function caricaDatiSpedizioneSalvata() {
             const salvati = localStorage.getItem('datiSpedizione3L');
             if(salvati) {
@@ -429,7 +454,7 @@
         window.addEventListener('load', function() {
             var hash = window.location.hash.substring(1); 
             if (hash) showSection(hash, false); else showSection('home', false); 
-            caricaDatiSpedizioneSalvata(); // Carica i dati appena apre il sito!
+            caricaDatiSpedizioneSalvata(); 
         });
         window.addEventListener('popstate', function() {
             var hash = window.location.hash.substring(1);
@@ -437,7 +462,6 @@
         });
 
         // === 2. IMPOSTAZIONI ===
-		const googleSheetFIOCCHI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQkWteQfpUAIPq95EgKnzqU2yZcMobrYgbMsx1XFT_Mju0DuCDqI4hA9HSQ_RybRi14GPBcG6Ark5GE/pub?output=csv';
         const googleSheetPRODOTTI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTChc9qUuZv7PYOwwQReUb9uRiKbPZINyd-UVZg32J-7nf4yA5cENjh8kkvtD96lRqzlju3z6TodfUZ/pub?output=csv';
         const googleSheetCIONDOLI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRl2ORNAWbnaRGglufp8VlsF-AO1rV2xX3cN9ki3yiLqXfaH943s2SuQ41QKgFk4rks3fsckw5-ZQuB/pub?output=csv';
         const emailPayPal = 'luciaxxxo@alice.it'; 
@@ -462,20 +486,6 @@
             carrello.push({ nome: nome, prezzo: parseFloat(prezzo), immagine: immagine });
             aggiornaCarrelloUI();
             openCart(); 
-        }
-
-        // Nuova funzione dedicata per i prodotti con campo testo!
-        function aggiungiPersonalizzato(nomeBase, prezzo, textAreaId, immagine) {
-            let noteText = document.getElementById(textAreaId).value.trim();
-            let nomeFinale = nomeBase;
-            
-            if (noteText !== "") {
-                // Aggiunge le istruzioni scritte al nome del prodotto che vedrai su PayPal
-                nomeFinale += ` (Note: ${noteText})`;
-            }
-            
-            aggiungiProdotto(nomeFinale, prezzo, immagine);
-            document.getElementById(textAreaId).value = ""; // Svuota il campo per fargliene creare un'altra
         }
 
         function rimuoviProdotto(index) {
@@ -539,8 +549,6 @@
 
         function inviaOrdineAPayPal(event) {
             event.preventDefault();
-
-            // Salva istantaneamente i dati inseriti nella memoria del dispositivo!
             salvaDatiSpedizione();
 
             let nome = document.getElementById('nome').value;
@@ -573,19 +581,23 @@
             window.location.href = paypalUrl;
         }
 
-        // === 4. CARICAMENTO PRODOTTI NORMALI (Ora nella scheda Collane) ===
+        // === 4. CARICAMENTO PRODOTTI NORMALI E FIOCCHI DA SINGOLO FOGLIO ===
         Papa.parse(googleSheetPRODOTTI, {
             download: true, header: true,
             transformHeader: function(h) { return h.trim().toLowerCase(); },
             complete: function(risultato) {
                 var prodotti = risultato.data;
-                var contenitore = document.getElementById('lista-prodotti');
-                if (prodotti.length === 0) { contenitore.innerHTML = '<p class="loading-text">Nessun prodotto trovato.</p>'; return; }
-                contenitore.innerHTML = '';
+                var contenitoreCollane = document.getElementById('lista-prodotti');
+                var contenitoreFiocchi = document.getElementById('lista-fiocchi');
+                
+                if (contenitoreCollane) contenitoreCollane.innerHTML = '';
+                if (contenitoreFiocchi) contenitoreFiocchi.innerHTML = '';
+
                 prodotti.forEach(function(riga) {
                     if (riga.titolo && riga.titolo.trim() !== "") {
                         var immagine = riga.immagine ? riga.immagine : 'logo.png';
                         var prezzoNum = parseFloat(riga.prezzo) || 0;
+                        var cat = riga.categoria ? riga.categoria.toLowerCase().trim() : 'c'; // 'c' di default per le collane
                         var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
 
                         var cardHTML = `
@@ -598,9 +610,23 @@
                                     Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
                                 </button>
                             </div>`;
-                        contenitore.innerHTML += cardHTML;
+                        
+                        // Smistamento logico
+                        if (cat === 'f') {
+                            if (contenitoreFiocchi) contenitoreFiocchi.innerHTML += cardHTML;
+                        } else {
+                            if (contenitoreCollane) contenitoreCollane.innerHTML += cardHTML;
+                        }
                     }
                 });
+                
+                // Messaggi se le categorie sono vuote
+                if (contenitoreFiocchi && contenitoreFiocchi.innerHTML === '') {
+                    contenitoreFiocchi.innerHTML = '<p class="loading-text">Nessun fiocco disponibile al momento.</p>';
+                }
+                if (contenitoreCollane && contenitoreCollane.innerHTML === '') {
+                    contenitoreCollane.innerHTML = '<p class="loading-text">Nessuna collana disponibile al momento.</p>';
+                }
             }
         });
 
@@ -630,7 +656,33 @@
             }
         });
 
-        // === 6. CERVELLO COLLANA COMPOSTA ===
+        // === FUNZIONI PER PRODOTTI PERSONALIZZABILI E COLLANE ===
+        function aggiornaAnteprima(idImg, srcNuova) {
+            document.getElementById(idImg).src = srcNuova;
+        }
+
+        function aggiungiPersonalizzatoCompleto(nomeBase, prezzo, textAreaId, radioName, imgId, coloreFisso = null) {
+            let note = document.getElementById(textAreaId).value.trim();
+            let colore = coloreFisso;
+            if (!colore && radioName) {
+                let radioSelezionato = document.querySelector(`input[name="${radioName}"]:checked`);
+                if(radioSelezionato) colore = radioSelezionato.value;
+            }
+            
+            let immagineUrl = imgId;
+            if (typeof imgId === 'string' && document.getElementById(imgId)) {
+                immagineUrl = document.getElementById(imgId).src;
+            }
+            
+            let nomeFinale = `${nomeBase} [Colore: ${colore}]`;
+            if (note !== "") {
+                nomeFinale += ` - Note: ${note}`;
+            }
+
+            aggiungiProdotto(nomeFinale, prezzo, immagineUrl);
+            document.getElementById(textAreaId).value = ""; // Svuota il campo note
+        }
+
         function calcolaTotaleCiondoli(event) {
             let prezzoBaseCatenina = 5.00;
             let totale = prezzoBaseCatenina;
@@ -677,42 +729,8 @@
             checkboxes.forEach(box => box.checked = false);
             calcolaTotaleCiondoli(); 
         }
-		// === CARICAMENTO FIOCCHI ===
-Papa.parse(googleSheetFIOCCHI, {
-    download: true, 
-    header: true,
-    transformHeader: function(h) { return h.trim().toLowerCase(); },
-    complete: function(risultato) {
-        var fiocchi = risultato.data;
-        var contenitore = document.getElementById('lista-fiocchi');
-        
-        if (!fiocchi || fiocchi.length === 0) { 
-            contenitore.innerHTML = '<p class="loading-text">Nessun fiocco disponibile al momento.</p>'; 
-            return; 
-        }
-
-        contenitore.innerHTML = ''; // Svuota il caricamento
-        fiocchi.forEach(function(riga) {
-            if (riga.titolo && riga.titolo.trim() !== "") {
-                var immagine = riga.immagine ? riga.immagine : 'logo.png';
-                var prezzoNum = parseFloat(riga.prezzo) || 0;
-                var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-
-                var cardHTML = `
-                    <div class="product-card">
-                        <img src="${immagine}" alt="${titoloPulito}" class="product-image" onerror="this.src='logo.png'">
-                        <h3>${riga.titolo}</h3>
-                        <p>${riga.descrizione || ''}</p>
-                        <div class="price">€${prezzoNum.toFixed(2)}</div>
-                        <button onclick="aggiungiProdotto('${titoloPulito}', ${prezzoNum}, '${immagine}')" class="buy-button-paypal">
-                            Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
-                        </button>
-                    </div>`;
-                contenitore.innerHTML += cardHTML;
-            }
-        });
-    }
-});
     </script>
+</body>
+</html>
 </body>
 </html>
