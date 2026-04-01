@@ -168,9 +168,9 @@
         
         <div class="menu-title">Personalizza</div>
         <a href="#componi" onclick="showSection('componi'); return false;">✨ Componi Collana</a>
-        <a href="#crea-maglietta" onclick="showSection('crea-maglietta'); return false;">👕 Crea Maglietta</a>
-      <a href="#crea-pochette" onclick="showSection('crea-pochette'); return false;">👝 Crea Pochette</a>
-      <a href="#crea-borsa" onclick="showSection('crea-borsa'); return false;">👜 Crea Borsa</a>
+        <a href="#crea" onclick="showSection('crea'); return false;">👕 Crea Maglietta</a>
+        <a href="#crea" onclick="showSection('crea'); return false;">👝 Crea Pochette</a>
+        <a href="#crea" onclick="showSection('crea'); return false;">👜 Crea Borsa</a>
         
         <div class="menu-title">Supporto</div>
         <a href="#contatti" onclick="showSection('contatti'); return false;">✉️ Contatti</a>
@@ -292,53 +292,8 @@
             </div>
         </div>
 
-        <div id="crea-maglietta" class="content-section">
-    <h2>Crea la tua Maglietta</h2>
-    <div class="componi-box">
-        <h3 style="text-align: center;">1. Scegli il Colore</h3>
-        <div class="opzioni-catenina">
-            <label>
-                <input type="radio" name="colore-maglietta" value="Bianco" checked onchange="aggiornaAnteprima('img-maglietta', 'bianco-tshirt.png')"> 
-                <img src="bianco-tshirt.png" style="width:40px; border-radius:5px;"> Bianco
-            </label>
-            <label>
-                <input type="radio" name="colore-maglietta" value="Nero" onchange="aggiornaAnteprima('img-maglietta', 'nero-tshirt.png')"> 
-                <img src="nero-tshirt.png" style="width:40px; border-radius:5px;"> Nero
-            </label>
-        </div>
-        <img id="img-maglietta" src="bianco-tshirt.png" class="product-image" style="display:block; margin:auto; width:200px;">
-        
-        <h3 style="text-align: center;">2. Descrizione Personalizzazione</h3>
-        <textarea id="nota-maglietta" class="custom-textarea" placeholder="Taglia, scritte, colore ricamo..."></textarea>
-        <button onclick="aggiungiPersonalizzatoConColore('Maglietta', 20.00, 'nota-maglietta', 'colore-maglietta', 'img-maglietta')" class="checkout-btn">Aggiungi al Carrello €20.00</button>
-    </div>
-</div>
-
-<div id="crea-pochette" class="content-section">
-    <h2>Crea la tua Pochette</h2>
-    <div class="componi-box">
-        <h3 style="text-align: center;">1. Scegli il Colore</h3>
-        <div class="opzioni-catenina">
-            <label><input type="radio" name="colore-pochette" value="Azzurro" checked onchange="aggiornaAnteprima('img-pochette', 'azzurro-p.png')"> Azzurro</label>
-            <label><input type="radio" name="colore-pochette" value="Rosa" onchange="aggiornaAnteprima('img-pochette', 'rosa-p.png')"> Rosa</label>
-            <label><input type="radio" name="colore-pochette" value="Nero" onchange="aggiornaAnteprima('img-pochette', 'nero-p.png')"> Nero</label>
-        </div>
-        <img id="img-pochette" src="azzurro-p.png" class="product-image" style="display:block; margin:auto; width:200px;">
-        
-        <textarea id="nota-pochette" class="custom-textarea" placeholder="Dettagli ricamo..."></textarea>
-        <button onclick="aggiungiPersonalizzatoConColore('Pochette', 15.00, 'nota-pochette', 'colore-pochette', 'img-pochette')" class="checkout-btn">Aggiungi al Carrello €15.00</button>
-    </div>
-</div>
-
-<div id="crea-borsa" class="content-section">
-    <h2>Crea la tua Borsa</h2>
-    <div class="componi-box">
-        <h3 style="text-align: center;">Colore disponibile: Bianco</h3>
-        <img src="bianco-borsa.png" class="product-image" style="display:block; margin:auto; width:200px;">
-        <textarea id="nota-borsa" class="custom-textarea" placeholder="Descrivi il ricamo desiderato..."></textarea>
-        <button onclick="aggiungiPersonalizzatoConColore('Borsa', 25.00, 'nota-borsa', null, 'bianco-borsa.png', 'Bianco')" class="checkout-btn">Aggiungi al Carrello €25.00</button>
-    </div>
-</div>
+        <div id="crea" class="content-section">
+            <h2>Crea il tuo Prodotto Personalizzato</h2>
             
             <div class="photo-notice">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
@@ -628,56 +583,25 @@
                 var contenitore = document.getElementById('lista-prodotti');
                 if (prodotti.length === 0) { contenitore.innerHTML = '<p class="loading-text">Nessun prodotto trovato.</p>'; return; }
                 contenitore.innerHTML = '';
-               // 1. MODIFICA CARICAMENTO GOOGLE SHEETS
-Papa.parse(googleSheetPRODOTTI, {
-    download: true, header: true,
-    transformHeader: function(h) { return h.trim().toLowerCase(); },
-    complete: function(risultato) {
-        var prodotti = risultato.data;
-        document.getElementById('lista-prodotti').innerHTML = ''; // Collane
-        document.getElementById('cat-fiocchi').querySelector('.product-container').innerHTML = ''; // Fiocchi
-        
-        prodotti.forEach(function(riga) {
-            if (riga.titolo && riga.titolo.trim() !== "") {
-                var cat = riga.categoria ? riga.categoria.toLowerCase().trim() : 'c';
-                var targetId = (cat === 'f') ? 'cat-fiocchi' : 'lista-prodotti';
-                var contenitore = (cat === 'f') ? document.getElementById('cat-fiocchi').querySelector('.product-container') : document.getElementById('lista-prodotti');
+                prodotti.forEach(function(riga) {
+                    if (riga.titolo && riga.titolo.trim() !== "") {
+                        var immagine = riga.immagine ? riga.immagine : 'logo.png';
+                        var prezzoNum = parseFloat(riga.prezzo) || 0;
+                        var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
 
-                var cardHTML = `
-                    <div class="product-card">
-                        <img src="${riga.immagine || 'logo.png'}" class="product-image">
-                        <h3>${riga.titolo}</h3>
-                        <p>${riga.descrizione || ''}</p>
-                        <div class="price">€${parseFloat(riga.prezzo).toFixed(2)}</div>
-                        <button onclick="aggiungiProdotto('${riga.titolo}', ${riga.prezzo}, '${riga.immagine}')" class="buy-button-paypal">Aggiungi al Carrello</button>
-                    </div>`;
-                contenitore.innerHTML += cardHTML;
-            }
-        });
-    }
-});
-
-// 2. FUNZIONE PER CAMBIARE IMMAGINE ESEMPIO
-function aggiornaAnteprima(idImg, srcNuova) {
-    document.getElementById(idImg).src = srcNuova;
-}
-
-// 3. FUNZIONE PER AGGIUNGERE AL CARRELLO CON COLORE
-function aggiungiPersonalizzatoConColore(nomeBase, prezzo, textAreaId, radioName, imgId, coloreFisso = null) {
-    let note = document.getElementById(textAreaId).value.trim();
-    let colore = coloreFisso;
-    if (!colore && radioName) {
-        colore = document.querySelector(`input[name="${radioName}"]:checked`).value;
-    }
-    let img = (typeof imgId === 'string' && document.getElementById(imgId)) ? document.getElementById(imgId).src : imgId;
-    
-    let nomeFinale = `${nomeBase} (${colore})`;
-    if (note !== "") nomeFinale += ` - Note: ${note}`;
-
-    aggiungiProdotto(nomeFinale, prezzo, img);
-    alert("Prodotto aggiunto al carrello!");
-    showSection('home'); // Torna in home dopo l'aggiunta
-}
+                        var cardHTML = `
+                            <div class="product-card">
+                                <img src="${immagine}" alt="${titoloPulito}" class="product-image" onerror="this.src='logo.png'">
+                                <h3>${riga.titolo}</h3>
+                                <p>${riga.descrizione || ''}</p>
+                                <div class="price">€${prezzoNum.toFixed(2)}</div>
+                                <button onclick="aggiungiProdotto('${titoloPulito}', ${prezzoNum}, '${immagine}')" class="buy-button-paypal">
+                                    Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </div>`;
+                        contenitore.innerHTML += cardHTML;
+                    }
+                });
             }
         });
 
