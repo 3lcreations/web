@@ -51,35 +51,6 @@
         header p { color: var(--testo-chiaro); font-size: 18px; margin-top: 25px; font-style: italic; position: relative; z-index: 1;}
         .header-video { width: 400px; max-width: 100%; border-radius: 20px; margin-bottom: 0; border: none; outline: none; display: block; margin: 0 auto; position: relative; z-index: 1; }
 
-        /* --- CAROSELLO INSTAGRAM --- */
-        .instagram-section { margin-bottom: 40px; }
-        .instagram-slider { 
-            display: flex; 
-            overflow-x: auto; 
-            gap: 20px; 
-            padding-bottom: 10px; 
-            scroll-snap-type: x mandatory; 
-            -webkit-overflow-scrolling: touch; 
-            scrollbar-width: none; 
-            -ms-overflow-style: none;  
-        }
-        .instagram-slider::-webkit-scrollbar { display: none; }
-        
-        .instagram-item { 
-            flex: 0 0 280px; 
-            scroll-snap-align: center; 
-            background: white; 
-            border-radius: 20px; 
-            box-shadow: 0 5px 15px rgba(216, 27, 96, 0.05); 
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            border: 1px solid rgba(244, 143, 177, 0.2);
-            padding: 10px; 
-            box-sizing: border-box;
-        }
-        .instagram-item iframe { border-radius: 15px !important; margin: 0 !important; }
-
         .home-text { font-size: 16px; line-height: 1.8; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: 1px solid rgba(255,255,255,0.6); }
 
         .product-container { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
@@ -89,8 +60,9 @@
         .product-card h3 { margin: 10px 0; font-size: 20px; color: var(--testo-scuro); }
         .price { font-size: 24px; color: var(--fucsia); font-weight: 600; margin: 15px 0; }
         
-        .buy-button-paypal { background-color: #0070ba; color: white; border: none; padding: 12px 10px; font-size: 15px; border-radius: 30px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: 600; transition: all 0.3s ease; width: 100%; box-sizing: border-box;}
-        .buy-button-paypal:hover { background-color: #003087; transform: translateY(-2px); }
+        /* BOTTONE ACQUISTO PRODOTTI NORMALI (Tornato Rosa Fucsia) */
+        .buy-button-paypal { background-color: var(--fucsia); color: white; border: none; padding: 12px 10px; font-size: 15px; border-radius: 30px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: 600; transition: all 0.3s ease; width: 100%; box-sizing: border-box;}
+        .buy-button-paypal:hover { background-color: #ad144d; transform: translateY(-2px); }
 
         .componi-box { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); border: 1px solid rgba(255,255,255,0.6); margin-bottom: 30px;}
         .opzioni-catenina { display: flex; gap: 20px; justify-content: center; margin: 20px 0; font-size: 18px; }
@@ -108,8 +80,9 @@
         .totale-box h3 { margin: 0 0 15px 0; font-size: 26px; color: var(--testo-scuro); }
         #prezzo-totale { color: var(--fucsia); }
 
-        .paypal-button { background-color: #0070ba; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 30px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 112, 186, 0.3);}
-        .paypal-button:hover { background-color: #003087; transform: translateY(-2px); }
+        /* BOTTONE ACQUISTO COMPONI COLLANA (Tornato Rosa Fucsia con ombra rosa) */
+        .paypal-button { background-color: var(--fucsia); color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 30px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(216, 27, 96, 0.3);}
+        .paypal-button:hover { background-color: #ad144d; transform: translateY(-2px); }
 
         .contact-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); text-align: center; border: 1px solid rgba(255,255,255,0.6); }
         .social-link { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px; font-size: 18px; color: var(--testo-scuro); text-decoration: none; transition: transform 0.3s ease, color 0.3s ease; padding: 10px; border-radius: 10px; }
@@ -132,8 +105,6 @@
             .charm-title { font-size: 12px; }
             .charm-price { font-size: 14px; }
             .charm-checkbox { transform: scale(1.2); }
-
-            .instagram-item { flex: 0 0 250px; } 
         }
     </style>
 </head>
@@ -157,25 +128,6 @@
                 <video src="logoanm.mp4" autoplay loop muted playsinline class="header-video"></video>
                 <p>Prodotti handmade per pelosetti e persone.</p>
             </header>
-
-            <div class="instagram-section">
-                <h2 style="display:block; text-align:center;">Seguici su Instagram 📸</h2>
-                <div class="instagram-slider">
-                    
-                    <div class="instagram-item">
-                        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DWloakLCAYT/" data-instgrm-version="14" style="background:#FFF; border:0; margin: 0; max-width:100%; width:100%;"></blockquote>
-                    </div>
-
-                    <div class="instagram-item">
-                         <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DWgenMqiGVK/" data-instgrm-version="14" style="background:#FFF; border:0; margin: 0; max-width:100%; width:100%;"></blockquote>
-                    </div>
-
-                    <div class="instagram-item">
-                         <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DWOgo7CiKYo/" data-instgrm-version="14" style="background:#FFF; border:0; margin: 0; max-width:100%; width:100%;"></blockquote>
-                    </div>
-
-                </div>
-            </div>
 
             <div class="home-text">
                 <h2>Chi Siamo</h2>
@@ -234,8 +186,6 @@
         </div>
     </div>
 
-    <script async src="https://www.instagram.com/embed.js"></script>
-
     <script>
         // === 1. GESTIONE MENU ===
         function openNav() {
@@ -255,8 +205,6 @@
             else { document.getElementById('home').classList.add('active'); sectionId = 'home'; }
             window.scrollTo(0, 0);
             if (updateUrl) { history.pushState(null, null, '#' + sectionId); }
-            
-            if (window.instgrm) { window.instgrm.Embeds.process(); }
         }
         window.addEventListener('load', function() {
             var hash = window.location.hash.substring(1); 
