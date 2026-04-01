@@ -30,11 +30,13 @@
 
         @keyframes float { from { transform: translate(0, 0); } to { transform: translate(40px, 60px); } }
 
+        /* MENU LATERALE E CATEGORIE */
         .sidebar { height: 100%; width: 0; position: fixed; z-index: 30; top: 0; left: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
-        .sidebar a { padding: 15px 30px; text-decoration: none; font-size: 18px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
+        .sidebar a { padding: 12px 30px; text-decoration: none; font-size: 17px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
         .sidebar a:hover { color: var(--fucsia); background-color: #fff0f5; padding-left: 45px; }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; background: none; color: var(--testo-scuro); padding: 0;}
-        .sidebar-logo { width: 120px; display: block; margin: 0 auto 30px auto; }
+        .sidebar-logo { width: 120px; display: block; margin: 0 auto 10px auto; }
+        .menu-title { font-size: 13px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 5px 30px; }
 
         /* CARRELLO LATERALE DESTRO */
         .cart-sidebar { height: 100%; width: 0; position: fixed; z-index: 40; top: 0; right: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 20px; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
@@ -91,16 +93,29 @@
 
         .home-text { font-size: 16px; line-height: 1.8; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: 1px solid rgba(255,255,255,0.6); }
 
+        /* SCHEDE PRODOTTO & CATEGORIE */
+        .category-tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .cat-btn { background: transparent; border: 2px solid var(--fucsia); color: var(--fucsia); padding: 10px 25px; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .cat-btn.active, .cat-btn:hover { background: var(--fucsia); color: white; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); }
+        .cat-content { display: none; }
+        .cat-content.active { display: block; animation: slideUpFade 0.5s ease forwards; }
+
         .product-container { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-        .product-card { background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); text-align: center; width: 280px; transition: all 0.4s ease; border: 1px solid transparent; box-sizing: border-box;}
+        .product-card { background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); text-align: center; width: 280px; transition: all 0.4s ease; border: 1px solid transparent; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;}
         .product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(216, 27, 96, 0.15); border-color: var(--rosa-chiaro); }
         .product-image { width: 100%; height: 220px; object-fit: cover; border-radius: 15px; margin-bottom: 20px; transition: transform 0.4s; }
         .product-card h3 { margin: 10px 0; font-size: 20px; color: var(--testo-scuro); }
         .price { font-size: 24px; color: var(--fucsia); font-weight: 600; margin: 15px 0; }
         
-        .buy-button-paypal { background-color: var(--fucsia); color: white; border: none; padding: 12px 10px; font-size: 15px; border-radius: 30px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: 600; transition: all 0.3s ease; width: 100%; box-sizing: border-box;}
+        .buy-button-paypal { background-color: var(--fucsia); color: white; border: none; padding: 12px 10px; font-size: 15px; border-radius: 30px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: 600; transition: all 0.3s ease; width: 100%; box-sizing: border-box; margin-top: auto;}
         .buy-button-paypal:hover { background-color: #ad144d; transform: translateY(-2px); }
 
+        /* SEZIONE PERSONALIZZA */
+        .photo-notice { background-color: #fff0f5; padding: 20px; border-radius: 15px; margin-bottom: 30px; font-size: 14px; color: var(--testo-scuro); border-left: 5px solid var(--fucsia); line-height: 1.6; }
+        .custom-textarea { width: 100%; height: 80px; border: 1px solid #ddd; border-radius: 10px; padding: 12px; font-family: 'Poppins', sans-serif; font-size: 13px; resize: vertical; margin-bottom: 15px; outline: none; transition: 0.3s; box-sizing: border-box; background-color: #fafafa;}
+        .custom-textarea:focus { border-color: var(--fucsia); background-color: #fff; }
+
+        /* SEZIONE COMPONI COLLANA */
         .componi-box { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); border: 1px solid rgba(255,255,255,0.6); margin-bottom: 30px;}
         .opzioni-catenina { display: flex; gap: 20px; justify-content: center; margin: 20px 0; font-size: 18px; }
         .opzioni-catenina label { cursor: pointer; display: flex; align-items: center; gap: 5px; }
@@ -115,7 +130,6 @@
 
         .totale-box { background: var(--panna-video); padding: 20px; border-radius: 20px; text-align: center; margin-top: 30px; border: 3px dashed var(--rosa-chiaro); }
         .totale-box h3 { margin: 0 0 15px 0; font-size: 26px; color: var(--testo-scuro); }
-        #prezzo-totale-ciondoli { color: var(--fucsia); }
 
         .contact-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); text-align: center; border: 1px solid rgba(255,255,255,0.6); }
         .social-link { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px; font-size: 18px; color: var(--testo-scuro); text-decoration: none; transition: transform 0.3s ease, color 0.3s ease; padding: 10px; border-radius: 10px; }
@@ -145,9 +159,20 @@
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <img src="logo.png" alt="Logo 3L Creations" class="sidebar-logo">
+        
         <a href="#home" onclick="showSection('home'); return false;">🏠 Home</a>
-        <a href="#acquista" onclick="showSection('acquista'); return false;">🛍️ Acquista</a>
-        <a href="#componi" onclick="showSection('componi'); return false;">✨ Componi la tua collana</a>
+        
+        <div class="menu-title">Prodotti Pronti</div>
+        <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('collane'); return false;">📿 Collane</a>
+        <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('fiocchi'); return false;">🎀 Fiocchi</a>
+        
+        <div class="menu-title">Personalizza</div>
+        <a href="#componi" onclick="showSection('componi'); return false;">✨ Componi Collana</a>
+        <a href="#crea" onclick="showSection('crea'); return false;">👕 Crea Maglietta</a>
+        <a href="#crea" onclick="showSection('crea'); return false;">👝 Crea Pochette</a>
+        <a href="#crea" onclick="showSection('crea'); return false;">👜 Crea Borsa</a>
+        
+        <div class="menu-title">Supporto</div>
         <a href="#contatti" onclick="showSection('contatti'); return false;">✉️ Contatti</a>
     </div>
 
@@ -219,7 +244,7 @@
                 <button type="submit" class="checkout-btn" style="margin-top: 10px;">
                     Paga in Sicurezza <i class="fas fa-lock"></i>
                 </button>
-                <p style="font-size: 11px; color: var(--testo-chiaro); text-align: center; margin-top: 10px;">Accetta Visa, Mastercard, Bancomat o PayPal. Riceveremo automaticamente i tuoi dati per la spedizione.</p>
+                <p style="font-size: 11px; color: var(--testo-chiaro); text-align: center; margin-top: 10px;">Accetta Visa, Mastercard, Bancomat o PayPal.</p>
             </form>
         </div>
     </div>
@@ -246,14 +271,71 @@
 
         <div id="acquista" class="content-section">
             <h2>I Nostri Prodotti</h2>
-            <div class="product-container" id="lista-prodotti">
-                <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento prodotti in corso...</p>
+            
+            <div class="category-tabs">
+                <button class="cat-btn active" onclick="cambiaCategoria('collane', this)">📿 Collane</button>
+                <button class="cat-btn" onclick="cambiaCategoria('fiocchi', this)">🎀 Fiocchi</button>
+            </div>
+
+            <div id="cat-collane" class="cat-content active">
+                <div class="product-container" id="lista-prodotti">
+                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento collane in corso...</p>
+                </div>
+            </div>
+
+            <div id="cat-fiocchi" class="cat-content">
+                <div class="product-container">
+                    <p style="text-align:center; width:100%; color: var(--testo-chiaro); margin-top: 20px;">
+                        I fiocchi saranno presto disponibili online! Contattaci per ordini speciali.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div id="crea" class="content-section">
+            <h2>Crea il tuo Prodotto Personalizzato</h2>
+            
+            <div class="photo-notice">
+                <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
+                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
+                È facilissimo! Scrivi le tue istruzioni e idee nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+            </div>
+
+            <div class="product-container">
+                <div class="product-card">
+                    <img src="logo.png" class="product-image" alt="Maglietta Personalizzata">
+                    <h3>Maglietta Personalizzata</h3>
+                    <div class="price">€20.00</div>
+                    <textarea id="nota-maglietta" class="custom-textarea" placeholder="Descrivi qui come la vuoi (Taglia, scritte, colore...)"></textarea>
+                    <button onclick="aggiungiPersonalizzato('Maglietta Personalizzata', 20.00, 'nota-maglietta', 'logo.png')" class="buy-button-paypal">
+                        Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
+                    </button>
+                </div>
+
+                <div class="product-card">
+                    <img src="logo.png" class="product-image" alt="Pochette Personalizzata">
+                    <h3>Pochette Personalizzata</h3>
+                    <div class="price">€15.00</div>
+                    <textarea id="nota-pochette" class="custom-textarea" placeholder="Descrivi qui i dettagli per la pochette..."></textarea>
+                    <button onclick="aggiungiPersonalizzato('Pochette Personalizzata', 15.00, 'nota-pochette', 'logo.png')" class="buy-button-paypal">
+                        Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
+                    </button>
+                </div>
+
+                <div class="product-card">
+                    <img src="logo.png" class="product-image" alt="Borsa Personalizzata">
+                    <h3>Borsa Personalizzata</h3>
+                    <div class="price">€25.00</div>
+                    <textarea id="nota-borsa" class="custom-textarea" placeholder="Descrivi qui i dettagli per la borsa..."></textarea>
+                    <button onclick="aggiungiPersonalizzato('Borsa Personalizzata', 25.00, 'nota-borsa', 'logo.png')" class="buy-button-paypal">
+                        Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
         <div id="componi" class="content-section">
             <h2>Crea la tua Collana Unica</h2>
-            
             <div class="componi-box">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il colore della catenina (Inclusa: €5.00)</h3>
                 <div class="opzioni-catenina">
@@ -272,7 +354,6 @@
 
             <div class="totale-box">
                 <h3>Totale Calcolato: €<span id="prezzo-totale-ciondoli">5.00</span></h3>
-                
                 <button class="buy-button-paypal" style="width: auto; padding: 15px 40px; font-size: 18px;" onclick="aggiungiCollanaCompostaAlCarrello(event)">
                     Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
                 </button>
@@ -282,7 +363,7 @@
         <div id="contatti" class="content-section">
             <h2>Mettiti in Contatto</h2>
             <div class="contact-card">
-                <p>Seguici sui nostri canali social per non perderti le ultime creazioni:</p>
+                <p>Seguici sui nostri canali social o contattaci per l'invio di foto per prodotti personalizzati:</p>
                 <br>
                 <a href="https://www.instagram.com/_3l_creations" target="_blank" class="social-link"><i class="fab fa-instagram social-icon"></i><span><strong>Instagram:</strong> @_3l_creations</span></a>
                 <a href="#" target="_blank" class="social-link"><i class="fab fa-facebook social-icon"></i><span><strong>Facebook:</strong> 3L Creations</span></a>
@@ -291,8 +372,10 @@
         </div>
     </div>
 
+    <script async src="https://www.instagram.com/embed.js"></script>
+
     <script>
-        // === 1. GESTIONE MENU ===
+        // === 1. GESTIONE MENU E SEZIONI ===
         function openNav() { document.getElementById("mySidebar").style.width = "250px"; if (window.innerWidth > 768) { document.getElementById("main").style.marginLeft = "250px"; } }
         function closeNav() { document.getElementById("mySidebar").style.width = "0"; document.getElementById("main").style.marginLeft= "auto"; }
         function showSection(sectionId, updateUrl = true) {
@@ -304,10 +387,51 @@
             else { document.getElementById('home').classList.add('active'); sectionId = 'home'; }
             window.scrollTo(0, 0);
             if (updateUrl) { history.pushState(null, null, '#' + sectionId); }
+            if (window.instgrm) { window.instgrm.Embeds.process(); }
         }
+        
+        // Funzione per cambiare categoria nei prodotti pronti
+        function cambiaCategoria(catId, btnElement) {
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.cat-content').forEach(content => content.classList.remove('active'));
+            
+            if(btnElement) {
+                btnElement.classList.add('active');
+            } else {
+                document.querySelector(`.cat-btn[onclick*="${catId}"]`).classList.add('active');
+            }
+            document.getElementById('cat-' + catId).classList.add('active');
+        }
+
+        // Recupero e Salvataggio dei Dati (Local Storage - Come creare un account automatico)
+        function caricaDatiSpedizioneSalvata() {
+            const salvati = localStorage.getItem('datiSpedizione3L');
+            if(salvati) {
+                const dati = JSON.parse(salvati);
+                document.getElementById('nome').value = dati.nome || '';
+                document.getElementById('cognome').value = dati.cognome || '';
+                document.getElementById('indirizzo').value = dati.indirizzo || '';
+                document.getElementById('citta').value = dati.citta || '';
+                document.getElementById('cap').value = dati.cap || '';
+                document.getElementById('telefono').value = dati.telefono || '';
+            }
+        }
+        function salvaDatiSpedizione() {
+            const dati = {
+                nome: document.getElementById('nome').value,
+                cognome: document.getElementById('cognome').value,
+                indirizzo: document.getElementById('indirizzo').value,
+                citta: document.getElementById('citta').value,
+                cap: document.getElementById('cap').value,
+                telefono: document.getElementById('telefono').value
+            };
+            localStorage.setItem('datiSpedizione3L', JSON.stringify(dati));
+        }
+
         window.addEventListener('load', function() {
             var hash = window.location.hash.substring(1); 
             if (hash) showSection(hash, false); else showSection('home', false); 
+            caricaDatiSpedizioneSalvata(); // Carica i dati appena apre il sito!
         });
         window.addEventListener('popstate', function() {
             var hash = window.location.hash.substring(1);
@@ -319,9 +443,7 @@
         const googleSheetCIONDOLI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRl2ORNAWbnaRGglufp8VlsF-AO1rV2xX3cN9ki3yiLqXfaH943s2SuQ41QKgFk4rks3fsckw5-ZQuB/pub?output=csv';
         const emailPayPal = 'luciaxxxo@alice.it'; 
         const costoSpedizioneFisso = 8.00;
-
-        // RICORDATI DI INSERIRE IL LINK DEL TUO SITO QUI SOTTO
-        const urlDelSito = 'https://3lcreations.github.io/web/#home';
+        const urlDelSito = 'https://3lcreations.github.io/web/';
         const nomeNegozio = '3L Creations';
 
         // === 3. LOGICA DEL CARRELLO E DEL FORM ===
@@ -341,6 +463,20 @@
             carrello.push({ nome: nome, prezzo: parseFloat(prezzo), immagine: immagine });
             aggiornaCarrelloUI();
             openCart(); 
+        }
+
+        // Nuova funzione dedicata per i prodotti con campo testo!
+        function aggiungiPersonalizzato(nomeBase, prezzo, textAreaId, immagine) {
+            let noteText = document.getElementById(textAreaId).value.trim();
+            let nomeFinale = nomeBase;
+            
+            if (noteText !== "") {
+                // Aggiunge le istruzioni scritte al nome del prodotto che vedrai su PayPal
+                nomeFinale += ` (Note: ${noteText})`;
+            }
+            
+            aggiungiProdotto(nomeFinale, prezzo, immagine);
+            document.getElementById(textAreaId).value = ""; // Svuota il campo per fargliene creare un'altra
         }
 
         function rimuoviProdotto(index) {
@@ -405,6 +541,9 @@
         function inviaOrdineAPayPal(event) {
             event.preventDefault();
 
+            // Salva istantaneamente i dati inseriti nella memoria del dispositivo!
+            salvaDatiSpedizione();
+
             let nome = document.getElementById('nome').value;
             let cognome = document.getElementById('cognome').value;
             let indirizzo = document.getElementById('indirizzo').value;
@@ -416,14 +555,14 @@
 
             paypalUrl += `&return=${encodeURIComponent(urlDelSito)}`;
             paypalUrl += `&cancel_return=${encodeURIComponent(urlDelSito)}`;
-            paypalUrl += `&cbt=${encodeURIComponent("Torna a " + nomeNegozio)}`;
+            paypalUrl += `&cbt=${encodeURIComponent("Torna al negozio " + nomeNegozio)}`;
+            paypalUrl += `&rm=2`;
 
             carrello.forEach((item, index) => {
                 let i = index + 1; 
                 paypalUrl += `&item_name_${i}=${encodeURIComponent(item.nome)}&amount_${i}=${item.prezzo.toFixed(2)}&quantity_${i}=1`;
             });
 
-            // Passa l'indirizzo a PayPal fissando la nazione a Italia (IT) e aggiungendo il telefono
             paypalUrl += `&first_name=${encodeURIComponent(nome)}`;
             paypalUrl += `&last_name=${encodeURIComponent(cognome)}`;
             paypalUrl += `&address1=${encodeURIComponent(indirizzo)}`;
@@ -435,7 +574,7 @@
             window.location.href = paypalUrl;
         }
 
-        // === 4. CARICAMENTO PRODOTTI NORMALI ===
+        // === 4. CARICAMENTO PRODOTTI NORMALI (Ora nella scheda Collane) ===
         Papa.parse(googleSheetPRODOTTI, {
             download: true, header: true,
             transformHeader: function(h) { return h.trim().toLowerCase(); },
