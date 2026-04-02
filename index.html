@@ -24,11 +24,38 @@
 
         body { font-family: 'Poppins', sans-serif; background-color: var(--sfondo); color: var(--testo-scuro); margin: 0; padding: 0; overflow-x: hidden; position: relative;}
 
+        /* MACCHIE DI COLORE SFOCATE SULLO SFONDO */
         body::before, body::after { content: ''; position: fixed; border-radius: 50%; z-index: -2; filter: blur(80px); animation: float 15s infinite alternate ease-in-out; }
         body::before { width: 400px; height: 400px; top: -150px; right: -100px; background: radial-gradient(circle, rgba(244,143,177,0.12) 0%, rgba(255,255,255,0) 80%); }
         body::after { width: 500px; height: 500px; bottom: -150px; left: -150px; background: radial-gradient(circle, rgba(216,27,96,0.08) 0%, rgba(255,255,255,0) 80%); }
 
         @keyframes float { from { transform: translate(0, 0); } to { transform: translate(40px, 60px); } }
+
+        /* NUOVO: PATTERN ICONE FLUTTUANTI SULLO SFONDO */
+        .floating-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -3; overflow: hidden; }
+        .floating-icon { position: absolute; color: rgba(244, 143, 177, 0.25); animation: floatPattern linear infinite alternate; }
+        
+        .fi-1 { top: 15%; left: 8%; font-size: 35px; animation-duration: 22s; }
+        .fi-2 { top: 75%; left: 12%; font-size: 25px; animation-duration: 18s; animation-direction: alternate-reverse; }
+        .fi-3 { top: 40%; left: 88%; font-size: 45px; animation-duration: 28s; }
+        .fi-4 { top: 80%; left: 82%; font-size: 30px; animation-duration: 20s; animation-direction: alternate-reverse; }
+        .fi-5 { top: 20%; left: 75%; font-size: 35px; animation-duration: 25s; }
+        .fi-6 { top: 85%; left: 35%; font-size: 40px; animation-duration: 24s; animation-direction: alternate-reverse; }
+        .fi-7 { top: 10%; left: 45%; font-size: 20px; animation-duration: 19s; }
+
+        @keyframes floatPattern {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(50px, 70px) rotate(360deg); }
+        }
+
+        /* NUOVO: TRUST BADGES (LATERALI SU PC) */
+        .trust-badges { position: fixed; top: 50%; transform: translateY(-50%); left: 20px; z-index: 10; display: flex; flex-direction: column; gap: 20px; }
+        .trust-badge { background: white; border: 2px solid var(--rosa-chiaro); border-radius: 15px; padding: 15px 10px; text-align: center; width: 90px; box-shadow: 0 5px 15px rgba(216, 27, 96, 0.1); color: var(--fucsia); font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.3s; }
+        .trust-badge i { font-size: 24px; }
+        .trust-badge:hover { transform: scale(1.05); border-color: var(--fucsia); box-shadow: 0 8px 20px rgba(216, 27, 96, 0.2);}
+        
+        @media (max-width: 1100px) { .trust-badges { display: none; } } /* Nasconde le badge su schermi piccoli per fare spazio */
+
 
         /* MENU LATERALE E CATEGORIE */
         .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
@@ -91,7 +118,7 @@
         header p { color: var(--testo-chiaro); font-size: 18px; margin-top: 25px; font-style: italic; position: relative; z-index: 1;}
         .header-video { width: 400px; max-width: 100%; border-radius: 20px; margin-bottom: 0; border: none; outline: none; display: block; margin: 0 auto; position: relative; z-index: 1; }
 
-        /* NUOVO: STILI CAROSELLO HOME (SLIDER) */
+        /* CAROSELLO HOME (SLIDER) */
         .home-slider-area { width: 100%; overflow: hidden; padding: 20px 0 40px 0; position: relative; margin-bottom: 20px;}
         .home-slider-track { display: flex; gap: 15px; align-items: center; will-change: transform; }
         .home-slide { flex: 0 0 75%; max-width: 450px; transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 0.4; transform: scale(0.85); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
@@ -164,6 +191,31 @@
     </style>
 </head>
 <body>
+
+    <div class="floating-bg">
+        <i class="fas fa-shirt floating-icon fi-1"></i>
+        <i class="fas fa-heart floating-icon fi-2"></i>
+        <i class="fas fa-pepper-hot floating-icon fi-3"></i>
+        <i class="fas fa-shopping-bag floating-icon fi-4"></i>
+        <i class="fas fa-gem floating-icon fi-5"></i>
+        <i class="fas fa-paw floating-icon fi-6"></i>
+        <i class="fas fa-heart floating-icon fi-7"></i>
+    </div>
+
+    <div class="trust-badges">
+        <div class="trust-badge">
+            <i class="fas fa-hand-sparkles"></i>
+            <span>100% Fatto a Mano</span>
+        </div>
+        <div class="trust-badge">
+            <i class="fas fa-truck"></i>
+            <span>Spedizioni in Italia</span>
+        </div>
+        <div class="trust-badge">
+            <i class="fas fa-shield-alt"></i>
+            <span>Pagamenti Sicuri</span>
+        </div>
+    </div>
 
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -284,6 +336,7 @@
                     <div class="home-slide"><img src="menu7.jpg" alt="Vetrina 7" onerror="this.src='logo.png'"></div>
                 </div>
             </div>
+
             <div class="home-text">
                 <h2>Chi Siamo</h2>
                 <p>Creazioni realizzate a mano, magliette, gioielli e tanto altro...</p>
@@ -532,7 +585,7 @@
             localStorage.setItem('datiSpedizione3L', JSON.stringify(dati));
         }
 
-        // === INIT HOME SLIDER (NUOVO) ===
+        // === INIT HOME SLIDER ===
         function initHomeSlider() {
             const track = document.getElementById('home-slider-track');
             if(!track) return;
@@ -563,20 +616,18 @@
                 track.style.transform = `translateX(${centerPos - offset}px)`;
             }
 
-            // Inizializza subito
             setTimeout(() => { centerSlide(1, false); }, 100);
 
             setInterval(() => {
                 if(isTransitioning) return;
                 isTransitioning = true;
                 
-                // Anima
                 centerSlide(2, true);
                 
                 setTimeout(() => {
                     const slides = document.querySelectorAll('.home-slide');
-                    track.appendChild(slides[0]); // sposta in fondo
-                    centerSlide(1, false); // resetta
+                    track.appendChild(slides[0]); 
+                    centerSlide(1, false); 
                     isTransitioning = false;
                 }, 600);
 
@@ -591,7 +642,7 @@
             var hash = window.location.hash.substring(1); 
             if (hash) showSection(hash, false); else showSection('home', false); 
             caricaDatiSpedizioneSalvata(); 
-            initHomeSlider(); // Avvio il carosello
+            initHomeSlider(); 
         });
         window.addEventListener('popstate', function() {
             var hash = window.location.hash.substring(1);
