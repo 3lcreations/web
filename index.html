@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-INSERISCI_QUI_IL_TUO_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-INSERISCI_QUI_IL_TUO_ID');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -37,6 +45,10 @@
 
         body { font-family: 'Poppins', sans-serif; background-color: var(--sfondo); color: var(--testo-scuro); margin: 0; padding: 0; overflow-x: hidden; position: relative;}
 
+        /* BARRA DI PROGRESSO SCROLL IN ALTO */
+        #scroll-progress-container { position: fixed; top: 0; left: 0; width: 100vw; height: 3px; background: transparent; z-index: 999999; pointer-events: none; }
+        #scroll-progress-bar { height: 100%; width: 0; background: var(--fucsia); box-shadow: 0 0 5px var(--fucsia); transition: width 0.1s ease-out; }
+
         /* MACCHIE DI COLORE SFOCATE SULLO SFONDO */
         body::before, body::after { content: ''; position: fixed; border-radius: 50%; z-index: -2; filter: blur(80px); animation: float 15s infinite alternate ease-in-out; }
         body::before { width: 400px; height: 400px; top: -150px; right: -100px; background: radial-gradient(circle, rgba(244,143,177,0.12) 0%, rgba(255,255,255,0) 80%); }
@@ -45,7 +57,7 @@
         @keyframes float { from { transform: translate(0, 0); } to { transform: translate(40px, 60px); } }
 
         /* SCHERMATA DI CARICAMENTO (SPLASH SCREEN) */
-        #splash-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--sfondo); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--sfondo); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
         .splash-logo { width: 130px; animation: pulseLogo 1.5s infinite ease-in-out; margin-bottom: 20px; }
         .splash-text { color: var(--fucsia); font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; animation: fadeInOut 1.5s infinite ease-in-out; }
         @keyframes pulseLogo { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
@@ -87,7 +99,7 @@
         .sidebar-logo { width: 120px; display: block; margin: 0 auto 10px auto; }
         .menu-title { font-size: 12px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 5px 30px; }
 
-        /* CARRELLO LATERALE DESTRO */
+        /* CARRELLO LATERALE DESTRO E WISHLIST LATERALE */
         .cart-sidebar { height: 100%; width: 0; position: fixed; z-index: 110; top: 0; right: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 20px; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .cart-header h2 { margin: 0; font-size: 22px; color: var(--testo-scuro); border: none; }
@@ -120,7 +132,7 @@
         .delivery-estimate i { color: var(--fucsia); }
         .delivery-estimate strong { color: var(--testo-scuro); }
 
-        /* PULSANTI FLUTTUANTI E CARRELLO BALZELLANTE */
+        /* PULSANTI FLUTTUANTI E TORNA SU */
         .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 90; transition: 0.3s;}
         .floating-cart:hover { transform: scale(1.1); }
         .cart-badge { position: absolute; top: -5px; right: -5px; background-color: white; color: var(--fucsia); font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid var(--fucsia);}
@@ -129,7 +141,11 @@
         .sparkle { position: absolute; width: 4px; height: 4px; background-color: #fff; border-radius: 50%; pointer-events: none; z-index: 100; animation: sparkAnim 0.6s ease-out forwards; }
         @keyframes sparkAnim { 0% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; } }
 
-        .back-to-top { background-color: rgba(255, 255, 255, 0.9); color: var(--fucsia); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); cursor: pointer; transition: 0.3s; border: 1px solid var(--rosa-chiaro); position: fixed; bottom: 105px; right: 37px; z-index: 89; opacity: 0; visibility: hidden;}
+        .floating-wishlist { position: fixed; bottom: 105px; right: 30px; background-color: white; color: var(--fucsia); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.2); cursor: pointer; z-index: 90; transition: 0.3s; border: 2px solid var(--rosa-chiaro);}
+        .floating-wishlist:hover { transform: scale(1.1); border-color: var(--fucsia); }
+        .wishlist-badge { position: absolute; top: -5px; right: -5px; background-color: var(--fucsia); color: white; font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+        .back-to-top { background-color: rgba(255, 255, 255, 0.9); color: var(--fucsia); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); cursor: pointer; transition: 0.3s; border: 1px solid var(--rosa-chiaro); position: fixed; bottom: 180px; right: 37px; z-index: 89; opacity: 0; visibility: hidden;}
         .back-to-top.show { opacity: 1; visibility: visible; }
         .back-to-top:hover { background-color: var(--fucsia); color: white; transform: translateY(-5px); }
 
@@ -159,7 +175,7 @@
         .lightbox-close:hover { color: var(--fucsia); transform: scale(1.1); }
         .product-image, .charm-image, .home-slide img { cursor: zoom-in; }
 
-        /* ANIMAZIONI ALLO SCORRIMENTO (REVEAL) E TRANSIZIONI APP-LIKE */
+        /* ANIMAZIONI ALLO SCORRIMENTO E TRANSIZIONI APP-LIKE */
         .reveal { opacity: 0; transform: translateY(40px); transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
@@ -176,12 +192,11 @@
             100% { opacity: 0; transform: translateY(-20px) scale(0.98); }
         }
 
-        /* SKELETON LOADING */
+        /* SKELETON LOADING E ICONA WISHLIST SULLE CARD */
         .skeleton-card { border: none !important; box-shadow: 0 10px 30px rgba(0,0,0,0.02) !important; cursor: default !important; transform: none !important; }
         .skeleton-anim { background: linear-gradient(90deg, #f9f9f9 25%, #ececec 50%, #f9f9f9 75%); background-size: 200% 100%; animation: skeletonLoading 1.5s infinite; border-radius: 10px; }
         .skeleton-img { width: 100%; height: 220px; border-radius: 15px; margin-bottom: 20px; }
         .skeleton-title { height: 24px; width: 70%; margin: 10px auto; }
-        .skeleton-desc { height: 16px; width: 90%; margin: 5px auto; }
         .skeleton-price { height: 28px; width: 40%; margin: 15px auto; }
         .skeleton-btn-mock { height: 45px; width: 100%; border-radius: 30px; margin-top: auto; }
         .skeleton-charm { width: 150px; height: 200px; padding: 15px; box-sizing: border-box; border-radius: 15px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
@@ -190,6 +205,11 @@
         .skeleton-charm-price { height: 18px; width: 60%; margin: 10px auto; }
         .skeleton-charm-box { height: 20px; width: 20px; margin: 0 auto; border-radius: 4px; }
         @keyframes skeletonLoading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        
+        .wishlist-btn { position: absolute; top: 15px; right: 15px; font-size: 22px; color: #ccc; cursor: pointer; transition: 0.3s; z-index: 10; background: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        .wishlist-btn.active { color: var(--fucsia); }
+        .wishlist-btn.active i { font-weight: 900; }
+        .wishlist-btn:hover { transform: scale(1.1); }
 
         /* BARRA DI RICERCA ISTANTANEA */
         .search-container { max-width: 400px; margin: 0 auto 30px auto; position: relative; }
@@ -215,7 +235,7 @@
         /* CURSORE MAGICO */
         #magic-cursor { display: none; }
         @media (pointer: fine) {
-            body, a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .floating-cart, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label { cursor: none !important; }
+            body, a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .floating-cart, .floating-wishlist, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label, .wishlist-btn { cursor: none !important; }
             #magic-cursor { display: block; position: fixed; width: 12px; height: 12px; background-color: var(--fucsia); border-radius: 50%; pointer-events: none; z-index: 999999; transform: translate(-50%, -50%); transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; }
             #magic-cursor.hover { width: 45px; height: 45px; background-color: rgba(216, 27, 96, 0.2); border: 2px solid var(--fucsia); }
         }
@@ -304,7 +324,7 @@
         .legal-text strong { color: var(--testo-scuro); }
 
         /* FOOTER */
-        footer { background-color: rgba(255, 255, 255, 0.9); text-align: center; padding: 30px 20px; border-top: 2px solid var(--rosa-chiaro); margin-top: 0; border-radius: 30px 30px 0 0; color: var(--testo-chiaro); font-size: 13px; box-shadow: 0 -5px 20px rgba(0,0,0,0.02); backdrop-filter: blur(10px); padding-bottom: 80px;}
+        footer { background-color: rgba(255, 255, 255, 0.9); text-align: center; padding: 30px 20px; border-top: 2px solid var(--rosa-chiaro); margin-top: 10px; border-radius: 30px 30px 0 0; color: var(--testo-chiaro); font-size: 13px; box-shadow: 0 -5px 20px rgba(0,0,0,0.02); backdrop-filter: blur(10px); padding-bottom: 80px;}
         footer a { color: var(--fucsia); text-decoration: none; font-weight: 600; margin: 0 10px; transition: 0.3s;}
         footer a:hover { color: var(--testo-scuro); }
         .footer-social { font-size: 20px; margin: 15px 0; display: flex; justify-content: center; gap: 15px; }
@@ -323,13 +343,17 @@
             .charm-price { font-size: 14px; }
             .charm-checkbox, .perlina-checkbox { transform: scale(1.2); }
             .cart-sidebar { width: 0; max-width: 100%; }
-            
             .floating-cart { right: 15px; bottom: 15px; width: 50px; height: 50px; font-size: 20px;}
-            .back-to-top { right: 20px; bottom: 80px; width: 40px; height: 40px; font-size: 18px;}
+            .floating-wishlist { right: 15px; bottom: 80px; width: 50px; height: 50px; font-size: 20px;}
+            .back-to-top { right: 20px; bottom: 145px; width: 40px; height: 40px; font-size: 18px;}
         }
     </style>
 </head>
 <body>
+
+    <div id="scroll-progress-container">
+        <div id="scroll-progress-bar"></div>
+    </div>
 
     <div id="toast-container"></div>
 
@@ -440,9 +464,7 @@
 
         <div id="checkout-form-view" class="checkout-form-container">
             <button class="back-to-cart-btn" onclick="nascondiFormSpedizione()"><i class="fas fa-chevron-left"></i> Torna al carrello</button>
-            
             <h3 style="color: var(--fucsia); margin-top: 0; margin-bottom: 20px;">Dati di Spedizione</h3>
-            
             <form id="shipping-form" onsubmit="inviaOrdineAPayPal(event)">
                 <div class="form-row">
                     <div class="form-group" style="flex: 1;">
@@ -454,12 +476,10 @@
                         <input type="text" id="cognome" required placeholder="Es. Rossi">
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label for="indirizzo">Indirizzo e Civico *</label>
                     <input type="text" id="indirizzo" required placeholder="Es. Via Roma, 12">
                 </div>
-
                 <div class="form-row">
                     <div class="form-group" style="flex: 2;">
                         <label for="citta">Città *</label>
@@ -470,18 +490,33 @@
                         <input type="text" id="cap" required placeholder="Es. 80100">
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label for="telefono">Numero di Cellulare *</label>
                     <input type="tel" id="telefono" required placeholder="Es. 333 1234567">
                 </div>
-
                 <button type="submit" class="checkout-btn" style="margin-top: 10px;">
                     Paga in Sicurezza <i class="fas fa-lock"></i>
                 </button>
                 <p style="font-size: 11px; color: var(--testo-chiaro); text-align: center; margin-top: 10px;">Accetta Visa, Mastercard, Bancomat o PayPal. Riceveremo automaticamente i tuoi dati.</p>
             </form>
         </div>
+    </div>
+
+    <div id="myWishlistSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>I tuoi Preferiti ❤️</h2>
+            <span class="closebtn" onclick="closeWishlist()">&times;</span>
+        </div>
+        <div id="wishlist-content-view" style="display: flex; flex-direction: column; flex-grow: 1;">
+            <div class="cart-items" id="wishlist-items-container">
+                <p style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">Nessun prodotto nei preferiti.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-wishlist" onclick="openWishlist()">
+        <i class="fas fa-heart"></i>
+        <div class="wishlist-badge" id="wishlist-badge-count">0</div>
     </div>
 
     <div class="floating-cart" onclick="openCart()">
@@ -555,17 +590,17 @@
 
             <div id="cat-collane" class="cat-content active">
                 <div class="product-container" id="lista-prodotti">
-                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-desc"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
-                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-desc"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
-                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-desc"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
+                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
+                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
+                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
                 </div>
             </div>
 
             <div id="cat-fiocchi" class="cat-content">
                 <div class="product-container" id="lista-fiocchi">
-                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-desc"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
-                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-desc"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
-                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-desc"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
+                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
+                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
+                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
                 </div>
             </div>
         </div>
@@ -845,12 +880,12 @@
             });
             
             document.addEventListener('mouseover', e => {
-                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label');
+                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .floating-wishlist, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label, .wishlist-btn');
                 if(clickable) cursor.classList.add('hover');
             });
             
             document.addEventListener('mouseout', e => {
-                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label');
+                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .floating-wishlist, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label, .wishlist-btn');
                 if(clickable) cursor.classList.remove('hover');
             });
         }
@@ -966,8 +1001,7 @@
             cards.forEach(card => {
                 if (card.classList.contains('skeleton-card')) return;
                 let title = card.querySelector('h3') ? card.querySelector('h3').innerText.toLowerCase() : '';
-                let desc = card.querySelector('p') ? card.querySelector('p').innerText.toLowerCase() : '';
-                if (title.includes(input) || desc.includes(input)) {
+                if (title.includes(input)) {
                     card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
@@ -1155,6 +1189,97 @@
             }, 3000);
         }
 
+        // === WISHLIST (PREFERITI) LOGICA ===
+        let wishlist = [];
+
+        function salvaWishlist() {
+            localStorage.setItem('wishlist3L', JSON.stringify(wishlist));
+        }
+
+        function caricaWishlist() {
+            const salvata = localStorage.getItem('wishlist3L');
+            if (salvata) {
+                wishlist = JSON.parse(salvata);
+                aggiornaWishlistUI();
+            }
+        }
+
+        function openWishlist() {
+            let cartWidth = window.innerWidth > 768 ? "380px" : "100%";
+            document.getElementById("myWishlistSidebar").style.width = cartWidth;
+        }
+
+        function closeWishlist() {
+            document.getElementById("myWishlistSidebar").style.width = "0";
+        }
+
+        function toggleWishlist(nome, prezzo, immagine, element) {
+            const index = wishlist.findIndex(item => item.nome === nome);
+            if(index > -1) {
+                wishlist.splice(index, 1);
+                if(element) {
+                    element.classList.remove('active');
+                    element.querySelector('i').classList.remove('fas');
+                    element.querySelector('i').classList.add('far');
+                }
+                showToast("Rimosso dai preferiti 💔");
+            } else {
+                wishlist.push({ nome: nome, prezzo: parseFloat(prezzo), immagine: immagine });
+                if(element) {
+                    element.classList.add('active');
+                    element.querySelector('i').classList.remove('far');
+                    element.querySelector('i').classList.add('fas');
+                }
+                showToast("Aggiunto ai preferiti! ❤️");
+            }
+            salvaWishlist();
+            aggiornaWishlistUI();
+        }
+
+        function rimuoviDaWishlist(index) {
+            let itemNome = wishlist[index].nome;
+            wishlist.splice(index, 1);
+            salvaWishlist();
+            aggiornaWishlistUI();
+            
+            // Spegne il cuore sulla scheda prodotto se visibile
+            document.querySelectorAll('.wishlist-btn.active').forEach(btn => {
+                if(btn.getAttribute('onclick').includes(itemNome)) {
+                    btn.classList.remove('active');
+                    btn.querySelector('i').classList.remove('fas');
+                    btn.querySelector('i').classList.add('far');
+                }
+            });
+        }
+
+        function aggiornaWishlistUI() {
+            const contenitore = document.getElementById('wishlist-items-container');
+            const badge = document.getElementById('wishlist-badge-count');
+            
+            badge.innerText = wishlist.length;
+
+            if (wishlist.length === 0) {
+                contenitore.innerHTML = '<p style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">Nessun prodotto nei preferiti.</p>';
+                return;
+            }
+
+            contenitore.innerHTML = '';
+            wishlist.forEach((item, index) => {
+                contenitore.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.immagine}" class="cart-item-img" onerror="this.src='logo.png'">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.nome}</div>
+                            <div class="cart-item-price">€${item.prezzo.toFixed(2)}</div>
+                            <button onclick="aggiungiProdotto('${item.nome}', ${item.prezzo}, '${item.immagine}'); rimuoviDaWishlist(${index});" style="margin-top: 5px; background: transparent; border: 1px solid var(--fucsia); color: var(--fucsia); padding: 3px 10px; border-radius: 15px; font-size: 11px; cursor: pointer;">Sposta nel Carrello <i class="fas fa-cart-arrow-down"></i></button>
+                        </div>
+                        <div class="cart-item-remove" onclick="rimuoviDaWishlist(${index})"><i class="fas fa-times-circle"></i></div>
+                    </div>
+                `;
+            });
+        }
+
+        // === INIZIALIZZAZIONE AL CARICAMENTO ===
         window.addEventListener('load', function() {
             setTimeout(function() {
                 const splash = document.getElementById('splash-screen');
@@ -1167,6 +1292,8 @@
             var hash = window.location.hash.substring(1); 
             if (hash) showSection(hash, false); else showSection('home', false); 
             caricaDatiSpedizioneSalvata(); 
+            caricaCarrello(); // MEMORIA CARRELLO
+            caricaWishlist(); // MEMORIA WISHLIST
             initHomeSlider(); 
             calcolaDataConsegna();
             observeElements(); 
@@ -1189,8 +1316,20 @@
         const urlDelSito = 'https://3lcreations.github.io/web/';
         const nomeNegozio = '3L Creations';
 
-        // === 4. LOGICA CARRELLO ===
+        // === 4. LOGICA CARRELLO E MEMORIA DI FERRO ===
         let carrello = [];
+
+        function salvaCarrello() {
+            localStorage.setItem('carrello3L', JSON.stringify(carrello));
+        }
+
+        function caricaCarrello() {
+            const salvato = localStorage.getItem('carrello3L');
+            if (salvato) {
+                carrello = JSON.parse(salvato);
+                aggiornaCarrelloUI();
+            }
+        }
 
         function openCart() {
             let cartWidth = window.innerWidth > 768 ? "380px" : "100%";
@@ -1204,6 +1343,7 @@
 
         function aggiungiProdotto(nome, prezzo, immagine) {
             carrello.push({ nome: nome, prezzo: parseFloat(prezzo), immagine: immagine });
+            salvaCarrello(); // SALVA IN MEMORIA
             aggiornaCarrelloUI();
             
             const cartBtn = document.querySelector('.floating-cart');
@@ -1230,6 +1370,7 @@
 
         function rimuoviProdotto(index) {
             carrello.splice(index, 1);
+            salvaCarrello(); // SALVA IN MEMORIA
             aggiornaCarrelloUI();
             if(carrello.length === 0) { nascondiFormSpedizione(); }
         }
@@ -1268,6 +1409,8 @@
                     </div>
                 `;
             });
+
+
 
             let totaleScontrino = subtotale + costoSpedizioneFisso;
             subtotalLabel.innerText = `€${subtotale.toFixed(2)}`;
@@ -1318,6 +1461,10 @@
             paypalUrl += `&country=IT`; 
             paypalUrl += `&night_phone_a=${encodeURIComponent(telefono)}`;
 
+            // Svuota carrello dopo l'invio
+            carrello = [];
+            salvaCarrello();
+
             window.location.href = paypalUrl;
         }
 
@@ -1353,12 +1500,17 @@
                                 badgeHTML = `<div class="product-badge">${riga.badge.trim()}</div>`;
                             }
 
+                            // CONTROLLO SE GIA' NEI PREFERITI
+                            let isWished = wishlist.some(w => w.nome === titoloPulito);
+                            let heartClass = isWished ? 'fas' : 'far';
+                            let activeClass = isWished ? 'active' : '';
+
                             var cardHTML = `
                                 <div class="product-card reveal">
                                     ${badgeHTML}
+                                    <div class="wishlist-btn ${activeClass}" onclick="toggleWishlist('${titoloPulito}', ${prezzoNum}, '${immagine}', this)"><i class="${heartClass} fa-heart"></i></div>
                                     <img src="${immagine}" alt="${titoloPulito}" class="product-image" onerror="this.src='logo.png'">
                                     <h3>${riga.titolo}</h3>
-                                    <p>${riga.descrizione || ''}</p>
                                     <div class="price">€${prezzoNum.toFixed(2)}</div>
                                     <button onclick="aggiungiProdotto('${titoloPulito}', ${prezzoNum}, '${immagine}')" class="buy-button-paypal">
                                         Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
