@@ -1,4 +1,4 @@
-      <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -122,14 +122,29 @@
         .form-group input:focus, .form-group select:focus { border-color: var(--fucsia); background-color: #fff;}
         .form-row { display: flex; gap: 10px; }
 
-        /* PULSANTI FLUTTUANTI (CARRELLO E TORNA SU) */
+        /* PULSANTI FLUTTUANTI E CARRELLO BALZELLANTE */
         .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 90; transition: 0.3s;}
         .floating-cart:hover { transform: scale(1.1); }
         .cart-badge { position: absolute; top: -5px; right: -5px; background-color: white; color: var(--fucsia); font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid var(--fucsia);}
+        
+        @keyframes cartBounce { 0% { transform: scale(1); } 40% { transform: scale(1.3) rotate(-10deg); } 70% { transform: scale(0.9) rotate(10deg); } 100% { transform: scale(1) rotate(0deg); } }
+        .floating-cart.bounce { animation: cartBounce 0.5s ease; }
 
         .back-to-top { background-color: rgba(255, 255, 255, 0.9); color: var(--fucsia); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); cursor: pointer; transition: 0.3s; border: 1px solid var(--rosa-chiaro); position: fixed; bottom: 105px; right: 37px; z-index: 89; opacity: 0; visibility: hidden;}
         .back-to-top.show { opacity: 1; visibility: visible; }
         .back-to-top:hover { background-color: var(--fucsia); color: white; transform: translateY(-5px); }
+
+        /* NOTIFICHE TOAST */
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background-color: var(--fucsia); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(216, 27, 96, 0.4); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; transform: translateX(150%); transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .toast.show { transform: translateX(0); }
+
+        /* BANNER COOKIE */
+        #cookie-banner { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 -5px 15px rgba(0,0,0,0.05); padding: 15px 20px; z-index: 9999; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid var(--rosa-chiaro); transform: translateY(100%); transition: transform 0.5s ease; box-sizing: border-box; flex-wrap: wrap; gap: 15px;}
+        #cookie-banner.show { transform: translateY(0); }
+        .cookie-text { font-size: 13px; color: var(--testo-scuro); flex: 1; min-width: 250px;}
+        .cookie-btn { background-color: var(--fucsia); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px; transition: 0.3s; white-space: nowrap;}
+        .cookie-btn:hover { background-color: #ad144d; transform: scale(1.05); }
 
         /* LIGHTBOX (ZOOM FOTO) */
         #lightbox { display: none; position: fixed; z-index: 99999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; flex-direction: column;}
@@ -140,7 +155,7 @@
         .lightbox-close:hover { color: var(--fucsia); transform: scale(1.1); }
         .product-image, .charm-image, .home-slide img { cursor: zoom-in; }
 
-        /* NUOVO: ANIMAZIONI ALLO SCORRIMENTO (REVEAL) */
+        /* ANIMAZIONI ALLO SCORRIMENTO (REVEAL) */
         .reveal { opacity: 0; transform: translateY(40px); transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
@@ -223,7 +238,7 @@
         .legal-text strong { color: var(--testo-scuro); }
 
         /* FOOTER */
-        footer { background-color: rgba(255, 255, 255, 0.9); text-align: center; padding: 30px 20px; border-top: 2px solid var(--rosa-chiaro); margin-top: 50px; border-radius: 30px 30px 0 0; color: var(--testo-chiaro); font-size: 13px; box-shadow: 0 -5px 20px rgba(0,0,0,0.02); backdrop-filter: blur(10px); padding-bottom: 100px; /* Spazio extra per i bottoni fluttuanti */}
+        footer { background-color: rgba(255, 255, 255, 0.9); text-align: center; padding: 30px 20px; border-top: 2px solid var(--rosa-chiaro); margin-top: 50px; border-radius: 30px 30px 0 0; color: var(--testo-chiaro); font-size: 13px; box-shadow: 0 -5px 20px rgba(0,0,0,0.02); backdrop-filter: blur(10px); padding-bottom: 80px;}
         footer a { color: var(--fucsia); text-decoration: none; font-weight: 600; margin: 0 10px; transition: 0.3s;}
         footer a:hover { color: var(--testo-scuro); }
         .footer-social { font-size: 20px; margin: 15px 0; display: flex; justify-content: center; gap: 15px; }
@@ -244,13 +259,19 @@
             .charm-checkbox, .perlina-checkbox { transform: scale(1.2); }
             .cart-sidebar { width: 0; max-width: 100%; }
             
-            /* Aggiustamento posizione bottoni su mobile */
             .floating-cart { right: 15px; bottom: 15px; width: 50px; height: 50px; font-size: 20px;}
             .back-to-top { right: 20px; bottom: 80px; width: 40px; height: 40px; font-size: 18px;}
         }
     </style>
 </head>
 <body>
+
+    <div id="toast-container"></div>
+
+    <div id="cookie-banner">
+        <div class="cookie-text">Utilizziamo i cookie tecnici per far funzionare correttamente il carrello e garantirti la migliore esperienza sul nostro sito.</div>
+        <button class="cookie-btn" onclick="acceptCookies()">Ho capito</button>
+    </div>
 
     <div id="lightbox" onclick="closeLightbox()">
         <span class="lightbox-close">&times;</span>
@@ -439,7 +460,7 @@
                 <div class="photo-notice" style="margin-top: 30px;">
                     <i class="fas fa-camera" style="font-size: 24px; color: var(--fucsia); margin-bottom: 10px;"></i><br>
                     <strong>Hai acquistato un prodotto personalizzato con foto?</strong><br><br>
-                    Ricordati di inviarci <strong>SUBITO</strong> la tua foto tramite WhatsApp o Instagram, indicando il Nome e Cognome che hai appena usato per l'ordine. In questo modo potremo iniziare subito a lavorarci!
+                    Ricordati di inviarci <strong>SUBITO</strong> la tua foto a uno dei nostri contatti, indicando il Nome e Cognome che hai appena usato per l'ordine. In questo modo potremo iniziare subito a lavorarci!
                 </div>
                 <button class="checkout-btn" onclick="showSection('home')" style="max-width: 300px; margin: 20px auto;">Torna alla Home</button>
             </div>
@@ -471,8 +492,8 @@
             
             <div class="photo-notice reveal">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+                <strong>Vuoi una maglia personalizzata?</strong><br>
+                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto a uno dei nostri contatti indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
             <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
@@ -512,8 +533,8 @@
             
             <div class="photo-notice reveal">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+                <strong>Vuoi una maglia personalizzata per il tuo pelosetto?</strong><br>
+                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto a uno dei nostri contatti indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
             <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
@@ -552,8 +573,8 @@
             
             <div class="photo-notice reveal">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+                <strong>Vuoi una pochette personalizzata?</strong><br>
+                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto a uno dei nostri contatti indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
             <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
@@ -578,8 +599,8 @@
             
             <div class="photo-notice reveal">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+                <strong>Vuoi una borsa personalizzata?</strong><br>
+                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto a uno dei nostri contatti indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
             <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
@@ -678,7 +699,7 @@
             <a href="#contatti" onclick="showSection('contatti'); return false;">Contatti</a> | 
             <a href="#legale" onclick="showSection('legale'); return false;">Note Legali</a>
         </p>
-        <p style="margin-top: 15px;">© 2026 3L Creations. Tutti i diritti riservati.<br>Email: 3lcreationsfordogs1@gmail.com</p>
+        <p style="margin-top: 15px;">© 2026 3L Creations. Tutti i diritti riservati.</p>
     </footer>
 
     <script>
@@ -706,7 +727,6 @@
             if (updateUrl) { history.pushState(null, null, '#' + sectionId); }
             if (window.instgrm) { window.instgrm.Embeds.process(); }
             
-            // Riavvia l'osservatore quando cambi pagina per rianimare gli elementi
             setTimeout(observeElements, 100);
         }
         
@@ -800,12 +820,12 @@
             });
         }
 
-        // === NUOVO: ANIMAZIONI ALLO SCORRIMENTO (REVEAL) ===
+        // === ANIMAZIONI ALLO SCORRIMENTO (REVEAL) ===
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    scrollObserver.unobserve(entry.target); // Anima solo la prima volta che si vede
+                    scrollObserver.unobserve(entry.target);
                 }
             });
         }, { threshold: 0.1 });
@@ -850,8 +870,35 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
+        // === NUOVO: GESTIONE COOKIE E TOAST ===
+        function checkCookies() {
+            if (!localStorage.getItem('cookiesAccepted')) {
+                setTimeout(() => {
+                    document.getElementById('cookie-banner').classList.add('show');
+                }, 2000);
+            }
+        }
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            document.getElementById('cookie-banner').classList.remove('show');
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400); 
+            }, 3000);
+        }
+
         window.addEventListener('load', function() {
-            // GESTIONE SPLASH SCREEN E HASH
             setTimeout(function() {
                 const splash = document.getElementById('splash-screen');
                 if (splash) {
@@ -864,7 +911,8 @@
             if (hash) showSection(hash, false); else showSection('home', false); 
             caricaDatiSpedizioneSalvata(); 
             initHomeSlider(); 
-            observeElements(); // Fa partire l'osservatore
+            observeElements(); 
+            checkCookies(); // Controlla il banner dei cookie
         });
 
         window.addEventListener('popstate', function() {
@@ -899,6 +947,16 @@
         function aggiungiProdotto(nome, prezzo, immagine) {
             carrello.push({ nome: nome, prezzo: parseFloat(prezzo), immagine: immagine });
             aggiornaCarrelloUI();
+            
+            // Animazione rimbalzo e Notifica Toast
+            const cartBtn = document.querySelector('.floating-cart');
+            if(cartBtn) {
+                cartBtn.classList.remove('bounce');
+                void cartBtn.offsetWidth; 
+                cartBtn.classList.add('bounce');
+            }
+            showToast("Aggiunto al carrello!");
+            
             openCart(); 
         }
 
@@ -1032,7 +1090,6 @@
                                         Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
                                     </button>
                                 </div>`;
-                            // Usiamo insertAdjacentHTML invece di += per non rompere il DOM
                             contenitore.insertAdjacentHTML('beforeend', cardHTML);
                         }
                     });
@@ -1040,7 +1097,6 @@
                     if(count === 0) {
                         contenitore.innerHTML = `<p class="loading-text">${messaggioVuoto}</p>`;
                     }
-                    // Aggiunge le nuove carte all'osservatore
                     observeElements();
                 },
                 error: function() {
@@ -1139,8 +1195,6 @@
 
             aggiungiProdotto(nomeFinale, prezzo, immagineUrl);
             document.getElementById(textAreaId).value = ""; 
-            
-            alert(nomeBase + " aggiunto al carrello!");
         }
 
         // === 7. CERVELLO COMPONI COLLANA ===
