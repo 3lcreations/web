@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3L Creations</title>
+    
+    <title>3L Creations - Handmade con Amore</title>
+    <meta name="description" content="Creazioni realizzate a mano, magliette, gioielli e tanto altro per pelosetti e persone.">
+    <meta property="og:title" content="3L Creations">
+    <meta property="og:description" content="Creazioni realizzate a mano, magliette, gioielli e tanto altro per pelosetti e persone.">
+    <meta property="og:image" content="https://3lcreations.github.io/web/logo.png">
+    <meta property="og:url" content="https://3lcreations.github.io/web/">
+    <meta property="og:type" content="website">
     
     <link rel="icon" type="image/png" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -61,11 +68,11 @@
 
         /* MENU LATERALE SEMITRASPARENTE */
         .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
-        .sidebar a { padding: 12px 30px; text-decoration: none; font-size: 17px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
-        .sidebar a:hover { color: var(--fucsia); background-color: rgba(255, 240, 245, 0.8); padding-left: 45px; }
+        .sidebar a { padding: 12px 30px; text-decoration: none; font-size: 16px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
+        .sidebar a:hover { color: var(--fucsia); background-color: rgba(255, 240, 245, 0.8); padding-left: 40px; }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; background: none; color: var(--testo-scuro); padding: 0;}
         .sidebar-logo { width: 120px; display: block; margin: 0 auto 10px auto; }
-        .menu-title { font-size: 13px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 5px 30px; }
+        .menu-title { font-size: 12px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 5px 30px; }
 
         /* CARRELLO LATERALE DESTRO */
         .cart-sidebar { height: 100%; width: 0; position: fixed; z-index: 110; top: 0; right: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 20px; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
@@ -122,7 +129,7 @@
         header p { color: var(--testo-chiaro); font-size: 18px; margin-top: 25px; font-style: italic; position: relative; z-index: 1;}
         .header-video { width: 400px; max-width: 100%; border-radius: 20px; margin-bottom: 0; border: none; outline: none; display: block; margin: 0 auto; position: relative; z-index: 1; }
 
-        /* CAROSELLO HOME (SLIDER) */
+        /* CAROSELLO HOME (SLIDER) - MODIFICATO IN 3/4 (Verticale) */
         .home-slider-area { width: 100%; overflow: hidden; padding: 20px 0 40px 0; position: relative; margin-bottom: 20px;}
         .home-slider-track { display: flex; gap: 15px; align-items: center; will-change: transform; }
         .home-slide { flex: 0 0 75%; max-width: 450px; transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 0.4; transform: scale(0.85); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
@@ -175,6 +182,19 @@
         .social-link { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px; font-size: 18px; color: var(--testo-scuro); text-decoration: none; transition: transform 0.3s ease, color 0.3s ease; padding: 10px; border-radius: 10px; }
         .social-link:hover { transform: scale(1.05); color: var(--fucsia); background: rgba(244, 143, 177, 0.1); }
         .social-icon { font-size: 32px; color: var(--fucsia); }
+
+        /* NUOVO: STILI FAQ E LEGALE */
+        .faq-item { background: white; border-radius: 15px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-left: 4px solid var(--fucsia); text-align: left; }
+        .faq-question { font-weight: 600; color: var(--fucsia); margin-bottom: 10px; font-size: 16px; }
+        .faq-answer { font-size: 14px; line-height: 1.6; color: var(--testo-scuro); }
+        .legal-text { font-size: 13px; line-height: 1.8; color: var(--testo-chiaro); text-align: justify; margin-bottom: 20px; }
+        .legal-text strong { color: var(--testo-scuro); }
+
+        /* NUOVO: STILE FOOTER */
+        footer { background-color: rgba(255, 255, 255, 0.9); text-align: center; padding: 30px 20px; border-top: 3px dashed var(--rosa-chiaro); margin-top: 50px; border-radius: 30px 30px 0 0; color: var(--testo-chiaro); font-size: 13px; box-shadow: 0 -5px 20px rgba(0,0,0,0.02); backdrop-filter: blur(10px);}
+        footer a { color: var(--fucsia); text-decoration: none; font-weight: 600; margin: 0 10px; transition: 0.3s;}
+        footer a:hover { color: var(--testo-scuro); }
+        .footer-social { font-size: 20px; margin: 15px 0; display: flex; justify-content: center; gap: 15px; }
 
         .loading-text { font-size: 18px; color: var(--testo-chiaro); font-style: italic; width: 100%; text-align: center;}
 
@@ -240,8 +260,10 @@
         <a href="#crea-pochette" onclick="showSection('crea-pochette'); return false;">👝 Crea Pochette</a>
         <a href="#crea-borsa" onclick="showSection('crea-borsa'); return false;">👜 Crea Borsa</a>
         
-        <div class="menu-title">Supporto</div>
+        <div class="menu-title">Supporto e Info</div>
         <a href="#contatti" onclick="showSection('contatti'); return false;">✉️ Contatti</a>
+        <a href="#faq" onclick="showSection('faq'); return false;">❓ Domande Frequenti</a>
+        <a href="#legale" onclick="showSection('legale'); return false;">📄 Note Legali</a>
     </div>
 
     <div id="myCartSidebar" class="cart-sidebar">
@@ -312,7 +334,7 @@
                 <button type="submit" class="checkout-btn" style="margin-top: 10px;">
                     Paga in Sicurezza <i class="fas fa-lock"></i>
                 </button>
-                <p style="font-size: 11px; color: var(--testo-chiaro); text-align: center; margin-top: 10px;">Accetta Visa, Mastercard, Bancomat o PayPal.</p>
+                <p style="font-size: 11px; color: var(--testo-chiaro); text-align: center; margin-top: 10px;">Accetta Visa, Mastercard, Bancomat o PayPal. Riceveremo automaticamente i tuoi dati.</p>
             </form>
         </div>
     </div>
@@ -347,6 +369,20 @@
                 <h2>Chi Siamo</h2>
                 <p>Creazioni realizzate a mano, magliette, gioielli e tanto altro...</p>
                 <p>Esplora il catalogo nella sezione <strong>Acquista</strong> o scopri come raggiungerci in <strong>Contatti</strong>.</p>
+            </div>
+        </div>
+
+        <div id="grazie" class="content-section">
+            <div class="home-text" style="text-align: center;">
+                <h2>Grazie per il tuo Ordine! 🎉</h2>
+                <i class="fas fa-check-circle" style="font-size: 60px; color: #4CAF50; margin-bottom: 20px;"></i>
+                <p style="font-size: 18px;">Il tuo pagamento è andato a buon fine e stiamo già preparando il tuo pacco!</p>
+                <div class="photo-notice" style="margin-top: 30px;">
+                    <i class="fas fa-camera" style="font-size: 24px; color: var(--fucsia); margin-bottom: 10px;"></i><br>
+                    <strong>Hai acquistato un prodotto personalizzato con foto?</strong><br><br>
+                    Ricordati di inviarci <strong>SUBITO</strong> la tua foto tramite WhatsApp o Instagram, indicando il Nome e Cognome che hai appena usato per l'ordine. In questo modo potremo iniziare subito a lavorarci!
+                </div>
+                <button class="checkout-btn" onclick="showSection('home')" style="max-width: 300px; margin: 20px auto;">Torna alla Home</button>
             </div>
         </div>
 
@@ -541,9 +577,50 @@
                 <a href="https://www.instagram.com/_3l_creations" target="_blank" class="social-link"><i class="fab fa-instagram social-icon"></i><span><strong>Instagram:</strong> @_3l_creations</span></a>
                 <a href="https://www.facebook.com/groups/974242766065881" target="_blank" class="social-link"><i class="fab fa-facebook social-icon"></i><span><strong>Facebook:</strong> 3L Creations</span></a>
                 <a href="https://www.tiktok.com/@3lcreations" target="_blank" class="social-link"><i class="fab fa-tiktok social-icon"></i><span><strong>TikTok:</strong> @3lcreations</span></a>
+                <a href="mailto:3lcreationsfordogs1@gmail.com" class="social-link"><i class="fas fa-envelope social-icon"></i><span><strong>Email:</strong> 3lcreationsfordogs1@gmail.com</span></a>
             </div>
         </div>
-    </div>
+
+        <div id="faq" class="content-section">
+            <h2 style="display:block; text-align:center;">Domande Frequenti (FAQ)</h2>
+            <div class="home-text">
+                <div class="faq-item">
+                    <div class="faq-question"><i class="fas fa-tshirt"></i> Come devo lavare i capi e i ricami?</div>
+                    <div class="faq-answer">Consigliamo di lavare i prodotti a rovescio, a mano in acqua fredda, avendo cura di togliere eventuali spille. Non asciugare con l'asciugatrice e stirare sempre a rovescio per proteggere le lavorazioni.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question"><i class="fas fa-box-open"></i> Quali sono i tempi di spedizione?</div>
+                    <div class="faq-answer">Essendo prodotti realizzati interamente a mano e spesso su misura, dal momento del pagamento l'ordine verrà preparato e spedito entro 1 settimana.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question"><i class="fas fa-gem"></i> I materiali perdono colore o qualità nel tempo?</div>
+                    <div class="faq-answer">Assolutamente no! Selezioniamo accuratamente le materie prime. Con le giuste accortezze (evitare profumi diretti sui ciondoli, ecc.), il prodotto non perde assolutamente di qualità nel tempo.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="legale" class="content-section">
+            <h2 style="display:block; text-align:center;">Note Legali e Condizioni</h2>
+            <div class="home-text">
+                <p class="legal-text"><strong>Condizioni di Vendita:</strong> Opero nel pieno rispetto della normativa come hobbista (vendita occasionale di opere del proprio ingegno creativo) e non possiedo Partita IVA. I prodotti proposti sono frutto di lavoro artigianale e possono presentare lievi imperfezioni che ne garantiscono l'unicità.</p>
+                <p class="legal-text"><strong>Privacy e Cookie Policy:</strong> La tua privacy è importante. I dati forniti in fase di acquisto (nome, indirizzo, cellulare) vengono utilizzati esclusivamente per la gestione e la spedizione dell'ordine e non verranno mai ceduti a terzi. Questo sito utilizza solo "cookie tecnici" strettamente necessari per il funzionamento del carrello e la memorizzazione locale dei dati di spedizione sul tuo dispositivo.</p>
+                <p class="legal-text"><strong>Assistenza e Resi:</strong> Per qualsiasi problema con il tuo ordine, contattaci subito alla nostra email <a href="mailto:3lcreationsfordogs1@gmail.com">3lcreationsfordogs1@gmail.com</a> o sui nostri canali social. Essendo la maggior parte dei prodotti realizzati su misura e personalizzati (es. stampe fotografiche, ricami), i resi non sono previsti se non per evidente difetto di fabbricazione, ma troveremo in ogni caso una soluzione insieme!</p>
+            </div>
+        </div>
+
+    </div> <footer>
+        <div class="footer-social">
+            <a href="https://www.instagram.com/_3l_creations" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/groups/974242766065881" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.tiktok.com/@3lcreations" target="_blank"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <p>
+            <a href="#faq" onclick="showSection('faq'); return false;">FAQ</a> | 
+            <a href="#contatti" onclick="showSection('contatti'); return false;">Contatti</a> | 
+            <a href="#legale" onclick="showSection('legale'); return false;">Note Legali</a>
+        </p>
+        <p style="margin-top: 15px;">© 2026 3L Creations. Tutti i diritti riservati.<br>Email: 3lcreationsfordogs1@gmail.com</p>
+    </footer>
 
     <script>
         // === 1. GESTIONE MENU E SEZIONI ===
@@ -672,12 +749,10 @@
             showSection(hash || 'home', false);
         });
 
-        // === 3. IMPOSTAZIONI SITO ===
+        // === 3. IMPOSTAZIONI SITO E PAYPAL ===
         const googleSheetCOLLANE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTChc9qUuZv7PYOwwQReUb9uRiKbPZINyd-UVZg32J-7nf4yA5cENjh8kkvtD96lRqzlju3z6TodfUZ/pub?output=csv';
         const googleSheetFIOCCHI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQkWteQfpUAIPq95EgKnzqU2yZcMobrYgbMsx1XFT_Mju0DuCDqI4hA9HSQ_RybRi14GPBcG6Ark5GE/pub?output=csv';
         const googleSheetCIONDOLI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRl2ORNAWbnaRGglufp8VlsF-AO1rV2xX3cN9ki3yiLqXfaH943s2SuQ41QKgFk4rks3fsckw5-ZQuB/pub?output=csv';
-        
-        // NUOVO FOGLIO PERLINE
         const googleSheetPERLINE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOGsgGXu7uJH0Xq1x104XYwppdPddbFkhQxTsYe86pcB8MFM4dDWzDUsDGQndLsti5WXKuJLfKw1J/pub?output=csv';
 
         const emailPayPal = 'luciaxxxo@alice.it'; 
@@ -776,7 +851,8 @@
 
             let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=${emailPayPal}&currency_code=EUR&handling_cart=${costoSpedizioneFisso.toFixed(2)}`;
 
-            paypalUrl += `&return=${encodeURIComponent(urlDelSito)}`;
+            // MODIFICA: Ora, dopo aver pagato, PayPal riporta alla pagina di ringraziamento!
+            paypalUrl += `&return=${encodeURIComponent(urlDelSito + '#grazie')}`;
             paypalUrl += `&cancel_return=${encodeURIComponent(urlDelSito)}`;
             paypalUrl += `&cbt=${encodeURIComponent("Torna al negozio " + nomeNegozio)}`;
             paypalUrl += `&rm=2`;
@@ -852,7 +928,6 @@
         caricaProdottiGenerico(googleSheetCOLLANE, 'lista-prodotti', 'Nessuna collana disponibile al momento.');
         caricaProdottiGenerico(googleSheetFIOCCHI, 'lista-fiocchi', 'Nessun fiocco disponibile al momento.');
 
-        // Caricamento Ciondoli
         Papa.parse(googleSheetCIONDOLI, {
             download: true, header: true,
             transformHeader: function(h) { return h.trim().toLowerCase(); },
@@ -879,7 +954,6 @@
             }
         });
 
-        // NUOVO: Caricamento Perline
         Papa.parse(googleSheetPERLINE, {
             download: true, header: true,
             transformHeader: function(h) { return h.trim().toLowerCase(); },
@@ -942,28 +1016,25 @@
             alert(nomeBase + " aggiunto al carrello!");
         }
 
-        // === 7. CERVELLO COMPONI COLLANA AGGIORNATO (CIONDOLI + PERLINE) ===
+        // === 7. CERVELLO COMPONI COLLANA ===
         function calcolaTotaleCiondoli(event) {
             let prezzoBaseCatenina = 5.00;
             let totale = prezzoBaseCatenina;
             let numeroCiondoli = 0;
             let numeroPerline = 0;
             
-            // Calcolo Ciondoli
             let checkboxesCiondoli = document.querySelectorAll('.charm-checkbox:checked');
             checkboxesCiondoli.forEach(function(box) {
                 numeroCiondoli++;
                 totale += parseFloat(box.getAttribute('data-prezzo'));
             });
 
-            // Calcolo Perline
             let checkboxesPerline = document.querySelectorAll('.perlina-checkbox:checked');
             checkboxesPerline.forEach(function(box) {
                 numeroPerline++;
                 totale += parseFloat(box.getAttribute('data-prezzo'));
             });
 
-            // Controlli Max 10
             if (numeroCiondoli > 10) {
                 alert("Puoi scegliere al massimo 10 ciondoli per collana!");
                 if(event && event.target.classList.contains('charm-checkbox')) { event.target.checked = false; } 
@@ -993,13 +1064,11 @@
             let perlineSelezionate = [];
             let totale = 5.00; 
 
-            // Raccogli ciondoli
             checkboxesCiondoli.forEach(function(box) {
                 totale += parseFloat(box.getAttribute('data-prezzo'));
                 ciondoliSelezionati.push(box.getAttribute('data-titolo'));
             });
 
-            // Raccogli perline
             checkboxesPerline.forEach(function(box) {
                 totale += parseFloat(box.getAttribute('data-prezzo'));
                 perlineSelezionate.push(box.getAttribute('data-titolo'));
@@ -1015,7 +1084,6 @@
                 nomeOggetto += ` - Perline: ${perlineSelezionate.join(', ')}`;
             }
 
-            // Usa la foto del primo ciondolo, altrimenti della prima perlina, altrimenti logo
             let immagineAnteprima = 'logo.png';
             if (checkboxesCiondoli.length > 0) {
                 immagineAnteprima = checkboxesCiondoli[0].getAttribute('data-immagine') || 'logo.png';
@@ -1025,7 +1093,6 @@
 
             aggiungiProdotto(nomeOggetto, totale, immagineAnteprima);
             
-            // Svuota tutto dopo aver aggiunto al carrello
             checkboxesCiondoli.forEach(box => box.checked = false);
             checkboxesPerline.forEach(box => box.checked = false);
             calcolaTotaleCiondoli(); 
