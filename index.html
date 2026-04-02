@@ -347,6 +347,38 @@
             .floating-wishlist { right: 15px; bottom: 80px; width: 50px; height: 50px; font-size: 20px;}
             .back-to-top { right: 20px; bottom: 145px; width: 40px; height: 40px; font-size: 18px;}
         }
+        /* TAGLIE A PILLOLA */
+.size-selector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+.size-selector input {
+    display: none;
+}
+.size-pill {
+    padding: 8px 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--testo-chiaro);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafafa;
+}
+.size-selector input:checked + .size-pill {
+    border-color: var(--fucsia);
+    background-color: var(--fucsia);
+    color: white;
+    box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3);
+    transform: scale(1.05);
+}
+.size-selector label:hover .size-pill {
+    border-color: var(--rosa-chiaro);
+}
     </style>
 </head>
 <body>
@@ -643,14 +675,14 @@
                 <img id="img-maglia" src="bianco-tshirt.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
                 <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia <span onclick="openSizeGuide('umani')" style="font-size: 12px; color: var(--fucsia); cursor: pointer; text-decoration: underline; margin-left: 10px;"><i class="fas fa-ruler"></i> Guida alle taglie</span></h3>
-                <select id="taglia-maglia" class="custom-textarea" style="height: auto; padding: 10px; text-align: center; font-size: 14px;">
-                    <option value="XS">XS</option>
-                    <option value="S">S</option>
-                    <option value="M" selected>M</option>
-                    <option value="L">L</option>
-                    <option value="XL">XL</option>
-                    <option value="XXL">XXL</option>
-                </select>
+                <div class="size-selector">
+                    <label><input type="radio" name="taglia-maglia" value="XS"> <div class="size-pill">XS</div></label>
+                    <label><input type="radio" name="taglia-maglia" value="S"> <div class="size-pill">S</div></label>
+                    <label><input type="radio" name="taglia-maglia" value="M" checked> <div class="size-pill">M</div></label>
+                    <label><input type="radio" name="taglia-maglia" value="L"> <div class="size-pill">L</div></label>
+                    <label><input type="radio" name="taglia-maglia" value="XL"> <div class="size-pill">XL</div></label>
+                    <label><input type="radio" name="taglia-maglia" value="XXL"> <div class="size-pill">XXL</div></label>
+                </div>
 
                 <h3 style="text-align: center; color: var(--testo-scuro);">3. Dettagli Personalizzazione</h3>
                 <textarea id="nota-maglietta" class="custom-textarea" placeholder="Inserisci cosa vuoi ricamare o stampare..."></textarea>
@@ -688,13 +720,13 @@
                 <img id="img-pelosetto" src="bianco-pelosetto.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
                 <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia <span onclick="openSizeGuide('cani')" style="font-size: 12px; color: var(--fucsia); cursor: pointer; text-decoration: underline; margin-left: 10px;"><i class="fas fa-ruler"></i> Guida alle taglie</span></h3>
-                <select id="taglia-pelosetto" class="custom-textarea" style="height: auto; padding: 10px; text-align: center; font-size: 14px;">
-                    <option value="XS">XS</option>
-                    <option value="S">S</option>
-                    <option value="M" selected>M</option>
-                    <option value="L">L</option>
-                    <option value="XL">XL</option>
-                </select>
+                <div class="size-selector">
+                    <label><input type="radio" name="taglia-pelosetto" value="XS"> <div class="size-pill">XS</div></label>
+                    <label><input type="radio" name="taglia-pelosetto" value="S"> <div class="size-pill">S</div></label>
+                    <label><input type="radio" name="taglia-pelosetto" value="M" checked> <div class="size-pill">M</div></label>
+                    <label><input type="radio" name="taglia-pelosetto" value="L"> <div class="size-pill">L</div></label>
+                    <label><input type="radio" name="taglia-pelosetto" value="XL"> <div class="size-pill">XL</div></label>
+                </div>
 
                 <h3 style="text-align: center; color: var(--testo-scuro);">3. Dettagli Personalizzazione</h3>
                 <textarea id="nota-pelosetto" class="custom-textarea" placeholder="Inserisci cosa vuoi ricamare o stampare..."></textarea>
@@ -1691,9 +1723,21 @@ function applicaOrdinamentoComponenti() {
             
             let nomeFinale = `${nomeBase} [Colore: ${colore}]`;
             
-            if (tagliaId && document.getElementById(tagliaId)) {
-                let taglia = document.getElementById(tagliaId).value;
-                nomeFinale += ` [Taglia: ${taglia}]`;
+            if (tagliaId) {
+                let taglia = "";
+                let tagliaElement = document.getElementById(tagliaId);
+                
+                if (tagliaElement) {
+                    taglia = tagliaElement.value; // Se usi un vecchio <select>
+                } else {
+                    // Se usi le nuove pillole (radio buttons)
+                    let radioSelezionato = document.querySelector(`input[name="${tagliaId}"]:checked`);
+                    if (radioSelezionato) taglia = radioSelezionato.value; 
+                }
+                
+                if (taglia !== "") {
+                    nomeFinale += ` [Taglia: ${taglia}]`;
+                }
             }
 
             if (note !== "") {
