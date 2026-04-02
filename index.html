@@ -165,7 +165,7 @@
         .charm-image { width: 100%; height: 100px; object-fit: cover; border-radius: 10px; margin-bottom: 10px;}
         .charm-title { font-size: 14px; margin-bottom: 5px; }
         .charm-price { color: var(--fucsia); font-weight: bold; margin: 10px 0;}
-        .charm-checkbox { transform: scale(1.5); accent-color: var(--fucsia); cursor: pointer; }
+        .charm-checkbox, .perlina-checkbox { transform: scale(1.5); accent-color: var(--fucsia); cursor: pointer; }
 
         .totale-box { background: var(--panna-video); padding: 20px; border-radius: 20px; text-align: center; margin-top: 30px; border: 3px dashed var(--rosa-chiaro); }
         .totale-box h3 { margin: 0 0 15px 0; font-size: 26px; color: var(--testo-scuro); }
@@ -184,12 +184,12 @@
             h2 { font-size: 22px; }
             .product-card { width: 100%; }
             .opzioni-catenina { flex-direction: column; align-items: center; }
-            #lista-ciondoli { gap: 10px; }
+            #lista-ciondoli, #lista-perline { gap: 10px; }
             .charm-card { width: calc(50% - 5px); padding: 10px; }
             .charm-image { height: 80px; }
             .charm-title { font-size: 12px; }
             .charm-price { font-size: 14px; }
-            .charm-checkbox { transform: scale(1.2); }
+            .charm-checkbox, .perlina-checkbox { transform: scale(1.2); }
             .cart-sidebar { width: 0; max-width: 100%; }
         }
     </style>
@@ -518,6 +518,13 @@
                 </div>
             </div>
 
+            <div class="componi-box">
+                <h3 style="text-align: center; color: var(--testo-scuro);">3. Scegli le perline (Max 10)</h3>
+                <div class="product-container" id="lista-perline">
+                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento perline in corso...</p>
+                </div>
+            </div>
+
             <div class="totale-box">
                 <h3>Totale Calcolato: €<span id="prezzo-totale-ciondoli">5.00</span></h3>
                 <button class="buy-button-paypal" style="width: auto; padding: 15px 40px; font-size: 18px;" onclick="aggiungiCollanaCompostaAlCarrello(event)">
@@ -540,19 +547,14 @@
 
     <script>
         // === 1. GESTIONE MENU E SEZIONI ===
-        
         function openNav() { 
             document.getElementById("mySidebar").style.width = "250px"; 
-            
-            // Mostra l'overlay per chiudere il menu
             document.getElementById("menuOverlay").style.display = "block";
             setTimeout(() => { document.getElementById("menuOverlay").style.opacity = "1"; }, 10);
         }
         
         function closeNav() { 
             document.getElementById("mySidebar").style.width = "0"; 
-            
-            // Nasconde l'overlay
             document.getElementById("menuOverlay").style.opacity = "0";
             setTimeout(() => { document.getElementById("menuOverlay").style.display = "none"; }, 400);
         }
@@ -675,6 +677,9 @@
         const googleSheetFIOCCHI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQkWteQfpUAIPq95EgKnzqU2yZcMobrYgbMsx1XFT_Mju0DuCDqI4hA9HSQ_RybRi14GPBcG6Ark5GE/pub?output=csv';
         const googleSheetCIONDOLI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRl2ORNAWbnaRGglufp8VlsF-AO1rV2xX3cN9ki3yiLqXfaH943s2SuQ41QKgFk4rks3fsckw5-ZQuB/pub?output=csv';
         
+        // NUOVO FOGLIO PERLINE
+        const googleSheetPERLINE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOGsgGXu7uJH0Xq1x104XYwppdPddbFkhQxTsYe86pcB8MFM4dDWzDUsDGQndLsti5WXKuJLfKw1J/pub?output=csv';
+
         const emailPayPal = 'luciaxxxo@alice.it'; 
         const costoSpedizioneFisso = 8.00;
         const urlDelSito = 'https://3lcreations.github.io/web/';
@@ -815,10 +820,8 @@
                             count++;
                             var immagine = riga.immagine ? riga.immagine : 'logo.png';
                             
-                            // MODIFICA: SOSTITUISCE LA VIRGOLA COL PUNTO PER I DECIMALI
                             var prezzoPulito = riga.prezzo ? riga.prezzo.replace(',', '.') : '0';
                             var prezzoNum = parseFloat(prezzoPulito) || 0;
-                            
                             var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
 
                             var cardHTML = `
@@ -849,6 +852,7 @@
         caricaProdottiGenerico(googleSheetCOLLANE, 'lista-prodotti', 'Nessuna collana disponibile al momento.');
         caricaProdottiGenerico(googleSheetFIOCCHI, 'lista-fiocchi', 'Nessun fiocco disponibile al momento.');
 
+        // Caricamento Ciondoli
         Papa.parse(googleSheetCIONDOLI, {
             download: true, header: true,
             transformHeader: function(h) { return h.trim().toLowerCase(); },
@@ -859,8 +863,6 @@
                 ciondoli.forEach(function(riga) {
                     if (riga.titolo && riga.titolo.trim() !== "") {
                         var immagine = riga.immagine ? riga.immagine : 'logo.png';
-                        
-                        // MODIFICA: SOSTITUISCE LA VIRGOLA COL PUNTO PER I DECIMALI
                         var prezzoPulito = riga.prezzo ? riga.prezzo.replace(',', '.') : '0';
                         var prezzoNum = parseFloat(prezzoPulito) || 0;
                         
@@ -870,6 +872,33 @@
                                 <div class="charm-title">${riga.titolo}</div>
                                 <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
                                 <input type="checkbox" class="charm-checkbox" data-titolo="${riga.titolo}" data-prezzo="${prezzoNum}" data-immagine="${immagine}" onchange="calcolaTotaleCiondoli(event)">
+                            </div>`;
+                        contenitore.innerHTML += cardHTML;
+                    }
+                });
+            }
+        });
+
+        // NUOVO: Caricamento Perline
+        Papa.parse(googleSheetPERLINE, {
+            download: true, header: true,
+            transformHeader: function(h) { return h.trim().toLowerCase(); },
+            complete: function(risultato) {
+                var perline = risultato.data;
+                var contenitore = document.getElementById('lista-perline');
+                contenitore.innerHTML = '';
+                perline.forEach(function(riga) {
+                    if (riga.titolo && riga.titolo.trim() !== "") {
+                        var immagine = riga.immagine ? riga.immagine : 'logo.png';
+                        var prezzoPulito = riga.prezzo ? riga.prezzo.replace(',', '.') : '0';
+                        var prezzoNum = parseFloat(prezzoPulito) || 0;
+                        
+                        var cardHTML = `
+                            <div class="charm-card">
+                                <img src="${immagine}" alt="${riga.titolo}" class="charm-image" onerror="this.src='logo.png'">
+                                <div class="charm-title">${riga.titolo}</div>
+                                <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
+                                <input type="checkbox" class="perlina-checkbox" data-titolo="${riga.titolo}" data-prezzo="${prezzoNum}" data-immagine="${immagine}" onchange="calcolaTotaleCiondoli(event)">
                             </div>`;
                         contenitore.innerHTML += cardHTML;
                     }
@@ -913,22 +942,37 @@
             alert(nomeBase + " aggiunto al carrello!");
         }
 
-        // === 7. CERVELLO COMPONI COLLANA ===
+        // === 7. CERVELLO COMPONI COLLANA AGGIORNATO (CIONDOLI + PERLINE) ===
         function calcolaTotaleCiondoli(event) {
             let prezzoBaseCatenina = 5.00;
             let totale = prezzoBaseCatenina;
             let numeroCiondoli = 0;
+            let numeroPerline = 0;
             
-            let checkboxes = document.querySelectorAll('.charm-checkbox:checked');
-            
-            checkboxes.forEach(function(box) {
+            // Calcolo Ciondoli
+            let checkboxesCiondoli = document.querySelectorAll('.charm-checkbox:checked');
+            checkboxesCiondoli.forEach(function(box) {
                 numeroCiondoli++;
                 totale += parseFloat(box.getAttribute('data-prezzo'));
             });
 
+            // Calcolo Perline
+            let checkboxesPerline = document.querySelectorAll('.perlina-checkbox:checked');
+            checkboxesPerline.forEach(function(box) {
+                numeroPerline++;
+                totale += parseFloat(box.getAttribute('data-prezzo'));
+            });
+
+            // Controlli Max 10
             if (numeroCiondoli > 10) {
                 alert("Puoi scegliere al massimo 10 ciondoli per collana!");
-                if(event) { event.target.checked = false; } 
+                if(event && event.target.classList.contains('charm-checkbox')) { event.target.checked = false; } 
+                return calcolaTotaleCiondoli(); 
+            }
+
+            if (numeroPerline > 10) {
+                alert("Puoi scegliere al massimo 10 perline per collana!");
+                if(event && event.target.classList.contains('perlina-checkbox')) { event.target.checked = false; } 
                 return calcolaTotaleCiondoli(); 
             }
 
@@ -937,27 +981,53 @@
 
         function aggiungiCollanaCompostaAlCarrello(event) {
             event.preventDefault(); 
-            let checkboxes = document.querySelectorAll('.charm-checkbox:checked');
-            if (checkboxes.length < 1) {
-                alert("Devi selezionare almeno 1 ciondolo per comporre la tua collana!");
+            let checkboxesCiondoli = document.querySelectorAll('.charm-checkbox:checked');
+            let checkboxesPerline = document.querySelectorAll('.perlina-checkbox:checked');
+            
+            if (checkboxesCiondoli.length === 0 && checkboxesPerline.length === 0) {
+                alert("Devi selezionare almeno 1 ciondolo o 1 perlina per comporre la tua collana!");
                 return;
             }
 
             let ciondoliSelezionati = [];
+            let perlineSelezionate = [];
             let totale = 5.00; 
 
-            checkboxes.forEach(function(box) {
+            // Raccogli ciondoli
+            checkboxesCiondoli.forEach(function(box) {
                 totale += parseFloat(box.getAttribute('data-prezzo'));
                 ciondoliSelezionati.push(box.getAttribute('data-titolo'));
             });
 
+            // Raccogli perline
+            checkboxesPerline.forEach(function(box) {
+                totale += parseFloat(box.getAttribute('data-prezzo'));
+                perlineSelezionate.push(box.getAttribute('data-titolo'));
+            });
+
             let coloreCatenina = document.querySelector('input[name="catenina"]:checked').value;
-            let nomeOggetto = `Collana Personalizzata (${coloreCatenina}) - Ciondoli: ${ciondoliSelezionati.join(', ')}`;
-            let immagineAnteprima = checkboxes[0].getAttribute('data-immagine') || 'logo.png';
+            let nomeOggetto = `Collana Personalizzata (${coloreCatenina})`;
+            
+            if (ciondoliSelezionati.length > 0) {
+                nomeOggetto += ` - Ciondoli: ${ciondoliSelezionati.join(', ')}`;
+            }
+            if (perlineSelezionate.length > 0) {
+                nomeOggetto += ` - Perline: ${perlineSelezionate.join(', ')}`;
+            }
+
+            // Usa la foto del primo ciondolo, altrimenti della prima perlina, altrimenti logo
+            let immagineAnteprima = 'logo.png';
+            if (checkboxesCiondoli.length > 0) {
+                immagineAnteprima = checkboxesCiondoli[0].getAttribute('data-immagine') || 'logo.png';
+            } else if (checkboxesPerline.length > 0) {
+                immagineAnteprima = checkboxesPerline[0].getAttribute('data-immagine') || 'logo.png';
+            }
 
             aggiungiProdotto(nomeOggetto, totale, immagineAnteprima);
             
-            checkboxes.forEach(box => box.checked = false);
+            // Svuota tutto dopo aver aggiunto al carrello
+            checkboxesCiondoli.forEach(box => box.checked = false);
+            checkboxesPerline.forEach(box => box.checked = false);
             calcolaTotaleCiondoli(); 
         }
     </script>
