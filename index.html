@@ -115,6 +115,11 @@
         .form-group input:focus, .form-group select:focus { border-color: var(--fucsia); background-color: #fff;}
         .form-row { display: flex; gap: 10px; }
 
+        /* DATA DI CONSEGNA DINAMICA */
+        .delivery-estimate { font-size: 12px; color: var(--testo-chiaro); text-align: center; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .delivery-estimate i { color: var(--fucsia); }
+        .delivery-estimate strong { color: var(--testo-scuro); }
+
         /* PULSANTI FLUTTUANTI E CARRELLO BALZELLANTE */
         .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 90; transition: 0.3s;}
         .floating-cart:hover { transform: scale(1.1); }
@@ -154,9 +159,22 @@
         .lightbox-close:hover { color: var(--fucsia); transform: scale(1.1); }
         .product-image, .charm-image, .home-slide img { cursor: zoom-in; }
 
-        /* ANIMAZIONI ALLO SCORRIMENTO (REVEAL) */
+        /* ANIMAZIONI ALLO SCORRIMENTO (REVEAL) E TRANSIZIONI APP-LIKE */
         .reveal { opacity: 0; transform: translateY(40px); transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
         .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .content-section { display: none; opacity: 0; }
+        .content-section.active { display: block; animation: appEnter 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        .content-section.fade-out { display: block; animation: appExit 0.3s ease forwards; }
+
+        @keyframes appEnter {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes appExit {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-20px) scale(0.98); }
+        }
 
         /* SKELETON LOADING */
         .skeleton-card { border: none !important; box-shadow: 0 10px 30px rgba(0,0,0,0.02) !important; cursor: default !important; transform: none !important; }
@@ -179,13 +197,25 @@
         .search-input { width: 100%; padding: 12px 15px 12px 45px; border: 2px solid #eee; border-radius: 30px; font-family: 'Poppins', sans-serif; font-size: 14px; outline: none; transition: 0.3s; box-sizing: border-box; background-color: #fafafa; }
         .search-input:focus { border-color: var(--rosa-chiaro); background-color: #fff; box-shadow: 0 5px 15px rgba(244,143,177,0.2); }
 
-        /* BADGE PRODOTTI (NOVITÀ / PIÙ VENDUTO) */
+        /* BADGE PRODOTTI E CERCHIETTI COLORE (COLOR SWATCHES) */
         .product-badge { position: absolute; top: 15px; left: -10px; background: var(--fucsia); color: white; padding: 5px 15px; font-size: 12px; font-weight: 600; border-radius: 0 10px 10px 0; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); z-index: 10; text-transform: uppercase; letter-spacing: 1px; }
+
+        .swatch-container { display: flex; gap: 20px; justify-content: center; margin: 20px 0; }
+        .swatch-label { cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; color: var(--testo-chiaro); font-weight: 600;}
+        .swatch-label input { display: none; }
+        .swatch-circle { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ddd; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); position: relative; box-sizing: border-box;}
+        .swatch-label input:checked + .swatch-circle { border-color: var(--fucsia); transform: scale(1.15); box-shadow: 0 0 0 2px white, 0 0 0 3px var(--fucsia); }
+        .swatch-label:hover .swatch-circle { transform: scale(1.05); }
+        
+        .swatch-white { background-color: #ffffff; }
+        .swatch-black { background-color: #222222; }
+        .swatch-blue { background-color: #a2c4e0; }
+        .swatch-pink { background-color: #f48fb1; }
 
         /* CURSORE MAGICO */
         #magic-cursor { display: none; }
         @media (pointer: fine) {
-            body, a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .floating-cart, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick] { cursor: none !important; }
+            body, a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .floating-cart, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label { cursor: none !important; }
             #magic-cursor { display: block; position: fixed; width: 12px; height: 12px; background-color: var(--fucsia); border-radius: 50%; pointer-events: none; z-index: 999999; transform: translate(-50%, -50%); transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; }
             #magic-cursor.hover { width: 45px; height: 45px; background-color: rgba(216, 27, 96, 0.2); border: 2px solid var(--fucsia); }
         }
@@ -207,10 +237,6 @@
         /* BOTTONE MENU HOME ICONA INCOLLATO (STICKY) */
         .openbtn { font-size: 22px; cursor: pointer; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); color: var(--fucsia); border: 1px solid rgba(216, 27, 96, 0.3); padding: 10px 15px; border-radius: 12px; margin-bottom: 20px; font-weight: 600; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; position: sticky; top: 15px; z-index: 95; box-shadow: 0 4px 15px rgba(216, 27, 96, 0.15);}
         .openbtn:hover { background-color: var(--fucsia); color: white; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); }
-
-        .content-section { display: none; animation: slideUpFade 0.6s ease forwards; opacity: 0; transform: translateY(20px); }
-        .content-section.active { display: block; }
-        @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
 
         h2 { color: var(--fucsia); font-weight: 600; margin-bottom: 30px; font-size: 28px; position: relative; display: inline-block; text-align: center;}
         h2::after { content: ''; width: 40px; height: 3px; background-color: var(--rosa-chiaro); position: absolute; bottom: -5px; left: 0; border-radius: 2px; }
@@ -234,7 +260,7 @@
         .cat-btn { background: transparent; border: 2px solid var(--fucsia); color: var(--fucsia); padding: 10px 25px; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .cat-btn.active, .cat-btn:hover { background: var(--fucsia); color: white; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); }
         .cat-content { display: none; }
-        .cat-content.active { display: block; animation: slideUpFade 0.5s ease forwards; }
+        .cat-content.active { display: block; }
 
         .product-container { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
         .product-card { background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); text-align: center; width: 280px; transition: all 0.4s ease; border: 1px solid transparent; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; position: relative;}
@@ -253,9 +279,6 @@
 
         /* SEZIONE COMPONI COLLANA */
         .componi-box { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); border: 1px solid rgba(255,255,255,0.6); margin-bottom: 30px;}
-        .opzioni-catenina { display: flex; gap: 20px; justify-content: center; margin: 20px 0; font-size: 18px; }
-        .opzioni-catenina label { cursor: pointer; display: flex; align-items: center; gap: 5px; }
-        .opzioni-catenina input[type="radio"] { accent-color: var(--fucsia); transform: scale(1.2); }
         
         .charm-card { background: white; padding: 15px; border-radius: 15px; width: 150px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; transition: 0.3s; box-sizing: border-box;}
         .charm-card:not(.skeleton-charm):hover { border-color: var(--rosa-chiaro); transform: translateY(-5px);}
@@ -293,7 +316,6 @@
             .header-video { width: 280px; } 
             h2 { font-size: 22px; }
             .product-card { width: 100%; }
-            .opzioni-catenina { flex-direction: column; align-items: center; }
             #lista-ciondoli, #lista-perline { gap: 10px; }
             .charm-card { width: calc(50% - 5px); padding: 10px; }
             .charm-image { height: 80px; }
@@ -412,6 +434,7 @@
                     <span id="cart-total-price">€0.00</span>
                 </div>
                 <button class="checkout-btn" onclick="mostraFormSpedizione()">Procedi al Pagamento <i class="fas fa-arrow-right"></i></button>
+                <div id="dynamic-delivery-date" class="delivery-estimate"></div>
             </div>
         </div>
 
@@ -558,16 +581,20 @@
 
             <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
-                <div class="opzioni-catenina">
-                    <label>
-                        <input type="radio" name="col-maglia" value="Bianco" checked onchange="aggiornaAnteprima('img-maglia', 'bianco-tshirt.png')"> 
+                
+                <div class="swatch-container">
+                    <label class="swatch-label">
+                        <input type="radio" name="col-maglia" value="Bianco" checked onchange="aggiornaAnteprima('img-maglia', 'bianco-tshirt.png')">
+                        <div class="swatch-circle swatch-white"></div>
                         Bianco
                     </label>
-                    <label>
-                        <input type="radio" name="col-maglia" value="Nero" onchange="aggiornaAnteprima('img-maglia', 'nero-tshirt.png')"> 
+                    <label class="swatch-label">
+                        <input type="radio" name="col-maglia" value="Nero" onchange="aggiornaAnteprima('img-maglia', 'nero-tshirt.png')">
+                        <div class="swatch-circle swatch-black"></div>
                         Nero
                     </label>
                 </div>
+
                 <img id="img-maglia" src="bianco-tshirt.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
                 <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia <span onclick="openSizeGuide('umani')" style="font-size: 12px; color: var(--fucsia); cursor: pointer; text-decoration: underline; margin-left: 10px;"><i class="fas fa-ruler"></i> Guida alle taglie</span></h3>
@@ -599,16 +626,20 @@
 
             <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
-                <div class="opzioni-catenina">
-                    <label>
-                        <input type="radio" name="col-pelosetto" value="Bianco" checked onchange="aggiornaAnteprima('img-pelosetto', 'bianco-pelosetto.png')"> 
+                
+                <div class="swatch-container">
+                    <label class="swatch-label">
+                        <input type="radio" name="col-pelosetto" value="Bianco" checked onchange="aggiornaAnteprima('img-pelosetto', 'bianco-pelosetto.png')">
+                        <div class="swatch-circle swatch-white"></div>
                         Bianco
                     </label>
-                    <label>
-                        <input type="radio" name="col-pelosetto" value="Nero" onchange="aggiornaAnteprima('img-pelosetto', 'nero-pelosetto.png')"> 
+                    <label class="swatch-label">
+                        <input type="radio" name="col-pelosetto" value="Nero" onchange="aggiornaAnteprima('img-pelosetto', 'nero-pelosetto.png')">
+                        <div class="swatch-circle swatch-black"></div>
                         Nero
                     </label>
                 </div>
+
                 <img id="img-pelosetto" src="bianco-pelosetto.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
                 <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia <span onclick="openSizeGuide('cani')" style="font-size: 12px; color: var(--fucsia); cursor: pointer; text-decoration: underline; margin-left: 10px;"><i class="fas fa-ruler"></i> Guida alle taglie</span></h3>
@@ -639,11 +670,25 @@
 
             <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
-                <div class="opzioni-catenina">
-                    <label><input type="radio" name="col-pochette" value="Azzurro" checked onchange="aggiornaAnteprima('img-pochette', 'azzurro-p.png')"> Azzurro</label>
-                    <label><input type="radio" name="col-pochette" value="Rosa" onchange="aggiornaAnteprima('img-pochette', 'rosa-p.png')"> Rosa</label>
-                    <label><input type="radio" name="col-pochette" value="Nero" onchange="aggiornaAnteprima('img-pochette', 'nero-p.png')"> Nero</label>
+                
+                <div class="swatch-container">
+                    <label class="swatch-label">
+                        <input type="radio" name="col-pochette" value="Azzurro" checked onchange="aggiornaAnteprima('img-pochette', 'azzurro-p.png')">
+                        <div class="swatch-circle swatch-blue"></div>
+                        Azzurro
+                    </label>
+                    <label class="swatch-label">
+                        <input type="radio" name="col-pochette" value="Rosa" onchange="aggiornaAnteprima('img-pochette', 'rosa-p.png')">
+                        <div class="swatch-circle swatch-pink"></div>
+                        Rosa
+                    </label>
+                    <label class="swatch-label">
+                        <input type="radio" name="col-pochette" value="Nero" onchange="aggiornaAnteprima('img-pochette', 'nero-p.png')">
+                        <div class="swatch-circle swatch-black"></div>
+                        Nero
+                    </label>
                 </div>
+
                 <img id="img-pochette" src="azzurro-p.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
                 <h3 style="text-align: center; color: var(--testo-scuro);">2. Dettagli Personalizzazione</h3>
@@ -680,10 +725,23 @@
             
             <div class="componi-box reveal">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il colore della catenina (Inclusa: €5.00)</h3>
-                <div class="opzioni-catenina">
-                    <label><input type="radio" name="catenina" value="Oro" checked onchange="calcolaTotaleCiondoli()"> Oro</label>
-                    <label><input type="radio" name="catenina" value="Argento" onchange="calcolaTotaleCiondoli()"> Argento</label>
-                    <label><input type="radio" name="catenina" value="Bronzo" onchange="calcolaTotaleCiondoli()"> Bronzo</label>
+                
+                <div class="swatch-container">
+                    <label class="swatch-label">
+                        <input type="radio" name="catenina" value="Oro" checked onchange="calcolaTotaleCiondoli()">
+                        <div class="swatch-circle" style="background: linear-gradient(135deg, #FFD700, #DAA520);"></div>
+                        Oro
+                    </label>
+                    <label class="swatch-label">
+                        <input type="radio" name="catenina" value="Argento" onchange="calcolaTotaleCiondoli()">
+                        <div class="swatch-circle" style="background: linear-gradient(135deg, #E0E0E0, #C0C0C0);"></div>
+                        Argento
+                    </label>
+                    <label class="swatch-label">
+                        <input type="radio" name="catenina" value="Bronzo" onchange="calcolaTotaleCiondoli()">
+                        <div class="swatch-circle" style="background: linear-gradient(135deg, #CD7F32, #8B4513);"></div>
+                        Bronzo
+                    </label>
                 </div>
             </div>
 
@@ -752,7 +810,9 @@
             </div>
         </div>
 
-    </div> <div class="marquee-container reveal">
+    </div> 
+    
+    <div class="marquee-container reveal">
         <div class="marquee-content">
             ✦ 100% FATTO A MANO ✦ SPEDIZIONI IN TUTTA ITALIA ✦ DESIGN ESCLUSIVO ✦ AMORE PER I DETTAGLI ✦ 100% FATTO A MANO ✦ SPEDIZIONI IN TUTTA ITALIA ✦ DESIGN ESCLUSIVO ✦ AMORE PER I DETTAGLI ✦ 100% FATTO A MANO ✦ SPEDIZIONI IN TUTTA ITALIA ✦ DESIGN ESCLUSIVO ✦ AMORE PER I DETTAGLI ✦ 100% FATTO A MANO ✦ SPEDIZIONI IN TUTTA ITALIA ✦ DESIGN ESCLUSIVO ✦ AMORE PER I DETTAGLI ✦
         </div>
@@ -785,12 +845,12 @@
             });
             
             document.addEventListener('mouseover', e => {
-                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick]');
+                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label');
                 if(clickable) cursor.classList.add('hover');
             });
             
             document.addEventListener('mouseout', e => {
-                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick]');
+                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label');
                 if(clickable) cursor.classList.remove('hover');
             });
         }
@@ -842,7 +902,7 @@
             }
         }
 
-        // === 1. GESTIONE MENU E SEZIONI ===
+        // === 1. GESTIONE MENU E TRANSIZIONI APP-LIKE ===
         function openNav() { 
             document.getElementById("mySidebar").style.width = "250px"; 
             document.getElementById("menuOverlay").style.display = "block";
@@ -857,15 +917,25 @@
         
         function showSection(sectionId, updateUrl = true) {
             closeNav();
-            var sections = document.getElementsByClassName('content-section');
-            for (var i = 0; i < sections.length; i++) { sections[i].classList.remove('active'); }
-            var targetSection = document.getElementById(sectionId);
-            if (targetSection) { targetSection.classList.add('active'); } 
-            else { document.getElementById('home').classList.add('active'); sectionId = 'home'; }
+            let currentActive = document.querySelector('.content-section.active');
+            let targetSection = document.getElementById(sectionId) || document.getElementById('home');
+            
+            if (currentActive && currentActive !== targetSection) {
+                currentActive.classList.add('fade-out');
+                setTimeout(() => {
+                    currentActive.classList.remove('active', 'fade-out');
+                    activateNewSection(targetSection, sectionId, updateUrl);
+                }, 300);
+            } else if (!currentActive) {
+                activateNewSection(targetSection, sectionId, updateUrl);
+            }
+        }
+
+        function activateNewSection(targetSection, sectionId, updateUrl) {
+            targetSection.classList.add('active');
             window.scrollTo(0, 0);
             if (updateUrl) { history.pushState(null, null, '#' + sectionId); }
             if (window.instgrm) { window.instgrm.Embeds.process(); }
-            
             setTimeout(observeElements, 100);
         }
         
@@ -928,6 +998,24 @@
                 telefono: document.getElementById('telefono').value
             };
             localStorage.setItem('datiSpedizione3L', JSON.stringify(dati));
+        }
+
+        // === DATA DI CONSEGNA DINAMICA ===
+        function calcolaDataConsegna() {
+            const today = new Date();
+            const minDate = new Date(today);
+            minDate.setDate(today.getDate() + 6);
+            const maxDate = new Date(today);
+            maxDate.setDate(today.getDate() + 12);
+            
+            const options = { day: 'numeric', month: 'short' };
+            const minStr = minDate.toLocaleDateString('it-IT', options);
+            const maxStr = maxDate.toLocaleDateString('it-IT', options);
+            
+            const deliveryEl = document.getElementById('dynamic-delivery-date');
+            if(deliveryEl) {
+                deliveryEl.innerHTML = `<i class="fas fa-box-open"></i> Ordina oggi, consegna stimata tra il <strong>${minStr}</strong> e il <strong>${maxStr}</strong>`;
+            }
         }
 
         // === INIT HOME SLIDER ===
@@ -999,7 +1087,7 @@
             });
         }
 
-        // === LIGHTBOX E TORNA SU ===
+        // === LIGHTBOX E PROGRESS BAR / TORNA SU ===
         document.body.addEventListener('click', function(e) {
             if (e.target.classList.contains('product-image') || e.target.classList.contains('charm-image') || (e.target.tagName === 'IMG' && e.target.closest('.home-slide'))) {
                 openLightbox(e.target.src);
@@ -1027,6 +1115,12 @@
             } else {
                 btn.classList.remove('show');
             }
+
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            const scrollBar = document.getElementById("scroll-progress-bar");
+            if(scrollBar) scrollBar.style.width = scrolled + "%";
         });
 
         function scrollToTop() {
@@ -1074,6 +1168,7 @@
             if (hash) showSection(hash, false); else showSection('home', false); 
             caricaDatiSpedizioneSalvata(); 
             initHomeSlider(); 
+            calcolaDataConsegna();
             observeElements(); 
             checkCookies();
         });
@@ -1111,7 +1206,6 @@
             carrello.push({ nome: nome, prezzo: parseFloat(prezzo), immagine: immagine });
             aggiornaCarrelloUI();
             
-            // Animazione rimbalzo e scintille
             const cartBtn = document.querySelector('.floating-cart');
             if(cartBtn) {
                 cartBtn.classList.remove('bounce');
@@ -1254,7 +1348,6 @@
                             var prezzoNum = parseFloat(prezzoPulito) || 0;
                             var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
 
-                            // AGGIUNTA BADGE
                             var badgeHTML = '';
                             if (riga.badge && riga.badge.trim() !== "") {
                                 badgeHTML = `<div class="product-badge">${riga.badge.trim()}</div>`;
