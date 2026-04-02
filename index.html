@@ -38,6 +38,16 @@
 
         @keyframes float { from { transform: translate(0, 0); } to { transform: translate(40px, 60px); } }
 
+        /* NUOVO: SCHERMATA DI CARICAMENTO (SPLASH SCREEN) */
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--sfondo); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
+        .splash-logo { width: 130px; animation: pulseLogo 1.5s infinite ease-in-out; margin-bottom: 20px; }
+        .splash-text { color: var(--fucsia); font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; animation: fadeInOut 1.5s infinite ease-in-out; }
+        @keyframes pulseLogo { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
+        @keyframes fadeInOut { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+        /* NUOVO: BARRA DEGLI ANNUNCI (PROMO BAR) */
+        .promo-bar { background: linear-gradient(90deg, var(--fucsia), var(--rosa-chiaro)); color: white; text-align: center; padding: 10px 15px; font-size: 13px; font-weight: 600; letter-spacing: 1px; position: relative; z-index: 90; box-shadow: 0 2px 10px rgba(216, 27, 96, 0.2); text-transform: uppercase;}
+
         /* PATTERN ICONE FLUTTUANTI SULLO SFONDO */
         .floating-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -3; overflow: hidden; }
         .floating-icon { position: absolute; color: rgba(244, 143, 177, 0.25); animation: floatPattern linear infinite alternate; }
@@ -215,6 +225,15 @@
     </style>
 </head>
 <body>
+
+    <div id="splash-screen">
+        <img src="logo.png" alt="3L Creations" class="splash-logo" onerror="this.style.display='none'">
+        <div class="splash-text">Benvenuti da 3L Creations...</div>
+    </div>
+
+    <div class="promo-bar">
+        ✨ L'arte del ricamo incontra la tradizione partenopea • Scopri la nuova collezione 🌶️✨
+    </div>
 
     <div class="floating-bg">
         <i class="fas fa-shirt floating-icon fi-1"></i>
@@ -739,11 +758,21 @@
         }
 
         window.addEventListener('load', function() {
+            // GESTIONE SPLASH SCREEN E HASH
+            setTimeout(function() {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => { splash.style.display = 'none'; }, 600);
+                }
+            }, 800);
+
             var hash = window.location.hash.substring(1); 
             if (hash) showSection(hash, false); else showSection('home', false); 
             caricaDatiSpedizioneSalvata(); 
             initHomeSlider(); 
         });
+
         window.addEventListener('popstate', function() {
             var hash = window.location.hash.substring(1);
             showSection(hash || 'home', false);
