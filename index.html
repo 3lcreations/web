@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3L Creations</title>
     
-    <link rel="icon" type="image/png" href="favicon1.png">
+    <link rel="icon" type="image/png" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -56,10 +56,10 @@
         
         @media (max-width: 1100px) { .trust-badges { display: none; } }
 
-        /* NUOVO: OVERLAY PER CHIUSURA MENU AL CLICK */
+        /* OVERLAY PER CHIUSURA MENU AL CLICK */
         #menuOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.3); z-index: 95; opacity: 0; transition: opacity 0.4s ease; }
 
-        /* MODIFICA: MENU LATERALE SEMITRASPARENTE */
+        /* MENU LATERALE SEMITRASPARENTE */
         .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
         .sidebar a { padding: 12px 30px; text-decoration: none; font-size: 17px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
         .sidebar a:hover { color: var(--fucsia); background-color: rgba(255, 240, 245, 0.8); padding-left: 45px; }
@@ -107,7 +107,7 @@
 
         #main { transition: margin-left .5s; padding: 20px; max-width: 1000px; margin: auto; position: relative; z-index: 1;}
         
-        /* MODIFICA: BOTTONE MENU HOME ICONA */
+        /* BOTTONE MENU HOME ICONA */
         .openbtn { font-size: 22px; cursor: pointer; background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(5px); color: var(--fucsia); border: 1px solid rgba(216, 27, 96, 0.3); padding: 10px 15px; border-radius: 12px; margin-bottom: 20px; font-weight: 600; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center;}
         .openbtn:hover { background-color: var(--fucsia); color: white; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); }
 
@@ -541,7 +541,6 @@
     <script>
         // === 1. GESTIONE MENU E SEZIONI ===
         
-        /* MODIFICA: Logica del menu laterale aggiornata per supportare l'overlay */
         function openNav() { 
             document.getElementById("mySidebar").style.width = "250px"; 
             
@@ -567,6 +566,7 @@
             else { document.getElementById('home').classList.add('active'); sectionId = 'home'; }
             window.scrollTo(0, 0);
             if (updateUrl) { history.pushState(null, null, '#' + sectionId); }
+            if (window.instgrm) { window.instgrm.Embeds.process(); }
         }
         
         function cambiaCategoria(catId, btnElement) {
@@ -814,7 +814,11 @@
                         if (riga.titolo && riga.titolo.trim() !== "") {
                             count++;
                             var immagine = riga.immagine ? riga.immagine : 'logo.png';
-                            var prezzoNum = parseFloat(riga.prezzo) || 0;
+                            
+                            // MODIFICA: SOSTITUISCE LA VIRGOLA COL PUNTO PER I DECIMALI
+                            var prezzoPulito = riga.prezzo ? riga.prezzo.replace(',', '.') : '0';
+                            var prezzoNum = parseFloat(prezzoPulito) || 0;
+                            
                             var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
 
                             var cardHTML = `
@@ -855,7 +859,10 @@
                 ciondoli.forEach(function(riga) {
                     if (riga.titolo && riga.titolo.trim() !== "") {
                         var immagine = riga.immagine ? riga.immagine : 'logo.png';
-                        var prezzoNum = parseFloat(riga.prezzo) || 0;
+                        
+                        // MODIFICA: SOSTITUISCE LA VIRGOLA COL PUNTO PER I DECIMALI
+                        var prezzoPulito = riga.prezzo ? riga.prezzo.replace(',', '.') : '0';
+                        var prezzoNum = parseFloat(prezzoPulito) || 0;
                         
                         var cardHTML = `
                             <div class="charm-card">
