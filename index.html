@@ -31,7 +31,7 @@
         @keyframes float { from { transform: translate(0, 0); } to { transform: translate(40px, 60px); } }
 
         /* MENU LATERALE E CATEGORIE */
-        .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
+        .sidebar { height: 100%; width: 0; position: fixed; z-index: 30; top: 0; left: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
         .sidebar a { padding: 12px 30px; text-decoration: none; font-size: 17px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
         .sidebar a:hover { color: var(--fucsia); background-color: #fff0f5; padding-left: 45px; }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; background: none; color: var(--testo-scuro); padding: 0;}
@@ -39,7 +39,7 @@
         .menu-title { font-size: 13px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 5px 30px; }
 
         /* CARRELLO LATERALE DESTRO */
-        .cart-sidebar { height: 100%; width: 0; position: fixed; z-index: 110; top: 0; right: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 20px; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
+        .cart-sidebar { height: 100%; width: 0; position: fixed; z-index: 40; top: 0; right: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 20px; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .cart-header h2 { margin: 0; font-size: 22px; color: var(--testo-scuro); border: none; }
         .cart-sidebar .closebtn { font-size: 30px; cursor: pointer; color: var(--testo-scuro); }
@@ -68,11 +68,11 @@
         .back-to-cart-btn:hover { color: var(--fucsia); }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; color: var(--testo-chiaro); margin-bottom: 5px; }
-        .form-group input { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.3s; background-color: #fafafa;}
-        .form-group input:focus { border-color: var(--fucsia); background-color: #fff;}
+        .form-group input, .form-group select { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.3s; background-color: #fafafa;}
+        .form-group input:focus, .form-group select:focus { border-color: var(--fucsia); background-color: #fff;}
         .form-row { display: flex; gap: 10px; }
 
-        .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 90; transition: 0.3s;}
+        .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 20; transition: 0.3s;}
         .floating-cart:hover { transform: scale(1.1); }
         .cart-badge { position: absolute; top: -5px; right: -5px; background-color: white; color: var(--fucsia); font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid var(--fucsia);}
 
@@ -170,6 +170,7 @@
         <div class="menu-title">Personalizza</div>
         <a href="#componi" onclick="showSection('componi'); return false;">✨ Componi Collana</a>
         <a href="#crea-maglietta" onclick="showSection('crea-maglietta'); return false;">👕 Crea Maglietta</a>
+        <a href="#crea-pelosetto" onclick="showSection('crea-pelosetto'); return false;">🐾 Crea maglia pelosetto</a>
         <a href="#crea-pochette" onclick="showSection('crea-pochette'); return false;">👝 Crea Pochette</a>
         <a href="#crea-borsa" onclick="showSection('crea-borsa'); return false;">👜 Crea Borsa</a>
         
@@ -314,10 +315,60 @@
                 </div>
                 <img id="img-maglia" src="bianco-tshirt.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
-                <h3 style="text-align: center; color: var(--testo-scuro);">2. Dettagli Personalizzazione</h3>
-                <textarea id="nota-maglietta" class="custom-textarea" placeholder="Inserisci taglia e cosa vuoi ricamare o stampare..."></textarea>
-                <button onclick="aggiungiPersonalizzatoCompleto('Maglietta', 20.00, 'nota-maglietta', 'col-maglia', 'img-maglia')" class="checkout-btn">
+                <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia</h3>
+                <select id="taglia-maglia" class="custom-textarea" style="height: auto; padding: 10px; text-align: center; font-size: 14px;">
+                    <option value="XS">XS</option>
+                    <option value="S">S</option>
+                    <option value="M" selected>M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                </select>
+
+                <h3 style="text-align: center; color: var(--testo-scuro);">3. Dettagli Personalizzazione</h3>
+                <textarea id="nota-maglietta" class="custom-textarea" placeholder="Inserisci cosa vuoi ricamare o stampare..."></textarea>
+                <button onclick="aggiungiPersonalizzatoCompleto('Maglietta', 20.00, 'nota-maglietta', 'col-maglia', 'img-maglia', null, 'taglia-maglia')" class="checkout-btn">
                     Aggiungi al Carrello €20.00 <i class="fas fa-cart-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="crea-pelosetto" class="content-section">
+            <h2 style="display:block; text-align:center;">Crea maglia pelosetto 🐾</h2>
+            
+            <div class="photo-notice">
+                <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
+                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
+                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+            </div>
+
+            <div class="componi-box" style="max-width: 500px; margin: 0 auto;">
+                <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
+                <div class="opzioni-catenina">
+                    <label>
+                        <input type="radio" name="col-pelosetto" value="Bianco" checked onchange="aggiornaAnteprima('img-pelosetto', 'bianco-pelosetto.png')"> 
+                        Bianco
+                    </label>
+                    <label>
+                        <input type="radio" name="col-pelosetto" value="Nero" onchange="aggiornaAnteprima('img-pelosetto', 'nero-pelosetto.png')"> 
+                        Nero
+                    </label>
+                </div>
+                <img id="img-pelosetto" src="bianco-pelosetto.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
+                
+                <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia</h3>
+                <select id="taglia-pelosetto" class="custom-textarea" style="height: auto; padding: 10px; text-align: center; font-size: 14px;">
+                    <option value="XS">XS</option>
+                    <option value="S">S</option>
+                    <option value="M" selected>M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                </select>
+
+                <h3 style="text-align: center; color: var(--testo-scuro);">3. Dettagli Personalizzazione</h3>
+                <textarea id="nota-pelosetto" class="custom-textarea" placeholder="Inserisci cosa vuoi ricamare o stampare..."></textarea>
+                <button onclick="aggiungiPersonalizzatoCompleto('Maglia Pelosetto', 18.00, 'nota-pelosetto', 'col-pelosetto', 'img-pelosetto', null, 'taglia-pelosetto')" class="checkout-btn">
+                    Aggiungi al Carrello €18.00 <i class="fas fa-cart-plus"></i>
                 </button>
             </div>
         </div>
@@ -438,7 +489,7 @@
             document.getElementById('cat-' + catId).classList.add('active');
         }
 
-        // === 2. LOCAL STORAGE (SALVATAGGIO DATI SPEDIZIONE) ===
+        // === 2. LOCAL STORAGE ===
         function caricaDatiSpedizioneSalvata() {
             const salvati = localStorage.getItem('datiSpedizione3L');
             if(salvati) {
@@ -596,8 +647,6 @@
         }
 
         // === 5. CARICAMENTO DATI DA GOOGLE SHEETS ===
-        
-        // Funzione per caricare i prodotti pronti
         function caricaProdottiGenerico(urlSheet, idContenitore, messaggioVuoto) {
             Papa.parse(urlSheet, {
                 download: true, header: true,
@@ -647,11 +696,9 @@
             });
         }
 
-        // Lancio i caricamenti per le due sheet separate
         caricaProdottiGenerico(googleSheetCOLLANE, 'lista-prodotti', 'Nessuna collana disponibile al momento.');
         caricaProdottiGenerico(googleSheetFIOCCHI, 'lista-fiocchi', 'Nessun fiocco disponibile al momento.');
 
-        // Caricamento Ciondoli (Componi Collana)
         Papa.parse(googleSheetCIONDOLI, {
             download: true, header: true,
             transformHeader: function(h) { return h.trim().toLowerCase(); },
@@ -678,38 +725,40 @@
         });
 
         // === 6. FUNZIONI PER PRODOTTI PERSONALIZZATI ===
-        
-        // Cambia l'immagine quando si seleziona un colore
         function aggiornaAnteprima(idImg, srcNuova) {
             document.getElementById(idImg).src = srcNuova;
         }
 
-        // Aggiunge la maglietta/pochette/borsa al carrello
-        function aggiungiPersonalizzatoCompleto(nomeBase, prezzo, textAreaId, radioName, imgId, coloreFisso = null) {
+        // AGGIORNATO: Ora accetta anche la taglia!
+        function aggiungiPersonalizzatoCompleto(nomeBase, prezzo, textAreaId, radioName, imgId, coloreFisso = null, tagliaId = null) {
             let note = document.getElementById(textAreaId).value.trim();
             let colore = coloreFisso;
             
-            // Se c'è una scelta di colori, trova quello selezionato
             if (!colore && radioName) {
                 let radioSelezionato = document.querySelector(`input[name="${radioName}"]:checked`);
                 if(radioSelezionato) colore = radioSelezionato.value;
             }
             
-            // Prendi l'immagine visualizzata
             let immagineUrl = imgId;
             if (typeof imgId === 'string' && document.getElementById(imgId)) {
                 immagineUrl = document.getElementById(imgId).src;
             }
             
             let nomeFinale = `${nomeBase} [Colore: ${colore}]`;
+            
+            // Se la funzione riceve una taglia, la aggiunge al nome per lo scontrino
+            if (tagliaId && document.getElementById(tagliaId)) {
+                let taglia = document.getElementById(tagliaId).value;
+                nomeFinale += ` [Taglia: ${taglia}]`;
+            }
+
             if (note !== "") {
                 nomeFinale += ` - Note: ${note}`;
             }
 
             aggiungiProdotto(nomeFinale, prezzo, immagineUrl);
-            document.getElementById(textAreaId).value = ""; // Svuota la textarea per la prossima volta
+            document.getElementById(textAreaId).value = ""; 
             
-            // Un piccolo feedback all'utente
             alert(nomeBase + " aggiunto al carrello!");
         }
 
