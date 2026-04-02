@@ -1,4 +1,4 @@
-       <!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -76,7 +76,7 @@
         /* OVERLAY PER CHIUSURA MENU AL CLICK */
         #menuOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.3); z-index: 95; opacity: 0; transition: opacity 0.4s ease; }
 
-        /* NUOVO/MODIFICATO: MENU LATERALE SCORREVOLE (OVERFLOW-Y) E STILE SCROLLBAR */
+        /* MENU LATERALE SEMITRASPARENTE E SCROLLABILE */
         .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; padding-bottom: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
         .sidebar::-webkit-scrollbar { width: 5px; }
         .sidebar::-webkit-scrollbar-track { background: transparent; }
@@ -122,25 +122,27 @@
         .form-group input:focus, .form-group select:focus { border-color: var(--fucsia); background-color: #fff;}
         .form-row { display: flex; gap: 10px; }
 
-        /* PULSANTI FLUTTUANTI */
+        /* PULSANTI FLUTTUANTI (CARRELLO E TORNA SU) */
         .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 90; transition: 0.3s;}
         .floating-cart:hover { transform: scale(1.1); }
         .cart-badge { position: absolute; top: -5px; right: -5px; background-color: white; color: var(--fucsia); font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid var(--fucsia);}
 
-        /* NUOVO: BOTTONE TORNA SU */
         .back-to-top { background-color: rgba(255, 255, 255, 0.9); color: var(--fucsia); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); cursor: pointer; transition: 0.3s; border: 1px solid var(--rosa-chiaro); position: fixed; bottom: 105px; right: 37px; z-index: 89; opacity: 0; visibility: hidden;}
         .back-to-top.show { opacity: 1; visibility: visible; }
         .back-to-top:hover { background-color: var(--fucsia); color: white; transform: translateY(-5px); }
 
-        /* NUOVO: LIGHTBOX (ZOOM FOTO) */
+        /* LIGHTBOX (ZOOM FOTO) */
         #lightbox { display: none; position: fixed; z-index: 99999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; flex-direction: column;}
         #lightbox.active { display: flex; opacity: 1; }
         #lightbox img { max-width: 90%; max-height: 85vh; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: scale(0.8); transition: transform 0.3s ease; object-fit: contain; }
         #lightbox.active img { transform: scale(1); }
         .lightbox-close { position: absolute; top: 20px; right: 30px; font-size: 40px; color: white; cursor: pointer; transition: 0.3s; z-index: 100000; }
         .lightbox-close:hover { color: var(--fucsia); transform: scale(1.1); }
-        /* Cursore lente d'ingrandimento */
         .product-image, .charm-image, .home-slide img { cursor: zoom-in; }
+
+        /* NUOVO: ANIMAZIONI ALLO SCORRIMENTO (REVEAL) */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
 
         #main { transition: margin-left .5s; padding: 20px; max-width: 1000px; margin: auto; position: relative; z-index: 1;}
         
@@ -221,7 +223,7 @@
         .legal-text strong { color: var(--testo-scuro); }
 
         /* FOOTER */
-        footer { background-color: rgba(255, 255, 255, 0.9); text-align: center; padding: 30px 20px; border-top: 2px solid var(--rosa-chiaro); margin-top: 50px; border-radius: 30px 30px 0 0; color: var(--testo-chiaro); font-size: 13px; box-shadow: 0 -5px 20px rgba(0,0,0,0.02); backdrop-filter: blur(10px);}
+        footer { background-color: rgba(255, 255, 255, 0.9); text-align: center; padding: 30px 20px; border-top: 2px solid var(--rosa-chiaro); margin-top: 50px; border-radius: 30px 30px 0 0; color: var(--testo-chiaro); font-size: 13px; box-shadow: 0 -5px 20px rgba(0,0,0,0.02); backdrop-filter: blur(10px); padding-bottom: 100px; /* Spazio extra per i bottoni fluttuanti */}
         footer a { color: var(--fucsia); text-decoration: none; font-weight: 600; margin: 0 10px; transition: 0.3s;}
         footer a:hover { color: var(--testo-scuro); }
         .footer-social { font-size: 20px; margin: 15px 0; display: flex; justify-content: center; gap: 15px; }
@@ -241,7 +243,10 @@
             .charm-price { font-size: 14px; }
             .charm-checkbox, .perlina-checkbox { transform: scale(1.2); }
             .cart-sidebar { width: 0; max-width: 100%; }
-            .back-to-top { right: 20px; bottom: 100px; width: 40px; height: 40px; font-size: 18px;}
+            
+            /* Aggiustamento posizione bottoni su mobile */
+            .floating-cart { right: 15px; bottom: 15px; width: 50px; height: 50px; font-size: 20px;}
+            .back-to-top { right: 20px; bottom: 80px; width: 40px; height: 40px; font-size: 18px;}
         }
     </style>
 </head>
@@ -397,12 +402,12 @@
         <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i></button>
 
         <div id="home" class="content-section active">
-            <header>
+            <header class="reveal">
                 <video src="logoanm.mp4" autoplay loop muted playsinline class="header-video"></video>
                 <p>L'eleganza del fatto a mano, per te e per i tuoi amici a quattro zampe.</p>
             </header>
 
-            <div class="home-slider-area">
+            <div class="home-slider-area reveal">
                 <div class="home-slider-track" id="home-slider-track">
                     <div class="home-slide"><img src="menu1.jpg" alt="Vetrina 1" onerror="this.src='logo.png'"></div>
                     <div class="home-slide"><img src="menu2.jpg" alt="Vetrina 2" onerror="this.src='logo.png'"></div>
@@ -414,7 +419,7 @@
                 </div>
             </div>
 
-            <div class="home-text" style="text-align: center;">
+            <div class="home-text reveal" style="text-align: center;">
                 <h2>Chi Siamo</h2>
                 <p style="font-size: 15px; color: var(--testo-scuro); margin-bottom: 20px;">
                     Benvenuti nel mondo di <strong>3L Creations</strong>. Nati dall'amore per i dettagli e dalla profonda passione per la tradizione partenopea, diamo vita a creazioni uniche nel loro genere. 
@@ -427,7 +432,7 @@
         </div>
 
         <div id="grazie" class="content-section">
-            <div class="home-text" style="text-align: center;">
+            <div class="home-text reveal" style="text-align: center;">
                 <h2>Grazie per il tuo Ordine! 🎉</h2>
                 <i class="fas fa-check-circle" style="font-size: 60px; color: #4CAF50; margin-bottom: 20px;"></i>
                 <p style="font-size: 18px;">Il tuo pagamento è andato a buon fine e stiamo già preparando il tuo pacco!</p>
@@ -441,9 +446,9 @@
         </div>
 
         <div id="acquista" class="content-section">
-            <h2 style="display:block; text-align:center;">I Nostri Prodotti</h2>
+            <h2 class="reveal" style="display:block; text-align:center;">I Nostri Prodotti</h2>
             
-            <div class="category-tabs">
+            <div class="category-tabs reveal">
                 <button class="cat-btn active" onclick="cambiaCategoria('collane', this)">📿 Collane</button>
                 <button class="cat-btn" onclick="cambiaCategoria('fiocchi', this)">🎀 Fiocchi</button>
             </div>
@@ -462,15 +467,15 @@
         </div>
 
         <div id="crea-maglietta" class="content-section">
-            <h2 style="display:block; text-align:center;">Crea la tua Maglietta</h2>
+            <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Maglietta</h2>
             
-            <div class="photo-notice">
+            <div class="photo-notice reveal">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
                 <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
                 È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
-            <div class="componi-box" style="max-width: 500px; margin: 0 auto;">
+            <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
                 <div class="opzioni-catenina">
                     <label>
@@ -503,15 +508,15 @@
         </div>
 
         <div id="crea-pelosetto" class="content-section">
-            <h2 style="display:block; text-align:center;">Crea maglia pelosetto 🐾</h2>
+            <h2 class="reveal" style="display:block; text-align:center;">Crea maglia pelosetto 🐾</h2>
             
-            <div class="photo-notice">
+            <div class="photo-notice reveal">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
                 <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
                 È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
-            <div class="componi-box" style="max-width: 500px; margin: 0 auto;">
+            <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
                 <div class="opzioni-catenina">
                     <label>
@@ -543,15 +548,15 @@
         </div>
 
         <div id="crea-pochette" class="content-section">
-            <h2 style="display:block; text-align:center;">Crea la tua Pochette</h2>
+            <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Pochette</h2>
             
-            <div class="photo-notice">
+            <div class="photo-notice reveal">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
                 <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
                 È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
-            <div class="componi-box" style="max-width: 500px; margin: 0 auto;">
+            <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
                 <div class="opzioni-catenina">
                     <label><input type="radio" name="col-pochette" value="Azzurro" checked onchange="aggiornaAnteprima('img-pochette', 'azzurro-p.png')"> Azzurro</label>
@@ -569,15 +574,15 @@
         </div>
 
         <div id="crea-borsa" class="content-section">
-            <h2 style="display:block; text-align:center;">Crea la tua Borsa</h2>
+            <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Borsa</h2>
             
-            <div class="photo-notice">
+            <div class="photo-notice reveal">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
                 <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
                 È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
-            <div class="componi-box" style="max-width: 500px; margin: 0 auto;">
+            <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
                 <h3 style="text-align: center; color: var(--testo-scuro);">Colore Unico: Bianco</h3>
                 <img src="bianco-borsa.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
@@ -590,9 +595,9 @@
         </div>
 
         <div id="componi" class="content-section">
-            <h2 style="display:block; text-align:center;">Crea la tua Collana Unica</h2>
+            <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Collana Unica</h2>
             
-            <div class="componi-box">
+            <div class="componi-box reveal">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il colore della catenina (Inclusa: €5.00)</h3>
                 <div class="opzioni-catenina">
                     <label><input type="radio" name="catenina" value="Oro" checked onchange="calcolaTotaleCiondoli()"> Oro</label>
@@ -601,21 +606,21 @@
                 </div>
             </div>
 
-            <div class="componi-box">
+            <div class="componi-box reveal">
                 <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli i ciondoli (Da 1 a 10)</h3>
                 <div class="product-container" id="lista-ciondoli">
                     <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento ciondoli in corso...</p>
                 </div>
             </div>
 
-            <div class="componi-box">
+            <div class="componi-box reveal">
                 <h3 style="text-align: center; color: var(--testo-scuro);">3. Scegli le perline (Max 10)</h3>
                 <div class="product-container" id="lista-perline">
                     <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento perline in corso...</p>
                 </div>
             </div>
 
-            <div class="totale-box">
+            <div class="totale-box reveal">
                 <h3>Totale Calcolato: €<span id="prezzo-totale-ciondoli">5.00</span></h3>
                 <button class="buy-button-paypal" style="width: auto; padding: 15px 40px; font-size: 18px;" onclick="aggiungiCollanaCompostaAlCarrello(event)">
                     Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
@@ -624,8 +629,8 @@
         </div>
 
         <div id="contatti" class="content-section">
-            <h2 style="display:block; text-align:center;">Mettiti in Contatto</h2>
-            <div class="contact-card">
+            <h2 class="reveal" style="display:block; text-align:center;">Mettiti in Contatto</h2>
+            <div class="contact-card reveal">
                 <p>Seguici sui nostri canali social o contattaci per l'invio di foto per prodotti personalizzati:</p>
                 <br>
                 <a href="https://www.instagram.com/_3l_creations" target="_blank" class="social-link"><i class="fab fa-instagram social-icon"></i><span><strong>Instagram:</strong> @_3l_creations</span></a>
@@ -636,17 +641,17 @@
         </div>
 
         <div id="faq" class="content-section">
-            <h2 style="display:block; text-align:center;">Domande Frequenti (FAQ)</h2>
+            <h2 class="reveal" style="display:block; text-align:center;">Domande Frequenti (FAQ)</h2>
             <div class="home-text">
-                <div class="faq-item">
+                <div class="faq-item reveal">
                     <div class="faq-question"><i class="fas fa-tshirt"></i> Come devo lavare i capi e i ricami?</div>
                     <div class="faq-answer">Consigliamo di lavare i prodotti a rovescio, a mano in acqua fredda, avendo cura di togliere eventuali spille. Non asciugare con l'asciugatrice e stirare sempre a rovescio per proteggere le lavorazioni.</div>
                 </div>
-                <div class="faq-item">
+                <div class="faq-item reveal">
                     <div class="faq-question"><i class="fas fa-box-open"></i> Quali sono i tempi di spedizione?</div>
                     <div class="faq-answer">Essendo prodotti realizzati interamente a mano e spesso su misura, dal momento del pagamento l'ordine verrà preparato e spedito entro 1 settimana.</div>
                 </div>
-                <div class="faq-item">
+                <div class="faq-item reveal">
                     <div class="faq-question"><i class="fas fa-gem"></i> I materiali perdono colore o qualità nel tempo?</div>
                     <div class="faq-answer">Assolutamente no! Selezioniamo accuratamente le materie prime. Con le giuste accortezze (evitare profumi diretti sui ciondoli, ecc.), il prodotto non perde assolutamente di qualità nel tempo.</div>
                 </div>
@@ -654,15 +659,15 @@
         </div>
 
         <div id="legale" class="content-section">
-            <h2 style="display:block; text-align:center;">Note Legali e Condizioni</h2>
-            <div class="home-text">
+            <h2 class="reveal" style="display:block; text-align:center;">Note Legali e Condizioni</h2>
+            <div class="home-text reveal">
                 <p class="legal-text"><strong>Condizioni di Vendita:</strong> Opero nel pieno rispetto della normativa come hobbista (vendita occasionale di opere del proprio ingegno creativo) e non possiedo Partita IVA. I prodotti proposti sono frutto di lavoro artigianale e possono presentare lievi imperfezioni che ne garantiscono l'unicità.</p>
                 <p class="legal-text"><strong>Privacy e Cookie Policy:</strong> La tua privacy è importante. I dati forniti in fase di acquisto (nome, indirizzo, cellulare) vengono utilizzati esclusivamente per la gestione e la spedizione dell'ordine e non verranno mai ceduti a terzi. Questo sito utilizza solo "cookie tecnici" strettamente necessari per il funzionamento del carrello e la memorizzazione locale dei dati di spedizione sul tuo dispositivo.</p>
                 <p class="legal-text"><strong>Assistenza e Resi:</strong> Per qualsiasi problema con il tuo ordine, contattaci subito alla nostra email <a href="https://mail.google.com/mail/?view=cm&fs=1&to=3lcreationsfordogs1@gmail.com" target="_blank">3lcreationsfordogs1@gmail.com</a> o sui nostri canali social. Essendo la maggior parte dei prodotti realizzati su misura e personalizzati (es. stampe fotografiche, ricami), i resi non sono previsti se non per evidente difetto di fabbricazione, ma troveremo in ogni caso una soluzione insieme!</p>
             </div>
         </div>
 
-    </div> <footer>
+    </div> <footer class="reveal">
         <div class="footer-social">
             <a href="https://www.instagram.com/_3l_creations" target="_blank"><i class="fab fa-instagram"></i></a>
             <a href="https://www.facebook.com/groups/974242766065881" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -700,6 +705,9 @@
             window.scrollTo(0, 0);
             if (updateUrl) { history.pushState(null, null, '#' + sectionId); }
             if (window.instgrm) { window.instgrm.Embeds.process(); }
+            
+            // Riavvia l'osservatore quando cambi pagina per rianimare gli elementi
+            setTimeout(observeElements, 100);
         }
         
         function cambiaCategoria(catId, btnElement) {
@@ -792,7 +800,23 @@
             });
         }
 
-        // === NUOVO: LIGHTBOX E TORNA SU ===
+        // === NUOVO: ANIMAZIONI ALLO SCORRIMENTO (REVEAL) ===
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    scrollObserver.unobserve(entry.target); // Anima solo la prima volta che si vede
+                }
+            });
+        }, { threshold: 0.1 });
+
+        function observeElements() {
+            document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+                scrollObserver.observe(el);
+            });
+        }
+
+        // === LIGHTBOX E TORNA SU ===
         document.body.addEventListener('click', function(e) {
             if (e.target.classList.contains('product-image') || e.target.classList.contains('charm-image') || (e.target.tagName === 'IMG' && e.target.closest('.home-slide'))) {
                 openLightbox(e.target.src);
@@ -840,6 +864,7 @@
             if (hash) showSection(hash, false); else showSection('home', false); 
             caricaDatiSpedizioneSalvata(); 
             initHomeSlider(); 
+            observeElements(); // Fa partire l'osservatore
         });
 
         window.addEventListener('popstate', function() {
@@ -998,7 +1023,7 @@
                             var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
 
                             var cardHTML = `
-                                <div class="product-card">
+                                <div class="product-card reveal">
                                     <img src="${immagine}" alt="${titoloPulito}" class="product-image" onerror="this.src='logo.png'">
                                     <h3>${riga.titolo}</h3>
                                     <p>${riga.descrizione || ''}</p>
@@ -1007,13 +1032,16 @@
                                         Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
                                     </button>
                                 </div>`;
-                            contenitore.innerHTML += cardHTML;
+                            // Usiamo insertAdjacentHTML invece di += per non rompere il DOM
+                            contenitore.insertAdjacentHTML('beforeend', cardHTML);
                         }
                     });
                     
                     if(count === 0) {
                         contenitore.innerHTML = `<p class="loading-text">${messaggioVuoto}</p>`;
                     }
+                    // Aggiunge le nuove carte all'osservatore
+                    observeElements();
                 },
                 error: function() {
                      var contenitore = document.getElementById(idContenitore);
@@ -1039,15 +1067,16 @@
                         var prezzoNum = parseFloat(prezzoPulito) || 0;
                         
                         var cardHTML = `
-                            <div class="charm-card">
+                            <div class="charm-card reveal">
                                 <img src="${immagine}" alt="${riga.titolo}" class="charm-image" onerror="this.src='logo.png'">
                                 <div class="charm-title">${riga.titolo}</div>
                                 <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
                                 <input type="checkbox" class="charm-checkbox" data-titolo="${riga.titolo}" data-prezzo="${prezzoNum}" data-immagine="${immagine}" onchange="calcolaTotaleCiondoli(event)">
                             </div>`;
-                        contenitore.innerHTML += cardHTML;
+                        contenitore.insertAdjacentHTML('beforeend', cardHTML);
                     }
                 });
+                observeElements();
             }
         });
 
@@ -1065,15 +1094,16 @@
                         var prezzoNum = parseFloat(prezzoPulito) || 0;
                         
                         var cardHTML = `
-                            <div class="charm-card">
+                            <div class="charm-card reveal">
                                 <img src="${immagine}" alt="${riga.titolo}" class="charm-image" onerror="this.src='logo.png'">
                                 <div class="charm-title">${riga.titolo}</div>
                                 <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
                                 <input type="checkbox" class="perlina-checkbox" data-titolo="${riga.titolo}" data-prezzo="${prezzoNum}" data-immagine="${immagine}" onchange="calcolaTotaleCiondoli(event)">
                             </div>`;
-                        contenitore.innerHTML += cardHTML;
+                        contenitore.insertAdjacentHTML('beforeend', cardHTML);
                     }
                 });
+                observeElements();
             }
         });
 
