@@ -76,7 +76,7 @@
         @media (max-width: 1100px) { .trust-badges { display: none; } }
         #menuOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.3); z-index: 96; opacity: 0; transition: opacity 0.4s ease; }
 
-        /* MENU LATERALE SEMITRASPARENTE */
+        /* MENU LATERALE SEMITRASPARENTE E SCROLLABILE */
         .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; padding-bottom: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
         .sidebar::-webkit-scrollbar { width: 5px; }
         .sidebar::-webkit-scrollbar-track { background: transparent; }
@@ -185,10 +185,22 @@
         /* CURSORE MAGICO */
         #magic-cursor { display: none; }
         @media (pointer: fine) {
-            body, a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .floating-cart, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label { cursor: none !important; }
+            body, a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .floating-cart, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick] { cursor: none !important; }
             #magic-cursor { display: block; position: fixed; width: 12px; height: 12px; background-color: var(--fucsia); border-radius: 50%; pointer-events: none; z-index: 999999; transform: translate(-50%, -50%); transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; }
             #magic-cursor.hover { width: 45px; height: 45px; background-color: rgba(216, 27, 96, 0.2); border: 2px solid var(--fucsia); }
         }
+
+        /* GUIDA ALLE TAGLIE MODAL */
+        .size-guide-modal { display: none; position: fixed; z-index: 999999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; padding: 20px; box-sizing: border-box; }
+        .size-guide-modal.active { display: flex; opacity: 1; }
+        .size-guide-content { background: #fff; padding: 30px; border-radius: 20px; width: 100%; max-width: 500px; position: relative; box-shadow: 0 15px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s ease; max-height: 90vh; overflow-y: auto; }
+        .size-guide-modal.active .size-guide-content { transform: translateY(0); }
+        .close-guide { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--testo-chiaro); transition: 0.3s; }
+        .close-guide:hover { color: var(--fucsia); }
+        .size-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; text-align: center; }
+        .size-table th { background-color: var(--fucsia); color: white; padding: 10px; font-weight: 600; border: 1px solid #ddd;}
+        .size-table td { padding: 10px; border: 1px solid #ddd; color: var(--testo-scuro); }
+        .size-table tr:nth-child(even) { background-color: #fafafa; }
 
         #main { transition: margin-left .5s; padding: 20px; max-width: 1000px; margin: auto; position: relative; z-index: 1;}
         
@@ -312,6 +324,14 @@
     <div id="splash-screen">
         <img src="logo.png" alt="3L Creations" class="splash-logo" onerror="this.style.display='none'">
         <div class="splash-text">Benvenuti da 3L Creations...</div>
+    </div>
+
+    <div id="sizeGuideModal" class="size-guide-modal" onclick="closeSizeGuide(event)">
+        <div class="size-guide-content">
+            <span class="close-guide" onclick="closeSizeGuide(event, true)">&times;</span>
+            <h3 id="sizeGuideTitle" style="color: var(--fucsia); margin-top: 0; text-align: center;">Guida alle Taglie</h3>
+            <div id="sizeGuideBody"></div>
+        </div>
     </div>
 
     <div class="promo-bar">
@@ -550,7 +570,7 @@
                 </div>
                 <img id="img-maglia" src="bianco-tshirt.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
-                <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia</h3>
+                <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia <span onclick="openSizeGuide('umani')" style="font-size: 12px; color: var(--fucsia); cursor: pointer; text-decoration: underline; margin-left: 10px;"><i class="fas fa-ruler"></i> Guida alle taglie</span></h3>
                 <select id="taglia-maglia" class="custom-textarea" style="height: auto; padding: 10px; text-align: center; font-size: 14px;">
                     <option value="XS">XS</option>
                     <option value="S">S</option>
@@ -591,7 +611,7 @@
                 </div>
                 <img id="img-pelosetto" src="bianco-pelosetto.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
-                <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia</h3>
+                <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia <span onclick="openSizeGuide('cani')" style="font-size: 12px; color: var(--fucsia); cursor: pointer; text-decoration: underline; margin-left: 10px;"><i class="fas fa-ruler"></i> Guida alle taglie</span></h3>
                 <select id="taglia-pelosetto" class="custom-textarea" style="height: auto; padding: 10px; text-align: center; font-size: 14px;">
                     <option value="XS">XS</option>
                     <option value="S">S</option>
@@ -765,14 +785,61 @@
             });
             
             document.addEventListener('mouseover', e => {
-                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label');
+                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick]');
                 if(clickable) cursor.classList.add('hover');
             });
             
             document.addEventListener('mouseout', e => {
-                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label');
+                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick]');
                 if(clickable) cursor.classList.remove('hover');
             });
+        }
+
+        // === GUIDA ALLE TAGLIE ===
+        function openSizeGuide(tipo) {
+            const modal = document.getElementById('sizeGuideModal');
+            const title = document.getElementById('sizeGuideTitle');
+            const body = document.getElementById('sizeGuideBody');
+            
+            if (tipo === 'umani') {
+                title.innerText = "Guida alle Taglie Umani (EU)";
+                body.innerHTML = `
+                    <p style="font-size: 13px; color: var(--testo-chiaro); text-align: center;">Misure indicative in cm (Larghezza Torace / Lunghezza)</p>
+                    <table class="size-table">
+                        <tr><th>Taglia</th><th>Donna (EU)</th><th>Uomo (EU)</th><th>Torace (cm)</th><th>Lunghezza (cm)</th></tr>
+                        <tr><td>XS</td><td>38</td><td>42</td><td>48</td><td>68</td></tr>
+                        <tr><td>S</td><td>40</td><td>44</td><td>51</td><td>70</td></tr>
+                        <tr><td>M</td><td>42</td><td>46</td><td>53</td><td>72</td></tr>
+                        <tr><td>L</td><td>44</td><td>48</td><td>56</td><td>74</td></tr>
+                        <tr><td>XL</td><td>46</td><td>50</td><td>58</td><td>76</td></tr>
+                        <tr><td>XXL</td><td>48</td><td>52</td><td>61</td><td>78</td></tr>
+                    </table>
+                `;
+            } else if (tipo === 'cani') {
+                title.innerText = "Guida alle Taglie Pelosetti";
+                body.innerHTML = `
+                    <p style="font-size: 13px; color: var(--testo-chiaro); text-align: center;">Misura il tuo pelosetto con un metro morbido.</p>
+                    <table class="size-table">
+                        <tr><th>Taglia</th><th>Collo (cm)</th><th>Torace (cm)</th><th>Lunghezza (cm)</th></tr>
+                        <tr><td>XS</td><td>20 - 24</td><td>30 - 34</td><td>20</td></tr>
+                        <tr><td>S</td><td>24 - 28</td><td>35 - 39</td><td>25</td></tr>
+                        <tr><td>M</td><td>28 - 32</td><td>40 - 44</td><td>30</td></tr>
+                        <tr><td>L</td><td>32 - 36</td><td>45 - 49</td><td>35</td></tr>
+                        <tr><td>XL</td><td>36 - 40</td><td>50 - 54</td><td>40</td></tr>
+                    </table>
+                `;
+            }
+            
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+        }
+
+        function closeSizeGuide(e, force = false) {
+            const modal = document.getElementById('sizeGuideModal');
+            if (force || e.target === modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.style.display = 'none', 300);
+            }
         }
 
         // === 1. GESTIONE MENU E SEZIONI ===
