@@ -582,6 +582,15 @@
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchBar" class="search-input" placeholder="Cerca un prodotto (es. Cuore, Azzurro...)" onkeyup="filtraProdotti()">
             </div>
+            <div class="sort-container reveal" style="text-align: center; margin-bottom: 25px;">
+                <select id="sortProdotti" class="custom-textarea" style="width: auto; padding: 10px 20px; border-radius: 30px; height: auto; cursor: pointer; display: inline-block;" onchange="applicaOrdinamento()">
+                    <option value="">Ordina per...</option>
+                    <option value="prezzo-asc">Prezzo: Crescente (dal più basso)</option>
+                    <option value="prezzo-desc">Prezzo: Decrescente (dal più alto)</option>
+                    <option value="nome-asc">Alfabetico: A - Z</option>
+                    <option value="nome-desc">Alfabetico: Z - A</option>
+                </select>
+            </div>
 
             <div class="category-tabs reveal">
                 <button class="cat-btn active" onclick="cambiaCategoria('collane', this)">📿 Collane</button>
@@ -782,6 +791,15 @@
 
             <div class="componi-box reveal">
                 <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli i ciondoli (Da 1 a 10)</h3>
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <select id="sortComponenti" class="custom-textarea" style="width: auto; padding: 8px 15px; border-radius: 20px; height: auto; font-size: 13px; cursor: pointer;" onchange="applicaOrdinamentoComponenti()">
+                        <option value="">Ordina ciondoli e perline...</option>
+                        <option value="prezzo-asc">Prezzo: dal più basso</option>
+                        <option value="prezzo-desc">Prezzo: dal più alto</option>
+                        <option value="nome-asc">Alfabetico: A - Z</option>
+                        <option value="nome-desc">Alfabetico: Z - A</option>
+                    </select>
+                </div>
                 <div class="product-container" id="lista-ciondoli">
                     <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
                     <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
@@ -990,6 +1008,7 @@
                 searchBar.value = '';
                 filtraProdotti();
             }
+            applicaOrdinamento();
         }
 
         // === RICERCA ISTANTANEA ===
@@ -1278,7 +1297,66 @@
                 `;
             });
         }
+// === ORDINAMENTO PRODOTTI E COMPONENTI ===
 
+// Funzione "Motore" che sposta fisicamente le card nel DOM
+function ordinaElementi(idContenitore, classeCard, selettoreTitolo, selettorePrezzo, criterio) {
+    const contenitore = document.getElementById(idContenitore);
+    if (!contenitore) return;
+
+    // 1. Prendi tutte le card dentro il contenitore
+    let cards = Array.from(contenitore.querySelectorAll('.' + classeCard));
+
+    // 2. Escludi le card "fantasma" del caricamento (skeleton)
+    cards = cards.filter(card => !card.classList.contains('skeleton-card') && !card.classList.contains('skeleton-charm'));
+
+    // 3. Ordina l'array di card
+    cards.sort((a, b) => {
+        // Estrai i titoli
+        let titoloA = a.querySelector(selettoreTitolo).innerText.toLowerCase();
+        let titoloB = b.querySelector(selettoreTitolo).innerText.toLowerCase();
+
+        // Estrai i prezzi pulendoli dal simbolo € e da testi come "+"
+        let txtPrezzoA = a.querySelector(selettorePrezzo).innerText.replace(/[^\d.,]/g, '').replace(',', '.');
+        let txtPrezzoB = b.querySelector(selettorePrezzo).innerText.replace(/[^\d.,]/g, '').replace(',', '.');
+        
+        let prezzoA = parseFloat(txtPrezzoA) || 0;
+        let prezzoB = parseFloat(txtPrezzoB) || 0;
+
+        // Applica il criterio scelto
+        if (criterio === 'prezzo-asc') return prezzoA - prezzoB;
+        if (criterio === 'prezzo-desc') return prezzoB - prezzoA;
+        if (criterio === 'nome-asc') return titoloA.localeCompare(titoloB);
+        if (criterio === 'nome-desc') return titoloB.localeCompare(titoloA);
+        return 0; 
+    });
+
+    // 4. Riattacca le card ordinate nel contenitore
+    cards.forEach(card => contenitore.appendChild(card));
+}
+
+// Funzione collegata al menu a tendina dei Prodotti Principali
+function applicaOrdinamento() {
+    let criterio = document.getElementById('sortProdotti').value;
+    if(!criterio) return; // Se seleziona "Ordina per...", non fa nulla
+
+    // Controlla quale categoria è aperta in questo momento e ordina quella
+    if(document.getElementById('cat-collane').classList.contains('active')) {
+        ordinaElementi('lista-prodotti', 'product-card', 'h3', '.price', criterio);
+    } else if(document.getElementById('cat-fiocchi').classList.contains('active')) {
+        ordinaElementi('lista-fiocchi', 'product-card', 'h3', '.price', criterio);
+    }
+}
+
+// Funzione collegata al menu a tendina di Ciondoli e Perline
+function applicaOrdinamentoComponenti() {
+    let criterio = document.getElementById('sortComponenti').value;
+    if(!criterio) return;
+
+    // Ordina simultaneamente sia la griglia dei ciondoli che quella delle perline
+    ordinaElementi('lista-ciondoli', 'charm-card', '.charm-title', '.charm-price', criterio);
+    ordinaElementi('lista-perline', 'charm-card', '.charm-title', '.charm-price', criterio);
+}
         // === INIZIALIZZAZIONE AL CARICAMENTO ===
         window.addEventListener('load', function() {
             setTimeout(function() {
