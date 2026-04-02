@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+       <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -76,8 +76,12 @@
         /* OVERLAY PER CHIUSURA MENU AL CLICK */
         #menuOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.3); z-index: 95; opacity: 0; transition: opacity 0.4s ease; }
 
-        /* MENU LATERALE SEMITRASPARENTE */
-        .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
+        /* NUOVO/MODIFICATO: MENU LATERALE SCORREVOLE (OVERFLOW-Y) E STILE SCROLLBAR */
+        .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; padding-bottom: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
+        .sidebar::-webkit-scrollbar { width: 5px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--rosa-chiaro); border-radius: 10px; }
+        
         .sidebar a { padding: 12px 30px; text-decoration: none; font-size: 16px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
         .sidebar a:hover { color: var(--fucsia); background-color: rgba(255, 240, 245, 0.8); padding-left: 40px; }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; background: none; color: var(--testo-scuro); padding: 0;}
@@ -118,9 +122,25 @@
         .form-group input:focus, .form-group select:focus { border-color: var(--fucsia); background-color: #fff;}
         .form-row { display: flex; gap: 10px; }
 
+        /* PULSANTI FLUTTUANTI */
         .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 90; transition: 0.3s;}
         .floating-cart:hover { transform: scale(1.1); }
         .cart-badge { position: absolute; top: -5px; right: -5px; background-color: white; color: var(--fucsia); font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid var(--fucsia);}
+
+        /* NUOVO: BOTTONE TORNA SU */
+        .back-to-top { background-color: rgba(255, 255, 255, 0.9); color: var(--fucsia); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); cursor: pointer; transition: 0.3s; border: 1px solid var(--rosa-chiaro); position: fixed; bottom: 105px; right: 37px; z-index: 89; opacity: 0; visibility: hidden;}
+        .back-to-top.show { opacity: 1; visibility: visible; }
+        .back-to-top:hover { background-color: var(--fucsia); color: white; transform: translateY(-5px); }
+
+        /* NUOVO: LIGHTBOX (ZOOM FOTO) */
+        #lightbox { display: none; position: fixed; z-index: 99999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; flex-direction: column;}
+        #lightbox.active { display: flex; opacity: 1; }
+        #lightbox img { max-width: 90%; max-height: 85vh; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: scale(0.8); transition: transform 0.3s ease; object-fit: contain; }
+        #lightbox.active img { transform: scale(1); }
+        .lightbox-close { position: absolute; top: 20px; right: 30px; font-size: 40px; color: white; cursor: pointer; transition: 0.3s; z-index: 100000; }
+        .lightbox-close:hover { color: var(--fucsia); transform: scale(1.1); }
+        /* Cursore lente d'ingrandimento */
+        .product-image, .charm-image, .home-slide img { cursor: zoom-in; }
 
         #main { transition: margin-left .5s; padding: 20px; max-width: 1000px; margin: auto; position: relative; z-index: 1;}
         
@@ -221,10 +241,16 @@
             .charm-price { font-size: 14px; }
             .charm-checkbox, .perlina-checkbox { transform: scale(1.2); }
             .cart-sidebar { width: 0; max-width: 100%; }
+            .back-to-top { right: 20px; bottom: 100px; width: 40px; height: 40px; font-size: 18px;}
         }
     </style>
 </head>
 <body>
+
+    <div id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="">
+    </div>
 
     <div id="splash-screen">
         <img src="logo.png" alt="3L Creations" class="splash-logo" onerror="this.style.display='none'">
@@ -363,6 +389,10 @@
         <div class="cart-badge" id="cart-badge-count">0</div>
     </div>
 
+    <div class="back-to-top" id="backToTopBtn" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
     <div id="main">
         <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i></button>
 
@@ -436,8 +466,8 @@
             
             <div class="photo-notice">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi una maglia personalizzata?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto a uno dei nostri contatti indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
+                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
             <div class="componi-box" style="max-width: 500px; margin: 0 auto;">
@@ -477,8 +507,8 @@
             
             <div class="photo-notice">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi una maglia personalizzata per il tuo pelosetto?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto a uno dei nostri contatti indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
+                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
             <div class="componi-box" style="max-width: 500px; margin: 0 auto;">
@@ -517,8 +547,8 @@
             
             <div class="photo-notice">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi una pochette personalizzata?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto a uno dei nostri contatti indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
+                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
             <div class="componi-box" style="max-width: 500px; margin: 0 auto;">
@@ -543,8 +573,8 @@
             
             <div class="photo-notice">
                 <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi una borsa personalizzata?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto a uno dei nostri contatti indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
+                <strong>Vuoi stampare o ricamare una tua foto?</strong><br>
+                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto su WhatsApp o Instagram indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
             </div>
 
             <div class="componi-box" style="max-width: 500px; margin: 0 auto;">
@@ -760,6 +790,40 @@
             window.addEventListener('resize', () => {
                 if(!isTransitioning) centerSlide(1, false);
             });
+        }
+
+        // === NUOVO: LIGHTBOX E TORNA SU ===
+        document.body.addEventListener('click', function(e) {
+            if (e.target.classList.contains('product-image') || e.target.classList.contains('charm-image') || (e.target.tagName === 'IMG' && e.target.closest('.home-slide'))) {
+                openLightbox(e.target.src);
+            }
+        });
+
+        function openLightbox(src) {
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightbox-img');
+            lbImg.src = src;
+            lb.style.display = 'flex';
+            setTimeout(() => lb.classList.add('active'), 10);
+        }
+
+        function closeLightbox() {
+            const lb = document.getElementById('lightbox');
+            lb.classList.remove('active');
+            setTimeout(() => lb.style.display = 'none', 300);
+        }
+
+        window.addEventListener('scroll', function() {
+            const btn = document.getElementById('backToTopBtn');
+            if (window.scrollY > 300) {
+                btn.classList.add('show');
+            } else {
+                btn.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         window.addEventListener('load', function() {
