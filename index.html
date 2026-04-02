@@ -31,7 +31,7 @@
 
         @keyframes float { from { transform: translate(0, 0); } to { transform: translate(40px, 60px); } }
 
-        /* NUOVO: PATTERN ICONE FLUTTUANTI SULLO SFONDO */
+        /* PATTERN ICONE FLUTTUANTI SULLO SFONDO */
         .floating-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -3; overflow: hidden; }
         .floating-icon { position: absolute; color: rgba(244, 143, 177, 0.25); animation: floatPattern linear infinite alternate; }
         
@@ -48,19 +48,21 @@
             100% { transform: translate(50px, 70px) rotate(360deg); }
         }
 
-        /* NUOVO: TRUST BADGES (LATERALI SU PC) */
+        /* TRUST BADGES (LATERALI SU PC) */
         .trust-badges { position: fixed; top: 50%; transform: translateY(-50%); left: 20px; z-index: 10; display: flex; flex-direction: column; gap: 20px; }
         .trust-badge { background: white; border: 2px solid var(--rosa-chiaro); border-radius: 15px; padding: 15px 10px; text-align: center; width: 90px; box-shadow: 0 5px 15px rgba(216, 27, 96, 0.1); color: var(--fucsia); font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.3s; }
         .trust-badge i { font-size: 24px; }
         .trust-badge:hover { transform: scale(1.05); border-color: var(--fucsia); box-shadow: 0 8px 20px rgba(216, 27, 96, 0.2);}
         
-        @media (max-width: 1100px) { .trust-badges { display: none; } } /* Nasconde le badge su schermi piccoli per fare spazio */
+        @media (max-width: 1100px) { .trust-badges { display: none; } }
 
+        /* NUOVO: OVERLAY PER CHIUSURA MENU AL CLICK */
+        #menuOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.3); z-index: 95; opacity: 0; transition: opacity 0.4s ease; }
 
-        /* MENU LATERALE E CATEGORIE */
-        .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
+        /* MODIFICA: MENU LATERALE SEMITRASPARENTE */
+        .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
         .sidebar a { padding: 12px 30px; text-decoration: none; font-size: 17px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
-        .sidebar a:hover { color: var(--fucsia); background-color: #fff0f5; padding-left: 45px; }
+        .sidebar a:hover { color: var(--fucsia); background-color: rgba(255, 240, 245, 0.8); padding-left: 45px; }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; background: none; color: var(--testo-scuro); padding: 0;}
         .sidebar-logo { width: 120px; display: block; margin: 0 auto 10px auto; }
         .menu-title { font-size: 13px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 5px 30px; }
@@ -104,7 +106,9 @@
         .cart-badge { position: absolute; top: -5px; right: -5px; background-color: white; color: var(--fucsia); font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid var(--fucsia);}
 
         #main { transition: margin-left .5s; padding: 20px; max-width: 1000px; margin: auto; position: relative; z-index: 1;}
-        .openbtn { font-size: 16px; cursor: pointer; background-color: white; color: var(--fucsia); border: 2px solid var(--fucsia); padding: 10px 25px; border-radius: 30px; margin-bottom: 20px; font-weight: 600; transition: all 0.3s ease; }
+        
+        /* MODIFICA: BOTTONE MENU HOME ICONA */
+        .openbtn { font-size: 22px; cursor: pointer; background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(5px); color: var(--fucsia); border: 1px solid rgba(216, 27, 96, 0.3); padding: 10px 15px; border-radius: 12px; margin-bottom: 20px; font-weight: 600; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center;}
         .openbtn:hover { background-color: var(--fucsia); color: white; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); }
 
         .content-section { display: none; animation: slideUpFade 0.6s ease forwards; opacity: 0; transform: translateY(20px); }
@@ -217,6 +221,8 @@
         </div>
     </div>
 
+    <div id="menuOverlay" onclick="closeNav()"></div>
+
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <img src="logo.png" alt="Logo 3L Creations" class="sidebar-logo">
@@ -317,7 +323,7 @@
     </div>
 
     <div id="main">
-        <button class="openbtn" onclick="openNav()">Menu</button>
+        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i></button>
 
         <div id="home" class="content-section active">
             <header>
@@ -534,8 +540,24 @@
 
     <script>
         // === 1. GESTIONE MENU E SEZIONI ===
-        function openNav() { document.getElementById("mySidebar").style.width = "250px"; if (window.innerWidth > 768) { document.getElementById("main").style.marginLeft = "250px"; } }
-        function closeNav() { document.getElementById("mySidebar").style.width = "0"; document.getElementById("main").style.marginLeft= "auto"; }
+        
+        /* MODIFICA: Logica del menu laterale aggiornata per supportare l'overlay */
+        function openNav() { 
+            document.getElementById("mySidebar").style.width = "250px"; 
+            
+            // Mostra l'overlay per chiudere il menu
+            document.getElementById("menuOverlay").style.display = "block";
+            setTimeout(() => { document.getElementById("menuOverlay").style.opacity = "1"; }, 10);
+        }
+        
+        function closeNav() { 
+            document.getElementById("mySidebar").style.width = "0"; 
+            
+            // Nasconde l'overlay
+            document.getElementById("menuOverlay").style.opacity = "0";
+            setTimeout(() => { document.getElementById("menuOverlay").style.display = "none"; }, 400);
+        }
+        
         function showSection(sectionId, updateUrl = true) {
             closeNav();
             var sections = document.getElementsByClassName('content-section');
@@ -545,7 +567,6 @@
             else { document.getElementById('home').classList.add('active'); sectionId = 'home'; }
             window.scrollTo(0, 0);
             if (updateUrl) { history.pushState(null, null, '#' + sectionId); }
-            if (window.instgrm) { window.instgrm.Embeds.process(); }
         }
         
         function cambiaCategoria(catId, btnElement) {
