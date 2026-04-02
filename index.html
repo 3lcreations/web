@@ -31,7 +31,7 @@
         @keyframes float { from { transform: translate(0, 0); } to { transform: translate(40px, 60px); } }
 
         /* MENU LATERALE E CATEGORIE */
-        .sidebar { height: 100%; width: 0; position: fixed; z-index: 30; top: 0; left: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
+        .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
         .sidebar a { padding: 12px 30px; text-decoration: none; font-size: 17px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
         .sidebar a:hover { color: var(--fucsia); background-color: #fff0f5; padding-left: 45px; }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; background: none; color: var(--testo-scuro); padding: 0;}
@@ -39,7 +39,7 @@
         .menu-title { font-size: 13px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 5px 30px; }
 
         /* CARRELLO LATERALE DESTRO */
-        .cart-sidebar { height: 100%; width: 0; position: fixed; z-index: 40; top: 0; right: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 20px; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
+        .cart-sidebar { height: 100%; width: 0; position: fixed; z-index: 110; top: 0; right: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 20px; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .cart-header h2 { margin: 0; font-size: 22px; color: var(--testo-scuro); border: none; }
         .cart-sidebar .closebtn { font-size: 30px; cursor: pointer; color: var(--testo-scuro); }
@@ -72,7 +72,7 @@
         .form-group input:focus, .form-group select:focus { border-color: var(--fucsia); background-color: #fff;}
         .form-row { display: flex; gap: 10px; }
 
-        .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 20; transition: 0.3s;}
+        .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 90; transition: 0.3s;}
         .floating-cart:hover { transform: scale(1.1); }
         .cart-badge { position: absolute; top: -5px; right: -5px; background-color: white; color: var(--fucsia); font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid var(--fucsia);}
 
@@ -87,9 +87,17 @@
         h2 { color: var(--fucsia); font-weight: 600; margin-bottom: 30px; font-size: 28px; position: relative; display: inline-block; text-align: center;}
         h2::after { content: ''; width: 40px; height: 3px; background-color: var(--rosa-chiaro); position: absolute; bottom: -5px; left: 0; border-radius: 2px; }
 
-        header { text-align: center; padding: 60px 20px; background: var(--panna-video); border-radius: 30px; margin-bottom: 40px; position: relative; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06); border: 3px dashed var(--rosa-chiaro); }
+        header { text-align: center; padding: 60px 20px; background: var(--panna-video); border-radius: 30px; margin-bottom: 30px; position: relative; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06); border: 3px dashed var(--rosa-chiaro); }
         header p { color: var(--testo-chiaro); font-size: 18px; margin-top: 25px; font-style: italic; position: relative; z-index: 1;}
         .header-video { width: 400px; max-width: 100%; border-radius: 20px; margin-bottom: 0; border: none; outline: none; display: block; margin: 0 auto; position: relative; z-index: 1; }
+
+        /* NUOVO: STILI CAROSELLO HOME (SLIDER) */
+        .home-slider-area { width: 100%; overflow: hidden; padding: 20px 0 40px 0; position: relative; margin-bottom: 20px;}
+        .home-slider-track { display: flex; gap: 15px; align-items: center; will-change: transform; }
+        .home-slide { flex: 0 0 75%; max-width: 450px; transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); opacity: 0.4; transform: scale(0.85); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .home-slide.active { opacity: 1; transform: scale(1); box-shadow: 0 15px 35px rgba(216, 27, 96, 0.2); }
+        .home-slide img { width: 100%; height: auto; display: block; object-fit: cover; aspect-ratio: 4/3; }
+        @media (min-width: 768px) { .home-slide { flex: 0 0 50%; } }
 
         .home-text { font-size: 16px; line-height: 1.8; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: 1px solid rgba(255,255,255,0.6); }
 
@@ -264,6 +272,18 @@
                 <video src="logoanm.mp4" autoplay loop muted playsinline class="header-video"></video>
                 <p>Prodotti handmade per pelosetti e persone.</p>
             </header>
+
+            <div class="home-slider-area">
+                <div class="home-slider-track" id="home-slider-track">
+                    <div class="home-slide"><img src="menu1.jpg" alt="Vetrina 1" onerror="this.src='logo.png'"></div>
+                    <div class="home-slide"><img src="menu2.jpg" alt="Vetrina 2" onerror="this.src='logo.png'"></div>
+                    <div class="home-slide"><img src="menu3.jpg" alt="Vetrina 3" onerror="this.src='logo.png'"></div>
+                    <div class="home-slide"><img src="menu4.jpg" alt="Vetrina 4" onerror="this.src='logo.png'"></div>
+                    <div class="home-slide"><img src="menu5.jpg" alt="Vetrina 5" onerror="this.src='logo.png'"></div>
+                    <div class="home-slide"><img src="menu6.jpg" alt="Vetrina 6" onerror="this.src='logo.png'"></div>
+                    <div class="home-slide"><img src="menu7.jpg" alt="Vetrina 7" onerror="this.src='logo.png'"></div>
+                </div>
+            </div>
             <div class="home-text">
                 <h2>Chi Siamo</h2>
                 <p>Creazioni realizzate a mano, magliette, gioielli e tanto altro...</p>
@@ -459,8 +479,6 @@
         </div>
     </div>
 
-    <script async src="https://www.instagram.com/embed.js"></script>
-
     <script>
         // === 1. GESTIONE MENU E SEZIONI ===
         function openNav() { document.getElementById("mySidebar").style.width = "250px"; if (window.innerWidth > 768) { document.getElementById("main").style.marginLeft = "250px"; } }
@@ -514,10 +532,66 @@
             localStorage.setItem('datiSpedizione3L', JSON.stringify(dati));
         }
 
+        // === INIT HOME SLIDER (NUOVO) ===
+        function initHomeSlider() {
+            const track = document.getElementById('home-slider-track');
+            if(!track) return;
+            
+            let isTransitioning = false;
+
+            function centerSlide(index, animate) {
+                const slides = document.querySelectorAll('.home-slide');
+                if(slides.length === 0) return;
+                
+                slides.forEach((s, i) => {
+                    if(i === index) s.classList.add('active');
+                    else s.classList.remove('active');
+                });
+
+                const containerWidth = track.parentElement.offsetWidth;
+                const slideWidth = slides[index].offsetWidth;
+                const gap = 15; 
+                
+                let offset = 0;
+                for(let i=0; i<index; i++) {
+                    offset += slides[i].offsetWidth + gap;
+                }
+                
+                const centerPos = (containerWidth / 2) - (slideWidth / 2);
+                
+                track.style.transition = animate ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
+                track.style.transform = `translateX(${centerPos - offset}px)`;
+            }
+
+            // Inizializza subito
+            setTimeout(() => { centerSlide(1, false); }, 100);
+
+            setInterval(() => {
+                if(isTransitioning) return;
+                isTransitioning = true;
+                
+                // Anima
+                centerSlide(2, true);
+                
+                setTimeout(() => {
+                    const slides = document.querySelectorAll('.home-slide');
+                    track.appendChild(slides[0]); // sposta in fondo
+                    centerSlide(1, false); // resetta
+                    isTransitioning = false;
+                }, 600);
+
+            }, 3500);
+
+            window.addEventListener('resize', () => {
+                if(!isTransitioning) centerSlide(1, false);
+            });
+        }
+
         window.addEventListener('load', function() {
             var hash = window.location.hash.substring(1); 
             if (hash) showSection(hash, false); else showSection('home', false); 
             caricaDatiSpedizioneSalvata(); 
+            initHomeSlider(); // Avvio il carosello
         });
         window.addEventListener('popstate', function() {
             var hash = window.location.hash.substring(1);
@@ -729,7 +803,6 @@
             document.getElementById(idImg).src = srcNuova;
         }
 
-        // AGGIORNATO: Ora accetta anche la taglia!
         function aggiungiPersonalizzatoCompleto(nomeBase, prezzo, textAreaId, radioName, imgId, coloreFisso = null, tagliaId = null) {
             let note = document.getElementById(textAreaId).value.trim();
             let colore = coloreFisso;
@@ -746,7 +819,6 @@
             
             let nomeFinale = `${nomeBase} [Colore: ${colore}]`;
             
-            // Se la funzione riceve una taglia, la aggiunge al nome per lo scontrino
             if (tagliaId && document.getElementById(tagliaId)) {
                 let taglia = document.getElementById(tagliaId).value;
                 nomeFinale += ` [Taglia: ${taglia}]`;
