@@ -87,7 +87,7 @@
         .sidebar-logo { width: 120px; display: block; margin: 0 auto 10px auto; }
         .menu-title { font-size: 12px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 5px 30px; }
 
-        /* CARRELLO LATERALE */
+        /* CARRELLO LATERALE DESTRO */
         .cart-sidebar { height: 100%; width: 0; position: fixed; z-index: 110; top: 0; right: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 20px; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .cart-header h2 { margin: 0; font-size: 22px; color: var(--testo-scuro); border: none; }
@@ -179,6 +179,17 @@
         .search-input { width: 100%; padding: 12px 15px 12px 45px; border: 2px solid #eee; border-radius: 30px; font-family: 'Poppins', sans-serif; font-size: 14px; outline: none; transition: 0.3s; box-sizing: border-box; background-color: #fafafa; }
         .search-input:focus { border-color: var(--rosa-chiaro); background-color: #fff; box-shadow: 0 5px 15px rgba(244,143,177,0.2); }
 
+        /* BADGE PRODOTTI (NOVITÀ / PIÙ VENDUTO) */
+        .product-badge { position: absolute; top: 15px; left: -10px; background: var(--fucsia); color: white; padding: 5px 15px; font-size: 12px; font-weight: 600; border-radius: 0 10px 10px 0; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); z-index: 10; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* CURSORE MAGICO */
+        #magic-cursor { display: none; }
+        @media (pointer: fine) {
+            body, a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .floating-cart, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label { cursor: none !important; }
+            #magic-cursor { display: block; position: fixed; width: 12px; height: 12px; background-color: var(--fucsia); border-radius: 50%; pointer-events: none; z-index: 999999; transform: translate(-50%, -50%); transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; }
+            #magic-cursor.hover { width: 45px; height: 45px; background-color: rgba(216, 27, 96, 0.2); border: 2px solid var(--fucsia); }
+        }
+
         #main { transition: margin-left .5s; padding: 20px; max-width: 1000px; margin: auto; position: relative; z-index: 1;}
         
         /* BOTTONE MENU HOME ICONA INCOLLATO (STICKY) */
@@ -214,7 +225,7 @@
         .cat-content.active { display: block; animation: slideUpFade 0.5s ease forwards; }
 
         .product-container { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-        .product-card { background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); text-align: center; width: 280px; transition: all 0.4s ease; border: 1px solid transparent; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;}
+        .product-card { background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); text-align: center; width: 280px; transition: all 0.4s ease; border: 1px solid transparent; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; position: relative;}
         .product-card:not(.skeleton-card):hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(216, 27, 96, 0.15); border-color: var(--rosa-chiaro); }
         .product-image { width: 100%; height: 220px; object-fit: cover; border-radius: 15px; margin-bottom: 20px; transition: transform 0.4s; }
         .product-card h3 { margin: 10px 0; font-size: 20px; color: var(--testo-scuro); }
@@ -742,6 +753,28 @@
     </footer>
 
     <script>
+        // === CURSORE MAGICO ===
+        if (window.matchMedia("(pointer: fine)").matches) {
+            const cursor = document.createElement('div');
+            cursor.id = 'magic-cursor';
+            document.body.appendChild(cursor);
+            
+            document.addEventListener('mousemove', e => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            
+            document.addEventListener('mouseover', e => {
+                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label');
+                if(clickable) cursor.classList.add('hover');
+            });
+            
+            document.addEventListener('mouseout', e => {
+                const clickable = e.target.closest('a, button, input, select, textarea, .floating-cart, .back-to-top, .product-image, .charm-image, .home-slide img, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label');
+                if(clickable) cursor.classList.remove('hover');
+            });
+        }
+
         // === 1. GESTIONE MENU E SEZIONI ===
         function openNav() { 
             document.getElementById("mySidebar").style.width = "250px"; 
@@ -1154,8 +1187,15 @@
                             var prezzoNum = parseFloat(prezzoPulito) || 0;
                             var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
 
+                            // AGGIUNTA BADGE
+                            var badgeHTML = '';
+                            if (riga.badge && riga.badge.trim() !== "") {
+                                badgeHTML = `<div class="product-badge">${riga.badge.trim()}</div>`;
+                            }
+
                             var cardHTML = `
                                 <div class="product-card reveal">
+                                    ${badgeHTML}
                                     <img src="${immagine}" alt="${titoloPulito}" class="product-image" onerror="this.src='logo.png'">
                                     <h3>${riga.titolo}</h3>
                                     <p>${riga.descrizione || ''}</p>
