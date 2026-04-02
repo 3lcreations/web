@@ -565,7 +565,8 @@
             <div class="home-text reveal" style="text-align: center;">
                 <h2>Grazie per il tuo Ordine! 🎉</h2>
                 <i class="fas fa-check-circle" style="font-size: 60px; color: #4CAF50; margin-bottom: 20px;"></i>
-                <p style="font-size: 18px;">Il tuo pagamento è andato a buon fine e stiamo già preparando il tuo pacco!</p>
+               <p style="font-size: 18px;">Il tuo pagamento è andato a buon fine e stiamo già preparando il tuo pacco!<br>
+<strong>Riceverai il codice di tracciamento via email appena spedito. 📦</strong></p> 
                 <div class="photo-notice" style="margin-top: 30px;">
                     <i class="fas fa-camera" style="font-size: 24px; color: var(--fucsia); margin-bottom: 10px;"></i><br>
                     <strong>Hai acquistato un prodotto personalizzato con foto?</strong><br><br>
@@ -1498,11 +1499,13 @@ function applicaOrdinamentoComponenti() {
         }
 
         function mostraFormSpedizione() {
-            if (carrello.length === 0) { alert("Il carrello è vuoto!"); return; }
-            document.getElementById('cart-content-view').style.display = 'none';
-            document.getElementById('checkout-form-view').style.display = 'block';
-        }
-
+            if (carrello.length === 0) { 
+                showToast("Il carrello è vuoto! 🛒"); 
+                return; 
+            }
+            document.getElementById('cart-content-view').style.display = 'none';
+            document.getElementById('checkout-form-view').style.display = 'block';
+        }
         function nascondiFormSpedizione() {
             document.getElementById('checkout-form-view').style.display = 'none';
             document.getElementById('cart-content-view').style.display = 'flex';
@@ -1721,7 +1724,7 @@ function applicaOrdinamentoComponenti() {
             });
 
             if (numeroCiondoli > 10) {
-                alert("Puoi scegliere al massimo 10 ciondoli per collana!");
+                showToast("Massimo 10 pezzi raggiunti! 🛑")
                 if(event && event.target.classList.contains('charm-checkbox')) { event.target.checked = false; } 
                 return calcolaTotaleCiondoli(); 
             }
@@ -1741,9 +1744,9 @@ function applicaOrdinamentoComponenti() {
             let checkboxesPerline = document.querySelectorAll('.perlina-checkbox:checked');
             
             if (checkboxesCiondoli.length === 0 && checkboxesPerline.length === 0) {
-                alert("Devi selezionare almeno 1 ciondolo o 1 perlina per comporre la tua collana!");
-                return;
-            }
+                showToast("Scegli almeno 1 ciondolo o perlina! ✨");
+                return;
+            }
 
             let ciondoliSelezionati = [];
             let perlineSelezionate = [];
