@@ -29,6 +29,12 @@
             --testo-chiaro: #777777;
         }
 
+        /* SCROLLBAR GLOBALE PERSONALIZZATA */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--sfondo); }
+        ::-webkit-scrollbar-thumb { background: var(--rosa-chiaro); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--fucsia); }
+
         body { font-family: 'Poppins', sans-serif; background-color: var(--sfondo); color: var(--testo-scuro); margin: 0; padding: 0; overflow-x: hidden; position: relative;}
 
         /* MACCHIE DI COLORE SFOCATE SULLO SFONDO */
@@ -60,40 +66,32 @@
         .fi-6 { top: 85%; left: 35%; font-size: 40px; animation-duration: 24s; animation-direction: alternate-reverse; }
         .fi-7 { top: 10%; left: 45%; font-size: 20px; animation-duration: 19s; }
 
-        @keyframes floatPattern {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(50px, 70px) rotate(360deg); }
-        }
+        @keyframes floatPattern { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(50px, 70px) rotate(360deg); } }
 
-        /* TRUST BADGES (LATERALI SU PC) */
+        /* TRUST BADGES E OVERLAY */
         .trust-badges { position: fixed; top: 50%; transform: translateY(-50%); left: 20px; z-index: 10; display: flex; flex-direction: column; gap: 20px; }
         .trust-badge { background: white; border: 2px solid var(--rosa-chiaro); border-radius: 15px; padding: 15px 10px; text-align: center; width: 90px; box-shadow: 0 5px 15px rgba(216, 27, 96, 0.1); color: var(--fucsia); font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.3s; }
         .trust-badge i { font-size: 24px; }
         .trust-badge:hover { transform: scale(1.05); border-color: var(--fucsia); box-shadow: 0 8px 20px rgba(216, 27, 96, 0.2);}
-        
         @media (max-width: 1100px) { .trust-badges { display: none; } }
+        #menuOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.3); z-index: 96; opacity: 0; transition: opacity 0.4s ease; }
 
-        /* OVERLAY PER CHIUSURA MENU AL CLICK */
-        #menuOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.3); z-index: 95; opacity: 0; transition: opacity 0.4s ease; }
-
-        /* MENU LATERALE SEMITRASPARENTE E SCROLLABILE */
+        /* MENU LATERALE SEMITRASPARENTE */
         .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; padding-bottom: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
         .sidebar::-webkit-scrollbar { width: 5px; }
         .sidebar::-webkit-scrollbar-track { background: transparent; }
         .sidebar::-webkit-scrollbar-thumb { background: var(--rosa-chiaro); border-radius: 10px; }
-        
         .sidebar a { padding: 12px 30px; text-decoration: none; font-size: 16px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
         .sidebar a:hover { color: var(--fucsia); background-color: rgba(255, 240, 245, 0.8); padding-left: 40px; }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; background: none; color: var(--testo-scuro); padding: 0;}
         .sidebar-logo { width: 120px; display: block; margin: 0 auto 10px auto; }
         .menu-title { font-size: 12px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 5px 30px; }
 
-        /* CARRELLO LATERALE DESTRO */
+        /* CARRELLO LATERALE */
         .cart-sidebar { height: 100%; width: 0; position: fixed; z-index: 110; top: 0; right: 0; background-color: #ffffff; overflow-x: hidden; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 20px; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .cart-header h2 { margin: 0; font-size: 22px; color: var(--testo-scuro); border: none; }
         .cart-sidebar .closebtn { font-size: 30px; cursor: pointer; color: var(--testo-scuro); }
-        
         .cart-items { padding: 20px; flex-grow: 1; overflow-y: auto; }
         .cart-item { display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; position: relative;}
         .cart-item-img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; }
@@ -102,17 +100,12 @@
         .cart-item-price { color: var(--fucsia); font-weight: bold; }
         .cart-item-remove { position: absolute; right: 0; top: 0; color: #ccc; cursor: pointer; font-size: 18px; transition: 0.2s;}
         .cart-item-remove:hover { color: var(--fucsia); }
-
         .cart-footer { padding: 20px; border-top: 1px solid #eee; background: #fafafa; }
         .cart-subtotal-line { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; color: var(--testo-scuro);}
         .cart-shipping-line { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 15px; color: var(--testo-chiaro); border-bottom: 1px solid #ddd; padding-bottom: 10px;}
         .cart-total-line { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--testo-scuro);}
-        
-        /* BOTTONI PRINCIPALI */
         .checkout-btn { background-color: var(--fucsia); color: white; border: none; padding: 15px; font-size: 16px; border-radius: 30px; cursor: pointer; width: 100%; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(216, 27, 96, 0.3); text-align: center; text-decoration: none;}
         .checkout-btn:hover { background-color: #ad144d; transform: translateY(-2px); }
-
-        /* STILI DEL FORM DI SPEDIZIONE */
         .checkout-form-container { display: none; padding: 20px; flex-grow: 1; overflow-y: auto; background-color: #ffffff; }
         .back-to-cart-btn { background: none; border: none; color: var(--testo-chiaro); font-family: 'Poppins', sans-serif; font-size: 14px; padding: 0; cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 20px; transition: 0.3s; }
         .back-to-cart-btn:hover { color: var(--fucsia); }
@@ -122,19 +115,14 @@
         .form-group input:focus, .form-group select:focus { border-color: var(--fucsia); background-color: #fff;}
         .form-row { display: flex; gap: 10px; }
 
-        /* PULSANTI FLUTTUANTI E CARRELLO BALZELLANTE CON SCINTILLE */
+        /* PULSANTI FLUTTUANTI E CARRELLO BALZELLANTE */
         .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 90; transition: 0.3s;}
         .floating-cart:hover { transform: scale(1.1); }
         .cart-badge { position: absolute; top: -5px; right: -5px; background-color: white; color: var(--fucsia); font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid var(--fucsia);}
-        
         @keyframes cartBounce { 0% { transform: scale(1); } 40% { transform: scale(1.3) rotate(-10deg); } 70% { transform: scale(0.9) rotate(10deg); } 100% { transform: scale(1) rotate(0deg); } }
         .floating-cart.bounce { animation: cartBounce 0.5s ease; }
-
         .sparkle { position: absolute; width: 4px; height: 4px; background-color: #fff; border-radius: 50%; pointer-events: none; z-index: 100; animation: sparkAnim 0.6s ease-out forwards; }
-        @keyframes sparkAnim {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; }
-        }
+        @keyframes sparkAnim { 0% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; } }
 
         .back-to-top { background-color: rgba(255, 255, 255, 0.9); color: var(--fucsia); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); cursor: pointer; transition: 0.3s; border: 1px solid var(--rosa-chiaro); position: fixed; bottom: 105px; right: 37px; z-index: 89; opacity: 0; visibility: hidden;}
         .back-to-top.show { opacity: 1; visibility: visible; }
@@ -153,7 +141,7 @@
         .cookie-btn:hover { background-color: #ad144d; transform: scale(1.05); }
 
         /* NASTRO SCORREVOLE MINIMAL SOPRA AL FOOTER */
-        .marquee-container { width: 100%; overflow: hidden; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 12px 0; margin-top: 50px; background: transparent; white-space: nowrap; }
+        .marquee-container { width: 100%; overflow: hidden; border-top: 1px solid rgba(216, 27, 96, 0.2); border-bottom: 1px solid rgba(216, 27, 96, 0.2); padding: 12px 0; margin-top: 50px; background: transparent; white-space: nowrap; }
         .marquee-content { display: inline-block; font-size: 13px; font-weight: 400; color: var(--testo-chiaro); letter-spacing: 2px; text-transform: uppercase; animation: marqueeAnim 20s linear infinite; }
         @keyframes marqueeAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
@@ -170,10 +158,31 @@
         .reveal { opacity: 0; transform: translateY(40px); transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
+        /* SKELETON LOADING */
+        .skeleton-card { border: none !important; box-shadow: 0 10px 30px rgba(0,0,0,0.02) !important; cursor: default !important; transform: none !important; }
+        .skeleton-anim { background: linear-gradient(90deg, #f9f9f9 25%, #ececec 50%, #f9f9f9 75%); background-size: 200% 100%; animation: skeletonLoading 1.5s infinite; border-radius: 10px; }
+        .skeleton-img { width: 100%; height: 220px; border-radius: 15px; margin-bottom: 20px; }
+        .skeleton-title { height: 24px; width: 70%; margin: 10px auto; }
+        .skeleton-desc { height: 16px; width: 90%; margin: 5px auto; }
+        .skeleton-price { height: 28px; width: 40%; margin: 15px auto; }
+        .skeleton-btn-mock { height: 45px; width: 100%; border-radius: 30px; margin-top: auto; }
+        .skeleton-charm { width: 150px; height: 200px; padding: 15px; box-sizing: border-box; border-radius: 15px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .skeleton-charm-img { width: 100%; height: 100px; border-radius: 10px; margin-bottom: 10px; }
+        .skeleton-charm-title { height: 14px; width: 80%; margin: 5px auto; }
+        .skeleton-charm-price { height: 18px; width: 60%; margin: 10px auto; }
+        .skeleton-charm-box { height: 20px; width: 20px; margin: 0 auto; border-radius: 4px; }
+        @keyframes skeletonLoading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* BARRA DI RICERCA ISTANTANEA */
+        .search-container { max-width: 400px; margin: 0 auto 30px auto; position: relative; }
+        .search-container i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--testo-chiaro); }
+        .search-input { width: 100%; padding: 12px 15px 12px 45px; border: 2px solid #eee; border-radius: 30px; font-family: 'Poppins', sans-serif; font-size: 14px; outline: none; transition: 0.3s; box-sizing: border-box; background-color: #fafafa; }
+        .search-input:focus { border-color: var(--rosa-chiaro); background-color: #fff; box-shadow: 0 5px 15px rgba(244,143,177,0.2); }
+
         #main { transition: margin-left .5s; padding: 20px; max-width: 1000px; margin: auto; position: relative; z-index: 1;}
         
-        /* BOTTONE MENU HOME ICONA */
-        .openbtn { font-size: 22px; cursor: pointer; background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(5px); color: var(--fucsia); border: 1px solid rgba(216, 27, 96, 0.3); padding: 10px 15px; border-radius: 12px; margin-bottom: 20px; font-weight: 600; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center;}
+        /* BOTTONE MENU HOME ICONA INCOLLATO (STICKY) */
+        .openbtn { font-size: 22px; cursor: pointer; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); color: var(--fucsia); border: 1px solid rgba(216, 27, 96, 0.3); padding: 10px 15px; border-radius: 12px; margin-bottom: 20px; font-weight: 600; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; position: sticky; top: 15px; z-index: 95; box-shadow: 0 4px 15px rgba(216, 27, 96, 0.15);}
         .openbtn:hover { background-color: var(--fucsia); color: white; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); }
 
         .content-section { display: none; animation: slideUpFade 0.6s ease forwards; opacity: 0; transform: translateY(20px); }
@@ -206,7 +215,7 @@
 
         .product-container { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
         .product-card { background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); text-align: center; width: 280px; transition: all 0.4s ease; border: 1px solid transparent; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;}
-        .product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(216, 27, 96, 0.15); border-color: var(--rosa-chiaro); }
+        .product-card:not(.skeleton-card):hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(216, 27, 96, 0.15); border-color: var(--rosa-chiaro); }
         .product-image { width: 100%; height: 220px; object-fit: cover; border-radius: 15px; margin-bottom: 20px; transition: transform 0.4s; }
         .product-card h3 { margin: 10px 0; font-size: 20px; color: var(--testo-scuro); }
         .price { font-size: 24px; color: var(--fucsia); font-weight: 600; margin: 15px 0; }
@@ -226,7 +235,7 @@
         .opzioni-catenina input[type="radio"] { accent-color: var(--fucsia); transform: scale(1.2); }
         
         .charm-card { background: white; padding: 15px; border-radius: 15px; width: 150px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; transition: 0.3s; box-sizing: border-box;}
-        .charm-card:hover { border-color: var(--rosa-chiaro); transform: translateY(-5px);}
+        .charm-card:not(.skeleton-charm):hover { border-color: var(--rosa-chiaro); transform: translateY(-5px);}
         .charm-image { width: 100%; height: 100px; object-fit: cover; border-radius: 10px; margin-bottom: 10px;}
         .charm-title { font-size: 14px; margin-bottom: 5px; }
         .charm-price { color: var(--fucsia); font-weight: bold; margin: 10px 0;}
@@ -480,6 +489,11 @@
         <div id="acquista" class="content-section">
             <h2 class="reveal" style="display:block; text-align:center;">I Nostri Prodotti</h2>
             
+            <div class="search-container reveal">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchBar" class="search-input" placeholder="Cerca un prodotto (es. Cuore, Azzurro...)" onkeyup="filtraProdotti()">
+            </div>
+
             <div class="category-tabs reveal">
                 <button class="cat-btn active" onclick="cambiaCategoria('collane', this)">📿 Collane</button>
                 <button class="cat-btn" onclick="cambiaCategoria('fiocchi', this)">🎀 Fiocchi</button>
@@ -487,13 +501,17 @@
 
             <div id="cat-collane" class="cat-content active">
                 <div class="product-container" id="lista-prodotti">
-                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento collane in corso...</p>
+                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-desc"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
+                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-desc"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
+                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-desc"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
                 </div>
             </div>
 
             <div id="cat-fiocchi" class="cat-content">
                 <div class="product-container" id="lista-fiocchi">
-                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento fiocchi in corso...</p>
+                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-desc"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
+                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-desc"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
+                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-desc"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
                 </div>
             </div>
         </div>
@@ -641,14 +659,18 @@
             <div class="componi-box reveal">
                 <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli i ciondoli (Da 1 a 10)</h3>
                 <div class="product-container" id="lista-ciondoli">
-                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento ciondoli in corso...</p>
+                    <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
+                    <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
+                    <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
                 </div>
             </div>
 
             <div class="componi-box reveal">
                 <h3 style="text-align: center; color: var(--testo-scuro);">3. Scegli le perline (Max 10)</h3>
                 <div class="product-container" id="lista-perline">
-                    <p class="loading-text"><i class="fas fa-spinner fa-spin"></i> Caricamento perline in corso...</p>
+                    <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
+                    <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
+                    <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
                 </div>
             </div>
 
@@ -757,6 +779,30 @@
                 document.querySelector(`.cat-btn[onclick*="${catId}"]`).classList.add('active');
             }
             document.getElementById('cat-' + catId).classList.add('active');
+            
+            let searchBar = document.getElementById('searchBar');
+            if (searchBar) {
+                searchBar.value = '';
+                filtraProdotti();
+            }
+        }
+
+        // === RICERCA ISTANTANEA ===
+        function filtraProdotti() {
+            let input = document.getElementById('searchBar').value.toLowerCase();
+            let activeTab = document.querySelector('.cat-content.active');
+            if (!activeTab) return;
+            let cards = activeTab.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                if (card.classList.contains('skeleton-card')) return;
+                let title = card.querySelector('h3') ? card.querySelector('h3').innerText.toLowerCase() : '';
+                let desc = card.querySelector('p') ? card.querySelector('p').innerText.toLowerCase() : '';
+                if (title.includes(input) || desc.includes(input)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
 
         // === 2. LOCAL STORAGE ===
@@ -972,7 +1018,6 @@
                 void cartBtn.offsetWidth; 
                 cartBtn.classList.add('bounce');
                 
-                // Creazione scintille
                 for(let i=0; i<6; i++) {
                     let spark = document.createElement('div');
                     spark.classList.add('sparkle');
