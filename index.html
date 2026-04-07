@@ -25,10 +25,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
       import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
       // ⚠️ SOSTITUISCI QUESTI DATI CON QUELLI DELLA TUA CONSOLE FIREBASE ⚠️
    const firebaseConfig = {
   apiKey: "AIzaSyACRdFw2Ao9UbYw5O0h2PrA3n-CfoAgOLE",
@@ -49,6 +48,7 @@
       window.fbGetDocs = getDocs;
       window.fbAddDoc = addDoc;
       window.fbDeleteDoc = deleteDoc;
+      window.fbUpdateDoc = updateDoc;
       window.fbDoc = doc;
       window.fbSignIn = signInWithEmailAndPassword;
       window.fbSignOut = signOut;
@@ -254,7 +254,13 @@
         /* TASTO ELIMINA PER ADMIN */
         .delete-admin-btn { position: absolute; top: 60px; right: 15px; background-color: #ff4d4d; color: white; padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.3s; display: flex; align-items: center; gap: 5px; }
         .delete-admin-btn:hover { background-color: #cc0000; transform: scale(1.05); }
+        /* TASTO MODIFICA PER ADMIN */
+        .edit-admin-btn { position: absolute; top: 60px; left: 15px; background-color: #ff9800; color: white; padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.3s; display: flex; align-items: center; gap: 5px; }
+        .edit-admin-btn:hover { background-color: #e68a00; transform: scale(1.05); }
 
+        /* MODALE MODIFICA PRODOTTO */
+        #edit-modal { display: none; position: fixed; z-index: 999999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
+        #edit-modal .componi-box { background: white; width: 90%; max-width: 400px; padding: 30px; position: relative; margin: 0; }
         /* BARRA DI RICERCA ISTANTANEA */
         .search-container { max-width: 400px; margin: 0 auto 30px auto; position: relative; display: flex; align-items: center; }
         .search-container i { position: absolute; left: 15px; color: var(--testo-chiaro); font-size: 16px; z-index: 5; pointer-events: none; }
@@ -1693,6 +1699,46 @@
                 }
             }
         };
+        // === GESTIONE MODIFICA PRODOTTO (ADMIN) ===
+        window.apriModaleModifica = function(id, titolo, prezzo, badge) {
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-title-display').innerText = "Modifica: " + titolo;
+            document.getElementById('edit-prezzo').value = prezzo;
+            document.getElementById('edit-badge').value = badge;
+            document.getElementById('edit-modal').style.display = 'flex';
+        };
+
+        window.chiudiModaleModifica = function() {
+            document.getElementById('edit-modal').style.display = 'none';
+        };
+
+        window.salvaModificheProdotto = async function() {
+            const id = document.getElementById('edit-id').value;
+            const nuovoPrezzo = document.getElementById('edit-prezzo').value;
+            const nuovoBadge = document.getElementById('edit-badge').value;
+
+            if(!nuovoPrezzo) { showToast("Inserisci un prezzo valido!"); return; }
+
+            try {
+                const prodottoRef = window.fbDoc(window.db, "prodotti", id);
+                await window.fbUpdateDoc(prodottoRef, {
+                    prezzo: parseFloat(nuovoPrezzo),
+                    badge: nuovoBadge
+                });
+                
+                showToast("Modifiche salvate! ✨");
+                chiudiModaleModifica();
+                
+                // Ricarica le griglie per mostrare i nuovi dati
+                window.caricaProdottiFirebase('collane', 'lista-prodotti');
+                window.caricaProdottiFirebase('fiocchi', 'lista-fiocchi');
+                window.caricaProdottiFirebase('ciondoli', 'lista-ciondoli');
+                window.caricaProdottiFirebase('perline', 'lista-perline');
+            } catch (e) {
+                console.error(e);
+                showToast("Errore durante il salvataggio.");
+            }
+        };
 
         // MOTORE DI LETTURA UNICO DA FIREBASE
         window.caricaProdottiFirebase = async function(categoria, idContenitore) {
@@ -1701,7 +1747,6 @@
 
             try {
                 if(!window.fbGetDocs) {
-                    // Aspetta un momento se Firebase non è ancora pronto
                     setTimeout(() => window.caricaProdottiFirebase(categoria, idContenitore), 500);
                     return;
                 }
@@ -1720,9 +1765,14 @@
                         const immagine = riga.immagine || 'logo.png';
                         const prezzoNum = parseFloat(riga.prezzo) || 0;
                         const titolo = riga.titolo.replace(/'/g, "\\'"); 
+                        const badgeTesto = riga.badge ? riga.badge.replace(/'/g, "\\'") : '';
 
-                        let btnElimina = isAdmin ? 
-                            `<div class="delete-admin-btn" onclick="eliminaProdotto('${idProdotto}', '${titolo}')"><i class="fas fa-trash-alt"></i> Elimina</div>` : '';
+                        // Tasti Admin
+                        let btnElimina = isAdmin ? `<div class="delete-admin-btn" onclick="eliminaProdotto('${idProdotto}', '${titolo}')"><i class="fas fa-trash-alt"></i> Elimina</div>` : '';
+                        let btnModifica = isAdmin ? `<div class="edit-admin-btn" onclick="apriModaleModifica('${idProdotto}', '${titolo}', ${prezzoNum}, '${badgeTesto}')"><i class="fas fa-edit"></i> Modifica</div>` : '';
+
+                        // Etichetta Badge
+                        let htmlBadge = riga.badge ? `<div class="product-badge">${riga.badge}</div>` : '';
 
                         if(categoria === 'collane' || categoria === 'fiocchi') {
                             let isWished = wishlist.some(w => w.nome === riga.titolo);
@@ -1731,6 +1781,8 @@
 
                             const cardHTML = `
                                 <div class="product-card reveal visible" style="position:relative;">
+                                    ${htmlBadge}
+                                    ${btnModifica}
                                     ${btnElimina}
                                     <div class="wishlist-btn ${activeClass}" onclick="toggleWishlist('${titolo}', ${prezzoNum}, '${immagine}', this)">
                                         <i class="${heartClass} fa-heart"></i>
@@ -1748,6 +1800,8 @@
                             let chkClass = categoria === 'ciondoli' ? 'charm-checkbox' : 'perlina-checkbox';
                             const charmHTML = `
                                 <div class="charm-card reveal visible" style="position:relative;">
+                                    ${htmlBadge}
+                                    ${btnModifica}
                                     ${btnElimina}
                                     <img src="${immagine}" alt="${titolo}" class="charm-image" onerror="this.src='logo.png'">
                                     <div class="charm-title">${riga.titolo}</div>
@@ -1927,5 +1981,20 @@
             calcolaTotaleCiondoli(); 
         }
     </script>
+    <div id="edit-modal">
+        <div class="componi-box">
+            <span class="close-guide" onclick="chiudiModaleModifica()">&times;</span>
+            <h3 style="color: var(--fucsia); text-align: center; margin-top: 0;" id="edit-title-display">Modifica Prodotto</h3>
+            <input type="hidden" id="edit-id">
+            
+            <label style="font-size: 13px; color: var(--testo-chiaro);">Nuovo Prezzo (€)</label>
+            <input type="number" id="edit-prezzo" class="custom-textarea" style="height: 40px; margin-bottom: 15px;" step="0.01">
+            
+            <label style="font-size: 13px; color: var(--testo-chiaro);">Badge (es. Novità, Bestseller)</label>
+            <input type="text" id="edit-badge" class="custom-textarea" style="height: 40px; margin-bottom: 20px;" placeholder="Lascia vuoto per rimuovere il badge">
+            
+            <button onclick="salvaModificheProdotto()" class="checkout-btn" style="width: 100%;">Salva Modifiche <i class="fas fa-save"></i></button>
+        </div>
+    </div>
 </body>
 </html>
