@@ -2250,46 +2250,90 @@ let btnModifica = isAdmin ? `<div class="edit-admin-btn" onclick="apriModaleModi
         };
 
         // 2. Modifichiamo la vecchia funzione aggiornaAnteprima
-        window.aggiornaAnteprima = function(idImg, chiaveImmagine) {
-            // Prende il link dinamico invece del vecchio file .png
-            document.getElementById(idImg).src = window.immaginiSitoDinamiche[chiaveImmagine] || 'logo.png';
-        }
+      window.aggiornaAnteprima = function(idImg, chiaveImmagine) {
+            const imgElement = document.getElementById(idImg);
+            if (!imgElement) return;
+
+            // 1. Controlliamo se esiste una versione caricata dall'Admin (Cloud)
+            let nuovaImg = window.immaginiSitoDinamiche[chiaveImmagine];
+
+            // 2. Se non esiste nel Cloud, proviamo a ricostruire il nome file standard
+            if (!nuovaImg || nuovaImg === "") {
+                // Esempio: se chiave è 'tshirt_bianca', il file è 'bianco-tshirt.png'
+                if (chiaveImmagine === 'tshirt_bianca') nuovaImg = 'bianco-tshirt.png';
+                else if (chiaveImmagine === 'tshirt_nera') nuovaImg = 'nero-tshirt.png';
+                else if (chiaveImmagine === 'pelosetto_bianco') nuovaImg = 'bianco-pelosetto.png';
+                else if (chiaveImmagine === 'pelosetto_nero') nuovaImg = 'nero-pelosetto.png';
+                else if (chiaveImmagine === 'pochette_azzurra') nuovaImg = 'azzurro-p.png';
+                else if (chiaveImmagine === 'pochette_rosa') nuovaImg = 'rosa-p.png';
+                else if (chiaveImmagine === 'pochette_nera') nuovaImg = 'nero-p.png';
+            }
+
+            // 3. Applichiamo la foto (con un piccolo effetto dissolvenza per non farla "saltare")
+            imgElement.style.opacity = '0.5';
+            imgElement.src = nuovaImg || 'logo.png';
+            
+            imgElement.onload = () => { imgElement.style.opacity = '1'; };
+        };
 
        // Dizionario Prezzi Base di Emergenza
         window.prezziBase = { catenina: 5.00, maglietta: 20.00, pelosetto: 18.00, pochette: 15.00, borsa: 25.00 };
 
-        // Motore Impostazioni Sito Potenziato
+        // === MOTORE IMPOSTAZIONI SITO AGGIORNATO ===
         window.caricaImpostazioniSito = async function() {
             try {
-                // 1. CARICA FOTO
+                // 1. CARICA FOTO DAL DATABASE
                 const docRefImg = window.fbDoc(window.db, "impostazioni", "immagini_sito");
                 const docSnapImg = await window.fbGetDoc(docRefImg);
-                if(docSnapImg.exists()) { window.immaginiSitoDinamiche = { ...window.immaginiSitoDinamiche, ...docSnapImg.data() }; }
+                
+                if(docSnapImg.exists()) { 
+                    // Uniamo le foto caricate dall'admin a quelle di base
+                    Object.assign(window.immaginiSitoDinamiche, docSnapImg.data()); 
+        }
                 
                 // 2. CARICA PREZZI BASE
                 const docRefPrezzi = window.fbDoc(window.db, "impostazioni", "prezzi_base");
                 const docSnapPrezzi = await window.fbGetDoc(docRefPrezzi);
-                if(docSnapPrezzi.exists()) { window.prezziBase = { ...window.prezziBase, ...docSnapPrezzi.data() }; }
+                if(docSnapPrezzi.exists()) { 
+                    window.prezziBase = { ...window.prezziBase, ...docSnapPrezzi.data() }; 
+                }
 
-                // APPLICA FOTO
+                // --- APPLICAZIONE FOTO ALLA HOME (VETRINA) ---
                 for(let i=1; i<=7; i++) {
                     const img = document.getElementById('home-img-'+i);
                     if(img) img.src = window.immaginiSitoDinamiche['home_'+i];
                 }
-                const maglia = document.getElementById('img-maglia'); if(maglia) maglia.src = window.immaginiSitoDinamiche['tshirt_bianca'];
-                const pelo = document.getElementById('img-pelosetto'); if(pelo) pelo.src = window.immaginiSitoDinamiche['pelosetto_bianco'];
-                const pochette = document.getElementById('img-pochette'); if(pochette) pochette.src = window.immaginiSitoDinamiche['pochette_azzurra'];
-                const borsa = document.getElementById('img-borsa'); if(borsa) borsa.src = window.immaginiSitoDinamiche['borsa_bianca'];
+
+                // --- APPLICAZIONE FOTO AI PRODOTTI PERSONALIZZABILI ---
+                // Maglietta Umani (Default Bianca)
+                const maglia = document.getElementById('img-maglia'); 
+                if(maglia) maglia.src = window.immaginiSitoDinamiche['tshirt_bianca'];
+
+                // Pelosetto (Default Bianco)
+                const pelo = document.getElementById('img-pelosetto'); 
+                if(pelo) pelo.src = window.immaginiSitoDinamiche['pelosetto_bianco'];
+
+                // Pochette (Default Azzurra)
+                const pochette = document.getElementById('img-pochette'); 
+                if(pochette) pochette.src = window.immaginiSitoDinamiche['pochette_azzurra'];
+
+                // Borsa (Default Bianca)
+                const borsa = document.getElementById('img-borsa'); 
+                if(borsa) borsa.src = window.immaginiSitoDinamiche['borsa_bianca'];
                 
-                // APPLICA PREZZI NEI BOTTONI
+                // --- AGGIORNAMENTO PREZZI NEI BOTTONI ---
                 const lCat = document.getElementById('label-prezzo-catenina'); if(lCat) lCat.innerText = window.prezziBase.catenina.toFixed(2);
                 const lMag = document.getElementById('label-prezzo-maglietta'); if(lMag) lMag.innerText = window.prezziBase.maglietta.toFixed(2);
                 const lPel = document.getElementById('label-prezzo-pelosetto'); if(lPel) lPel.innerText = window.prezziBase.pelosetto.toFixed(2);
                 const lPoc = document.getElementById('label-prezzo-pochette'); if(lPoc) lPoc.innerText = window.prezziBase.pochette.toFixed(2);
                 const lBor = document.getElementById('label-prezzo-borsa'); if(lBor) lBor.innerText = window.prezziBase.borsa.toFixed(2);
 
-                calcolaTotaleCiondoli(); // Aggiorna il totale della collana
-            } catch(e) { console.error("Errore caricamento impostazioni:", e); }
+                // Aggiorniamo anche il totale del configuratore collana se presente
+                if (typeof calcolaTotaleCiondoli === "function") calcolaTotaleCiondoli();
+
+            } catch(e) { 
+                console.error("Errore caricamento impostazioni sito:", e); 
+            }
         };
 
         // Salva i Nuovi Prezzi
@@ -2432,9 +2476,20 @@ let btnModifica = isAdmin ? `<div class="edit-admin-btn" onclick="apriModaleModi
         });
 
         // === FUNZIONI PER PRODOTTI PERSONALIZZATI ===
-        window.aggiornaAnteprima = function(idImg, srcNuova) {
-            document.getElementById(idImg).src = srcNuova;
-        }
+       window.aggiornaAnteprima = function(idImg, chiaveImmagine) {
+            const imgElement = document.getElementById(idImg);
+            if (!imgElement) return;
+
+            // Prende l'immagine dal magazzino (che sia un link Firebase o un file locale)
+            const sorgente = window.immaginiSitoDinamiche[chiaveImmagine];
+
+            if (sorgente) {
+                imgElement.src = sorgente;
+            } else {
+                // Se proprio la chiave non esiste, mette il logo per non lasciare vuoto
+                imgElement.src = 'logo.png';
+            }
+        };
 
         // === FUNZIONE PER MOSTRARE IL NOME DELLA FOTO SCELTA ===
         window.aggiornaNomeFile = function(inputElement, spanId) {
