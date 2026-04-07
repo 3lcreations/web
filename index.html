@@ -293,7 +293,7 @@
         #magic-cursor { display: none; }
         @media (pointer: fine) {
             body, a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .floating-cart, .floating-wishlist, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label, .wishlist-btn { cursor: none !important; }
-            #magic-cursor { display: block; position: fixed; width: 12px; height: 12px; background-color: var(--fucsia); border-radius: 50%; pointer-events: none !important; mix-blend-mode: multiply; z-index: 999999; transform: translate(-50%, -50%); transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; }
+           #magic-cursor { display: block; position: fixed; width: 12px; height: 12px; background-color: var(--fucsia); border-radius: 50%; pointer-events: none !important; mix-blend-mode: multiply; z-index: 9999999; transform: translate(-50%, -50%); transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; }
             #magic-cursor.hover { width: 45px; height: 45px; background-color: rgba(216, 27, 96, 0.2); border: 2px solid var(--fucsia); }
         }
 
@@ -489,7 +489,7 @@
         <a href="#contatti" onclick="showSection('contatti'); return false;">✉️ Contatti</a>
         <a href="#faq" onclick="showSection('faq'); return false;">❓ Domande Frequenti</a>
         <a href="#legale" onclick="showSection('legale'); return false;">📄 Note Legali</a>
-        <a href="#sezione-admin" onclick="showSection('sezione-admin'); return false;">🔒 Area Admin</a>
+
     </div>
 
     <div id="myCartSidebar" class="cart-sidebar">
@@ -940,7 +940,7 @@
                 <h4 style="text-align: center; margin-bottom: 10px; color: var(--testo-scuro);">Aggiungi Nuovo Prodotto</h4>
                 <input type="text" id="new-titolo" placeholder="Nome Prodotto (es. Collana Cuore)" class="custom-textarea" style="height:40px;">
                 <input type="number" id="new-prezzo" placeholder="Prezzo (es. 15.50)" class="custom-textarea" style="height:40px;">
-                <select id="new-categoria" class="custom-textarea" style="height:40px; margin-bottom: 15px;">
+                <select id="new-categoria" class="custom-textarea" style="height: auto; min-height: 48px; padding: 10px 15px; margin-bottom: 15px;">
                     <option value="collane">Collane</option>
                     <option value="fiocchi">Fiocchi</option>
                     <option value="ciondoli">Ciondoli (Per collana)</option>
@@ -972,7 +972,7 @@
             <a href="#contatti" onclick="showSection('contatti'); return false;">Contatti</a> | 
             <a href="#legale" onclick="showSection('legale'); return false;">Note Legali</a>
         </p>
-        <p style="margin-top: 15px;">© 2026 3L Creations. Tutti i diritti riservati.</p>
+        <p style="margin-top: 15px;"><span onclick="showSection('sezione-admin')" style="cursor: default;">©</span> 2026 3L Creations. Tutti i diritti riservati.</p>
     </footer>
 
     <script>
