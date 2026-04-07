@@ -489,6 +489,7 @@ window.storage = storage;
         <a href="#home" onclick="showSection('home'); return false;">🏠 Home</a>
         <div class="menu-title">Area Personale</div>
         <a href="#profilo" onclick="showSection('profilo'); return false;">👤 Accedi / Registrati</a>
+        <a href="#miei-ordini" id="nav-miei-ordini" onclick="showSection('miei-ordini'); caricaOrdiniPersonali(); return false;" style="display:none;">📦 I miei ordini</a>
         <div class="menu-title">Prodotti Pronti</div>
         <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('collane'); return false;">📿 Collane</a>
         <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('fiocchi'); return false;">🎀 Fiocchi</a>
@@ -955,13 +956,23 @@ window.storage = storage;
                 </p>
             </div>
 
-            <div id="user-dashboard" class="componi-box reveal" style="display:none; max-width: 400px; margin: 0 auto; text-align: center;">
+           <div id="user-dashboard" class="componi-box reveal" style="display:none; max-width: 400px; margin: 0 auto; text-align: center;">
                 <h3 style="color: var(--fucsia);">Ciao <span id="user-nome-display"></span>! ✨</h3>
                 <p style="font-size: 13px; color: var(--testo-chiaro); margin-bottom: 20px;">Il tuo carrello e i tuoi preferiti sono sincronizzati.</p>
+                
+                <button onclick="showSection('miei-ordini'); caricaOrdiniPersonali();" class="checkout-btn" style="width: 100%; margin-bottom: 15px;">I Miei Ordini 📦</button>
+                
                 <button onclick="logoutCliente()" class="checkout-btn" style="background-color: #777; width: auto; padding: 10px 30px;">Esci dall'account</button>
             </div>
         </div>
-
+<div id="miei-ordini" class="content-section">
+            <h2 class="reveal" style="display:block; text-align:center;">I Miei Ordini 📦</h2>
+            <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
+                <button onclick="showSection('profilo')" class="back-to-cart-btn" style="margin-bottom: 20px;"><i class="fas fa-chevron-left"></i> Torna al Profilo</button>
+                <div id="lista-miei-ordini" style="display: flex; flex-direction: column; gap: 15px;">
+                    </div>
+            </div>
+        </div>
     
     
         <div id="faq" class="content-section">
@@ -1846,7 +1857,7 @@ window.storage = storage;
             document.getElementById('cart-content-view').style.display = 'flex';
         }
 
-        window.inviaOrdineAPayPal = function(event) {
+       window.inviaOrdineAPayPal = async function(event) {
             event.preventDefault();
             salvaDatiSpedizione();
 
@@ -1857,22 +1868,38 @@ window.storage = storage;
             let cap = document.getElementById('cap').value;
             let telefono = document.getElementById('telefono').value;
 
-            let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=luciaxxxo@alice.it&currency_code=EUR&handling_cart=8.00`;
+            // --- NUOVO: SALVATAGGIO IN FIREBASE ---
+            const user = window.auth.currentUser;
+            if (user && user.email !== "3lcreationsfordogs1@gmail.com" && user.email !== "mauro7leo10@gmail.com") {
+                let totaleOrdine = 8.00; // Spedizione inclusa
+                carrello.forEach(item => totaleOrdine += item.prezzo);
+                
+                try {
+                    await window.fbAddDoc(window.fbCollection(window.db, "utenti", user.uid, "ordini"), {
+                        data: new Date(),
+                        carrello: carrello,
+                        totale: totaleOrdine,
+                        stato: "In attesa di spedizione",
+                        spedizione: { nome, cognome, indirizzo, citta, cap, telefono }
+                    });
+                } catch(e) {
+                    console.error("Errore nel salvare l'ordine", e);
+                }
+            }
+            // --------------------------------------
 
+            let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=luciaxxxo@alice.it&currency_code=EUR&handling_cart=8.00`;
             paypalUrl += `&return=${encodeURIComponent('https://3lcreations.github.io/web/#grazie')}`;
             paypalUrl += `&cancel_return=${encodeURIComponent('https://3lcreations.github.io/web/')}`;
             paypalUrl += `&cbt=${encodeURIComponent("Torna al negozio 3L Creations")}`;
             paypalUrl += `&rm=2`;
 
-           carrello.forEach((item, index) => {
+            carrello.forEach((item, index) => {
                 let i = index + 1; 
-                
-                // Ricompone il nome e la foto solo per l'email di PayPal
                 let nomePerPayPal = item.nome;
                 if (item.fotoCliente && item.fotoCliente !== "") {
-                    nomePerPayPal += ` - Foto scaricabile: ${item.fotoCliente}`;
+                    nomePerPayPal += ` - Foto: ${item.fotoCliente}`;
                 }
-                
                 paypalUrl += `&item_name_${i}=${encodeURIComponent(nomePerPayPal)}&amount_${i}=${item.prezzo.toFixed(2)}&quantity_${i}=1`;
             });
 
@@ -1888,9 +1915,7 @@ window.storage = storage;
             salvaCarrello();
 
             window.location.href = paypalUrl;
-            
         }
-
         // === LOGICA FIREBASE: PRODOTTI, COMPONENTI E ADMIN ===
         
         // ADMIN AUTH STATE
@@ -1917,6 +1942,7 @@ window.storage = storage;
                     window.caricaProdottiFirebase('perline', 'lista-perline');
                 } else {
                     // È UN CLIENTE NORMALE
+                    if(document.getElementById('nav-miei-ordini')) document.getElementById('nav-miei-ordini').style.display = 'block';
                     if(userLoginBox) userLoginBox.style.display = 'none';
                     if(userDashboard) {
                         userDashboard.style.display = 'block';
@@ -1926,6 +1952,7 @@ window.storage = storage;
                 }
             } else {
                 // NESSUNO È CONNESSO
+                if(document.getElementById('nav-miei-ordini')) document.getElementById('nav-miei-ordini').style.display = 'none';
                 if(loginBoxAdmin) loginBoxAdmin.style.display = 'block';
                 if(adminPanel) adminPanel.style.display = 'none';
                 
@@ -2038,6 +2065,86 @@ window.storage = storage;
                     console.error(e);
                     showToast("Errore durante l'eliminazione.");
                 }
+            }
+        };
+        // === LOGICA: I MIEI ORDINI ===
+      // === LOGICA: I MIEI ORDINI (Versione Sicura) ===
+        window.caricaOrdiniPersonali = async function() {
+            const container = document.getElementById('lista-miei-ordini');
+            const user = window.auth.currentUser;
+            
+            // Se non c'è utente connesso o non trova il contenitore, si ferma senza errori
+            if (!user) return; 
+
+            if (container) container.innerHTML = "<p style='text-align:center; color: var(--testo-chiaro);'><i class='fas fa-spinner fa-spin'></i> Caricamento in corso...</p>";
+
+            try {
+                const ordiniRef = window.fbCollection(window.db, "utenti", user.uid, "ordini");
+                const querySnapshot = await window.fbGetDocs(ordiniRef);
+                
+                if (querySnapshot.empty) {
+                    if (container) container.innerHTML = `
+                        <div style="text-align:center; color: var(--testo-chiaro); margin-top: 30px;">
+                            <i class="fas fa-box-open" style="font-size: 40px; color: #eee; margin-bottom: 15px; display:block;"></i>
+                            Non hai ancora effettuato ordini.<br>
+                        </div>`;
+                    return;
+                }
+
+                let ordini = [];
+                querySnapshot.forEach(doc => {
+                    ordini.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Ordinamento a prova di errore (se manca la data non va in blocco)
+                ordini.sort((a, b) => {
+                    let timeA = (a.data && typeof a.data.toMillis === 'function') ? a.data.toMillis() : 0;
+                    let timeB = (b.data && typeof b.data.toMillis === 'function') ? b.data.toMillis() : 0;
+                    return timeB - timeA;
+                });
+
+                if (container) container.innerHTML = "";
+                
+                ordini.forEach(ordine => {
+                    // Estrazione data sicura
+                    let dataOdierna = new Date();
+                    if (ordine.data && typeof ordine.data.toDate === 'function') {
+                        dataOdierna = ordine.data.toDate();
+                    } else if (ordine.data) {
+                        dataOdierna = new Date(ordine.data); // Fallback di emergenza
+                    }
+                    
+                    let dataFormat = dataOdierna.toLocaleDateString('it-IT');
+                    let orarioFormat = dataOdierna.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
+                    
+                    // Estrazione prodotti sicura
+                    let listaProdottiHTML = "";
+                    if (ordine.carrello && Array.isArray(ordine.carrello)) {
+                        listaProdottiHTML = ordine.carrello.map(p => `<li>${p.nome || 'Prodotto'} - <strong>€${(p.prezzo || 0).toFixed(2)}</strong></li>`).join('');
+                    } else {
+                        listaProdottiHTML = `<li>Dettagli non disponibili</li>`;
+                    }
+
+                    let totale = ordine.totale || 0;
+
+                    container.innerHTML += `
+                        <div style="background: var(--sfondo); padding: 20px; border-radius: 15px; border: 1px solid var(--rosa-chiaro); box-shadow: 0 4px 10px rgba(0,0,0,0.03); margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                                <span style="font-size: 13px; color: var(--testo-chiaro);">📅 ${dataFormat} - ${orarioFormat}</span>
+                                <span style="color: var(--fucsia); font-weight: bold; font-size: 16px;">Tot: €${totale.toFixed(2)}</span>
+                            </div>
+                            <ul style="font-size: 13px; color: var(--testo-scuro); padding-left: 20px; margin: 0 0 15px 0;">
+                                ${listaProdottiHTML}
+                            </ul>
+                            <div style="font-size: 12px; background-color: #f1f8e9; color: #558b2f; padding: 5px 10px; border-radius: 8px; display: inline-block;">
+                                Stato: <strong>${ordine.stato || 'In lavorazione'}</strong>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                console.error("Errore nel caricamento ordini:", e);
+                if (container) container.innerHTML = "<p style='text-align:center; color: var(--fucsia);'>Ops! C'è stato un piccolo errore. Ricarica la pagina o riprova tra poco.</p>";
             }
         };
         // === GESTIONE MODIFICA PRODOTTO COMPLETA (ADMIN) ===
