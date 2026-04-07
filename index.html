@@ -1081,6 +1081,11 @@ window.storage = storage;
                 <input type="file" id="admin-site-img-file" class="custom-textarea" style="height: auto; padding: 10px; margin-bottom: 15px;" accept="image/*">
                 <button onclick="salvaImmagineSito()" class="checkout-btn" style="margin-bottom: 25px; background-color: #ff9800;">Aggiorna Foto <i class="fas fa-image"></i></button>
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
+                <h4 style="text-align: center; margin-bottom: 10px; color: var(--testo-scuro);">Gestione Ordini Ricevuti 📦</h4>
+                <div id="admin-lista-ordini" style="max-height: 500px; overflow-y: auto; background: #fafafa; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 25px;">
+                    <p style="text-align:center; color: var(--testo-chiaro); font-size: 13px;">Caricamento ordini...</p>
+                </div>
                 
                 <h4 style="text-align: center; margin-bottom: 10px; color: var(--testo-scuro);">Modifica Prezzi Personalizzabili</h4>
                 <p style="text-align:center; font-size: 11px; color: var(--testo-chiaro); margin-bottom: 15px;">Cambia i prezzi base dei prodotti neutri da ricamare/stampare.</p>
@@ -1881,7 +1886,7 @@ window.storage = storage;
             document.getElementById('cart-content-view').style.display = 'flex';
         }
 
-       window.inviaOrdineAPayPal = async function(event) {
+       window.inviaOrdineAPayPal = function(event) {
             event.preventDefault();
             salvaDatiSpedizione();
 
@@ -1892,26 +1897,18 @@ window.storage = storage;
             let cap = document.getElementById('cap').value;
             let telefono = document.getElementById('telefono').value;
 
-            // --- NUOVO: SALVATAGGIO IN FIREBASE ---
-            const user = window.auth.currentUser;
-            if (user && user.email !== "3lcreationsfordogs1@gmail.com" && user.email !== "mauro7leo10@gmail.com") {
-                let totaleOrdine = 8.00; // Spedizione inclusa
-                carrello.forEach(item => totaleOrdine += item.prezzo);
-                
-                try {
-                    await window.fbAddDoc(window.fbCollection(window.db, "utenti", user.uid, "ordini"), {
-                        data: new Date(),
-                        carrello: carrello,
-                        totale: totaleOrdine,
-                        stato: "In attesa di spedizione",
-                        spedizione: { nome, cognome, indirizzo, citta, cap, telefono }
-                    });
-                } catch(e) {
-                    console.error("Errore nel salvare l'ordine", e);
-                }
-            }
-            // --------------------------------------
+            // 1. PARCHEGGIAMO L'ORDINE NEL BROWSER (in attesa di pagamento)
+            let totaleOrdine = 8.00; 
+            carrello.forEach(item => totaleOrdine += item.prezzo);
+            
+            let ordineInSospeso = {
+                carrello: carrello,
+                totale: totaleOrdine,
+                spedizione: { nome, cognome, indirizzo, citta, cap, telefono }
+            };
+            localStorage.setItem('ordineInSospeso3L', JSON.stringify(ordineInSospeso));
 
+            // 2. COSTRUIAMO IL LINK PAYPAL
             let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=luciaxxxo@alice.it&currency_code=EUR&handling_cart=8.00`;
             paypalUrl += `&return=${encodeURIComponent('https://3lcreations.github.io/web/#grazie')}`;
             paypalUrl += `&cancel_return=${encodeURIComponent('https://3lcreations.github.io/web/')}`;
@@ -1935,11 +1932,9 @@ window.storage = storage;
             paypalUrl += `&country=IT`; 
             paypalUrl += `&night_phone_a=${encodeURIComponent(telefono)}`;
 
-            carrello = [];
-            salvaCarrello();
-
+            // ATTENZIONE: Il carrello NON si svuota più qui!
             window.location.href = paypalUrl;
-        }
+        };
         // === LOGICA FIREBASE: PRODOTTI, COMPONENTI E ADMIN ===
         
         // ADMIN AUTH STATE
@@ -1955,6 +1950,7 @@ window.storage = storage;
                 // UTENTE CONNESSO! È admin o cliente?
                 if (user.email === "mauro7leo10@gmail.com") {
                     // È UN ADMIN
+                    window.caricaOrdiniAdmin();
                     if(loginBoxAdmin) loginBoxAdmin.style.display = 'none';
                     if(adminPanel) {
                         adminPanel.style.display = 'block';
@@ -2157,9 +2153,10 @@ window.storage = storage;
                             <ul style="font-size: 13px; color: var(--testo-scuro); padding-left: 20px; margin: 0 0 15px 0;">
                                 ${listaProdottiHTML}
                             </ul>
-                            <div style="font-size: 12px; background-color: #f1f8e9; color: #558b2f; padding: 5px 10px; border-radius: 8px; display: inline-block;">
-                                Stato: <strong>${ordine.stato || 'In lavorazione'}</strong>
-                            </div>
+                           <div style="font-size: 12px; background-color: #f1f8e9; color: #558b2f; padding: 8px 12px; border-radius: 8px; display: inline-block;">
+    Stato: <strong style="font-size: 13px;">${ordine.stato || 'In attesa di spedizione'}</strong>
+    ${ordine.tracking ? `<br><span style="color:#336600; margin-top:6px; display:inline-block; border-top: 1px solid #c5e1a5; padding-top: 6px;">🚚 Tracking: <strong>${ordine.tracking}</strong></span>` : ''}
+</div>
                         </div>
                     `;
                 });
@@ -2171,6 +2168,100 @@ window.storage = storage;
                         <i class="fas fa-exclamation-triangle" style="font-size: 30px; margin-bottom: 10px;"></i><br>
                         <strong>Errore di sistema:</strong><br>${e.message}
                     </div>`;
+            }
+        };
+        // === GESTIONE ORDINI ADMIN ===
+        window.caricaOrdiniAdmin = async function() {
+            const container = document.getElementById('admin-lista-ordini');
+            if (!container) return;
+
+            try {
+                const querySnapshot = await window.fbGetDocs(window.fbCollection(window.db, "ordini_generali"));
+                if (querySnapshot.empty) {
+                    container.innerHTML = "<p style='text-align:center; font-size:13px; color:#888;'>Ancora nessun ordine ricevuto. Le vendite arriveranno! 🚀</p>";
+                    return;
+                }
+
+                let ordini = [];
+                querySnapshot.forEach(doc => { ordini.push({ id: doc.id, ...doc.data() }); });
+
+                // Ordina per data (dal più recente)
+                ordini.sort((a, b) => {
+                    let timeA = (a.data && typeof a.data.toMillis === 'function') ? a.data.toMillis() : 0;
+                    let timeB = (b.data && typeof b.data.toMillis === 'function') ? b.data.toMillis() : 0;
+                    return timeB - timeA;
+                });
+
+                container.innerHTML = "";
+                ordini.forEach(ordine => {
+                    let dataFormat = "Data non disponibile";
+                    if (ordine.data && typeof ordine.data.toDate === 'function') {
+                        dataFormat = ordine.data.toDate().toLocaleDateString('it-IT') + " - " + ordine.data.toDate().toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
+                    }
+
+                    // Crea la lista visiva dei prodotti acquistati
+                    let listaProdotti = ordine.carrello ? ordine.carrello.map(p => `• ${p.nome}`).join('<br>') : 'Nessun dettaglio';
+
+                    container.innerHTML += `
+                        <div style="background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid var(--fucsia); text-align: left;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
+                                <strong style="font-size:14px; color: var(--testo-scuro);">${ordine.spedizione.nome} ${ordine.spedizione.cognome}</strong>
+                                <span style="font-size:11px; color: var(--testo-chiaro);">${dataFormat}</span>
+                            </div>
+                            <p style="font-size: 12px; margin: 0 0 10px 0; color: #555; line-height: 1.4;">
+                                📍 ${ordine.spedizione.indirizzo}, ${ordine.spedizione.citta} (${ordine.spedizione.cap})<br>
+                                📞 ${ordine.spedizione.telefono}
+                            </p>
+                            
+                            <div style="background: #fdfdfd; border: 1px solid #eee; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 12px; color: var(--testo-scuro);">
+                                <strong>Acquisti:</strong><br>
+                                ${listaProdotti}
+                                <div style="margin-top: 8px; font-size: 14px; font-weight:bold; color: var(--fucsia);">Totale Pagato: €${(ordine.totale || 0).toFixed(2)}</div>
+                            </div>
+                            
+                            <label style="font-size:11px; font-weight:600; color:var(--testo-scuro);">Aggiorna Stato:</label>
+                            <select id="stato-admin-${ordine.id}" class="custom-textarea" style="height:35px; font-size:12px; padding: 5px 10px; margin-bottom: 10px;">
+                                <option value="In attesa di spedizione" ${ordine.stato === 'In attesa di spedizione' ? 'selected' : ''}>In attesa di spedizione</option>
+                                <option value="In Lavorazione" ${ordine.stato === 'In Lavorazione' ? 'selected' : ''}>In Lavorazione</option>
+                                <option value="Spedito" ${ordine.stato === 'Spedito' ? 'selected' : ''}>Spedito</option>
+                                <option value="Consegnato" ${ordine.stato === 'Consegnato' ? 'selected' : ''}>Consegnato</option>
+                            </select>
+
+                            <label style="font-size:11px; font-weight:600; color:var(--testo-scuro);">Inserisci Tracking:</label>
+                            <input type="text" id="track-admin-${ordine.id}" class="custom-textarea" style="height:35px; font-size:12px; padding: 5px 10px; margin-bottom: 15px;" placeholder="Es. CR123456789IT" value="${ordine.tracking || ''}">
+                            
+                            <button onclick="aggiornaStatoOrdine('${ordine.id}', '${ordine.userId}')" class="checkout-btn" style="padding: 10px; font-size: 12px; width: 100%; border-radius: 10px;">Salva e Avvisa Cliente <i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                console.error(e);
+                container.innerHTML = "<p style='color:red; font-size:12px; text-align:center;'>Errore nel caricamento.</p>";
+            }
+        };
+
+window.aggiornaStatoOrdine = async function(orderId, userId) {
+            const nuovoStato = document.getElementById('stato-admin-' + orderId).value;
+            const nuovoTracking = document.getElementById('track-admin-' + orderId).value;
+
+            showToast("Aggiornamento in corso... ⏳");
+
+            try {
+                const datiAggiornati = { stato: nuovoStato, tracking: nuovoTracking };
+
+                // 1. Aggiorna nel raccoglitore Admin
+                await window.fbUpdateDoc(window.fbDoc(window.db, "ordini_generali", orderId), datiAggiornati);
+                
+                // 2. Aggiorna nella cartella personale del Cliente (SOLO se è registrato e NON è un Ospite)
+                if (userId && userId !== "Ospite") {
+                    await window.fbUpdateDoc(window.fbDoc(window.db, "utenti", userId, "ordini", orderId), datiAggiornati);
+                }
+
+                showToast("Ordine aggiornato con successo! ✅");
+            } catch (e) {
+                console.error("Dettaglio errore:", e);
+                showToast("Errore durante l'aggiornamento ❌");
+                alert("Errore tecnico: " + e.message); // Questo ci aiuta a capire se ci sono altri intoppi
             }
         };
         // === GESTIONE MODIFICA PRODOTTO COMPLETA (ADMIN) ===
@@ -2814,6 +2905,58 @@ let btnModifica = isAdmin ? `<div class="edit-admin-btn" onclick="apriModaleModi
             checkboxesPerline.forEach(box => box.checked = false);
             calcolaTotaleCiondoli(); 
         }
+        // === SALVATAGGIO DEFINITIVO POST-PAGAMENTO ===
+        window.finalizzaOrdinePagato = async function() {
+            // Controlliamo se c'è un ordine "parcheggiato"
+            const sospesoRaw = localStorage.getItem('ordineInSospeso3L');
+            if (!sospesoRaw) return; // Se non c'è, o è già stato salvato, ci fermiamo.
+
+            const ordine = JSON.parse(sospesoRaw);
+            const user = window.auth.currentUser;
+
+            let nuovoOrdine = {
+                data: new Date(),
+                carrello: ordine.carrello,
+                totale: ordine.totale,
+                stato: "Pagato - In lavorazione",
+                tracking: "",
+                spedizione: ordine.spedizione
+            };
+
+            try {
+                if (user && user.email !== "3lcreationsfordogs1@gmail.com" && user.email !== "mauro7leo10@gmail.com") {
+                    nuovoOrdine.userId = user.uid;
+                    // Salva per il Cliente e per l'Admin
+                    const docRef = await window.fbAddDoc(window.fbCollection(window.db, "utenti", user.uid, "ordini"), nuovoOrdine);
+                    await window.fbSetDoc(window.fbDoc(window.db, "ordini_generali", docRef.id), nuovoOrdine);
+                } else {
+                    // SE E' UN OSPITE (NON LOGGATO), LO SALVIAMO SOLO PER L'ADMIN!
+                    nuovoOrdine.userId = "Ospite";
+                    await window.fbAddDoc(window.fbCollection(window.db, "ordini_generali"), nuovoOrdine);
+                }
+            } catch(e) {
+                console.error("Errore salvataggio ordine", e);
+            }
+
+            // PULIZIA: Ordine concluso, possiamo svuotare il carrello e il parcheggio!
+            localStorage.removeItem('ordineInSospeso3L');
+            carrello = [];
+            salvaCarrello();
+            aggiornaCarrelloUI();
+        };
+        // INNESCO AUTOMATICO QUANDO SI ATTERRA SULLA PAGINA "GRAZIE"
+        window.addEventListener('hashchange', () => {
+            if (window.location.hash === '#grazie' && localStorage.getItem('ordineInSospeso3L')) {
+                window.finalizzaOrdinePagato();
+            }
+        });
+        
+        window.addEventListener('load', () => {
+            if (window.location.hash === '#grazie' && localStorage.getItem('ordineInSospeso3L')) {
+                // Aspettiamo 1,5 secondi per dare tempo a Firebase di caricare l'utente
+                setTimeout(window.finalizzaOrdinePagato, 1500);
+            }
+        });
     </script>
    <div id="edit-modal">
         <div class="componi-box">
