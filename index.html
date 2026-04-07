@@ -71,7 +71,32 @@ window.storage = storage;
     </script>
 
     <style>
-        /* --- STILI IMMAGINI E ZOOM --- */
+   /* === TASTO INDIETRO STILE MENU === */
+        .back-to-cart-btn {
+            display: inline-flex; /* Lo rende un rettangolo che si adatta al contenuto */
+            align-items: center;
+            gap: 10px; /* Spazio tra freccia e testo */
+            background-color: #ffffff;
+            border: 2px solid var(--rosa-chiaro); /* Bordino rosa come i menu */
+            color: var(--fucsia);
+            padding: 8px 18px; /* Padding simile alle select */
+            border-radius: 12px; /* Arrotondato come il resto del sito */
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px; /* Spazio dal prodotto sotto */
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            width: fit-content; /* Non occupa tutta la riga */
+        }
+
+        .back-to-cart-btn:hover {
+            background-color: #fff5f8; /* Un tocco di rosa chiarissimo al passaggio */
+            border-color: var(--fucsia); /* Il bordo diventa più scuro */
+            transform: translateY(-2px); /* Leggero sollevamento */
+        }
+        
+    /* --- STILI IMMAGINI E ZOOM --- */
         
         /* Immagine sulla card (Griglia): NO ZOOM */
         .product-card .product-image {
@@ -779,27 +804,35 @@ window.storage = storage;
             </div>
         </div>
 <div id="dettaglio-prodotto" class="content-section">
-            <div class="componi-box reveal" style="max-width: 900px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 40px; padding: 40px;">
-                <button onclick="history.back()" class="back-to-cart-btn" style="position: absolute; top: 15px; left: 20px;"><i class="fas fa-chevron-left"></i> Indietro</button>
+            <div class="componi-box reveal" style="max-width: 950px; margin: 0 auto; padding: 25px; display: flex; flex-direction: column;">
                 
-                <div style="flex: 1; min-width: 300px;">
-                    <img id="dettaglio-img-principale" src="logo.png" class="product-image" style="height: 400px; width: 100%; object-fit: cover; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); cursor: zoom-in;" onclick="openLightbox(this.src)">
-                    <div id="dettaglio-galleria" style="display: flex; gap: 10px; margin-top: 15px; overflow-x: auto; padding-bottom: 10px;">
-                        </div>
+                <div class="back-to-cart-btn" onclick="history.back()">
+                    <i class="fas fa-chevron-left"></i> Torna ai prodotti
                 </div>
-                
-                <div style="flex: 1; min-width: 300px; text-align: left; display: flex; flex-direction: column; justify-content: center;">
-                    <div id="dettaglio-badge" style="margin-bottom: 10px;"></div>
-                    <h2 id="dettaglio-titolo" style="text-align: left; margin-bottom: 10px; color: var(--testo-scuro); border: none;">Nome Prodotto</h2>
-                    <div id="dettaglio-prezzo" class="price" style="font-size: 32px; margin-bottom: 20px; margin-top: 0;">€0.00</div>
-                    <p id="dettaglio-descrizione" style="font-size: 14px; color: var(--testo-chiaro); line-height: 1.8; margin-bottom: 30px; background: #fafafa; padding: 20px; border-radius: 15px; border-left: 4px solid var(--rosa-chiaro);">Descrizione del prodotto...</p>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 30px;">
                     
-                    <button id="dettaglio-btn-acquista" class="checkout-btn" style="padding: 18px; font-size: 18px; box-shadow: 0 8px 25px rgba(216, 27, 96, 0.4);">
-                        Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
+                    <div style="flex: 1.2; min-width: 300px;">
+                        <img id="dettaglio-img-principale" src="logo.png" class="product-image" style="height: 450px; width: 100%; object-fit: cover; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                        <div id="dettaglio-galleria" style="display: flex; gap: 10px; margin-top: 15px; overflow-x: auto; padding-bottom: 10px;">
+                            </div>
+                    </div>
+                    
+                    <div style="flex: 1; min-width: 300px; text-align: left;">
+                        <div id="dettaglio-badge" style="margin-bottom: 10px;"></div>
+                        <h2 id="dettaglio-titolo" style="text-align: left; margin-bottom: 5px; border: none; font-size: 28px;">Nome Prodotto</h2>
+                        <div id="dettaglio-prezzo" class="price" style="font-size: 26px; margin-bottom: 20px;">€0.00</div>
+                        
+                        <p id="dettaglio-descrizione" style="font-size: 14px; color: var(--testo-chiaro); line-height: 1.6; margin-bottom: 25px; background: #fff9fb; padding: 15px; border-radius: 12px; border-left: 3px solid var(--fucsia);">
+                            Descrizione...
+                        </p>
+                        
+                        <button id="dettaglio-btn-acquista" class="checkout-btn" style="width: 100%; padding: 15px; font-size: 16px;">
+                            Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </div>
+
+                </div> </div> </div>
         <div id="crea-maglietta" class="content-section">
             <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Maglietta</h2>
             
@@ -1135,8 +1168,14 @@ window.storage = storage;
                 
                 <textarea id="new-descrizione" class="custom-textarea" placeholder="Descrivi il prodotto: materiali, vestibilità, dettagli..." style="height: 80px; margin-bottom: 15px;"></textarea>
 
-                <label style="font-size: 13px; color: var(--testo-chiaro);">Foto Prodotto (Puoi selezionarne più di una!)</label>
-                <input type="file" id="new-immagine-file" class="custom-textarea" style="height: auto; padding: 10px; margin-bottom: 15px;" accept="image/*" multiple>
+                <label class="label-admin">Foto Prodotto (Puoi selezionarne più di una!)</label>
+<div class="file-upload-wrapper" style="margin-top: 5px;">
+    <input type="file" id="new-immagine-file" class="file-upload-input" accept="image/*" multiple onchange="aggiornaNomeFile(this, 'nome-new-prodotto')">
+    <label for="new-immagine-file" class="file-upload-btn" style="background-color: var(--rosa-chiaro); color: var(--testo-scuro);">
+        <i class="fas fa-images"></i> Seleziona Foto
+    </label>
+    <span id="nome-new-prodotto" class="file-upload-name">Nessuna foto selezionata</span>
+</div>
                 
                 <button onclick="salvaProdottoSuFirebase()" class="checkout-btn" style="margin-bottom: 15px;">Pubblica Prodotto <i class="fas fa-upload"></i></button>
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
@@ -1162,7 +1201,14 @@ window.storage = storage;
                     <option value="borsa_bianca">Base: Borsa Bianca</option>
                 </select>
                 
-                <input type="file" id="admin-site-img-file" class="custom-textarea" style="height: auto; padding: 10px; margin-bottom: 15px;" accept="image/*">
+              <label class="label-admin">Nuova Foto Vetrina/Base</label>
+<div class="file-upload-wrapper" style="margin-top: 5px;">
+    <input type="file" id="admin-site-img-file" class="file-upload-input" accept="image/*" onchange="aggiornaNomeFile(this, 'nome-site-img')">
+    <label for="admin-site-img-file" class="file-upload-btn" style="background-color: var(--rosa-chiaro); color: var(--testo-scuro);">
+        <i class="fas fa-camera"></i> Cambia Immagine
+    </label>
+    <span id="nome-site-img" class="file-upload-name">Nessuna immagine selezionata</span>
+</div>
                 <button onclick="salvaImmagineSito()" class="checkout-btn" style="margin-bottom: 25px; background-color: #ff9800;">Aggiorna Foto <i class="fas fa-image"></i></button>
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
@@ -2876,18 +2922,23 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
 
         // === FUNZIONE PER MOSTRARE IL NOME DELLA FOTO SCELTA ===
         window.aggiornaNomeFile = function(inputElement, spanId) {
-            const span = document.getElementById(spanId);
-            if (inputElement.files && inputElement.files.length > 0) {
-                span.innerHTML = `<i class="fas fa-check-circle"></i> Foto selezionata: ${inputElement.files[0].name}`;
-                span.style.color = "var(--fucsia)";
-                span.style.fontWeight = "600";
-            } else {
-                span.innerText = "Nessuna immagine selezionata";
-                span.style.color = "var(--testo-chiaro)";
-                span.style.fontWeight = "normal";
-            }
-        };
-
+    const span = document.getElementById(spanId);
+    if (!span) return;
+    
+    if (inputElement.files && inputElement.files.length > 0) {
+        if (inputElement.files.length === 1) {
+            span.innerHTML = `<i class="fas fa-check-circle"></i> ${inputElement.files[0].name}`;
+        } else {
+            span.innerHTML = `<i class="fas fa-check-circle"></i> ${inputElement.files.length} foto selezionate`;
+        }
+        span.style.color = "var(--fucsia)";
+        span.style.fontWeight = "600";
+    } else {
+        span.innerText = spanId === 'nome-edit-foto' ? "Lascia vuoto per non cambiare" : "Nessuna immagine selezionata";
+        span.style.color = "var(--testo-chiaro)";
+        span.style.fontWeight = "normal";
+    }
+};
         // === AGGIUNTA PRODOTTO PERSONALIZZATO AL CARRELLO ===
         window.aggiungiPersonalizzatoCompleto = async function(nomeBase, prezzo, textAreaId, radioName, imgId, coloreFisso = null, tagliaId = null, fileInputId = null) {
             let note = document.getElementById(textAreaId).value.trim();
@@ -3190,8 +3241,14 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 </label>
             </div>
 
-            <label class="label-admin">Aggiorna Foto (Opzionale)</label>
-            <input type="file" id="edit-immagine-file" class="custom-textarea" style="height: auto; padding: 8px; font-size: 11px;" accept="image/*" multiple>
+           <label class="label-admin">Aggiorna Foto (Sostituisce le attuali)</label>
+<div class="file-upload-wrapper" style="margin-top: 5px;">
+    <input type="file" id="edit-immagine-file" class="file-upload-input" accept="image/*" multiple onchange="aggiornaNomeFile(this, 'nome-edit-foto')">
+    <label for="edit-immagine-file" class="file-upload-btn" style="background-color: var(--rosa-chiaro); color: var(--testo-scuro);">
+        <i class="fas fa-sync-alt"></i> Scegli nuove foto
+    </label>
+    <span id="nome-edit-foto" class="file-upload-name">Lascia vuoto per non cambiare</span>
+</div>
             
             <button onclick="salvaModificaSuFirebase()" class="checkout-btn" style="width: 100%; padding: 12px; font-size: 15px;">Salva Modifiche <i class="fas fa-save"></i></button>
         </div>
