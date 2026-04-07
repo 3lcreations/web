@@ -2684,6 +2684,29 @@ let btnModifica = isAdmin ? `<div class="edit-admin-btn" onclick="apriModaleModi
             calcolaDataConsegna();
             observeElements(); 
             checkCookies();
+            // === NOTIFICA CARRELLO ABBANDONATO ===
+            // Aspettiamo 2 secondi per far sparire lo splash screen e dare il tempo all'utente di guardare la home
+            setTimeout(() => {
+                // Controlla se il carrello ha roba e se NON abbiamo già mostrato il messaggio in questa sessione
+                if (carrello && carrello.length > 0 && !sessionStorage.getItem('avvisoCarrelloMostrato')) {
+                    
+                    let testoArticoli = carrello.length === 1 ? "un articolo che ti aspetta" : carrello.length + " articoli che ti aspettano";
+                    
+                    // Mostra il toast magico
+                    showToast(`Bentornato! Hai ancora ${testoArticoli} nel carrello. ✨`);
+                    
+                    // Fa rimbalzare l'icona del carrello per attirare l'attenzione
+                    const cartBtn = document.querySelector('.floating-cart');
+                    if(cartBtn) {
+                        cartBtn.classList.remove('bounce');
+                        void cartBtn.offsetWidth; 
+                        cartBtn.classList.add('bounce');
+                    }
+
+                    // Registra che l'abbiamo mostrato, così non lo stressiamo più per questa visita
+                    sessionStorage.setItem('avvisoCarrelloMostrato', 'true');
+                }
+            }, 2500);
 
             // Carichiamo tutte le categorie da Firebase
             window.caricaEvidenza();
