@@ -1098,11 +1098,13 @@ window.storage = storage;
                 const userCredential = await window.fbCreateUser(window.auth, email, pwd);
                 const user = userCredential.user;
                 
-                // Salviamo i dettagli nel database utenti
+                // Salviamo i dettagli nel database utenti (Firestore)
                 const userRef = window.fbDoc(window.db, "utenti", user.uid);
                 await window.fbSetDoc(userRef, {
                     nome: nome,
                     cognome: cognome,
+                    email: email, // <--- AGGIUNTO: Ora salviamo anche l'email!
+                    data_registrazione: new Date(), // <--- EXTRA: Salviamo la data in cui si sono iscritti!
                     carrello: carrello,
                     wishlist: wishlist
                 }, { merge: true });
