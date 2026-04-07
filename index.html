@@ -24,9 +24,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+      import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+      // ⚠️ SOSTITUISCI QUESTI DATI CON QUELLI DELLA TUA CONSOLE FIREBASE ⚠️
+   const firebaseConfig = {
+  apiKey: "AIzaSyACRdFw2Ao9UbYw5O0h2PrA3n-CfoAgOLE",
+  authDomain: "l-creations.firebaseapp.com",
+  projectId: "l-creations",
+  storageBucket: "l-creations.firebasestorage.app",
+  messagingSenderId: "747374445759",
+  appId: "1:747374445759:web:d9d7df4704ad81958f720a",
+  measurementId: "G-N8W4K0XD7M"
+};
+
+      const app = initializeApp(firebaseConfig);
+      window.db = getFirestore(app);
+      window.auth = getAuth(app);
+      
+      // Esportiamo le funzioni per usarle nel JS normale
+      window.fbCollection = collection;
+      window.fbGetDocs = getDocs;
+      window.fbAddDoc = addDoc;
+      window.fbDeleteDoc = deleteDoc;
+      window.fbDoc = doc;
+      window.fbSignIn = signInWithEmailAndPassword;
+      window.fbSignOut = signOut;
+
+      // Ascoltatore di Login/Logout in tempo reale
+      onAuthStateChanged(window.auth, (user) => {
+          if (window.aggiornaUIAdmin) {
+              window.aggiornaUIAdmin(user);
+          }
+      });
+    </script>
 
     <style>
+        /* COLORE SELEZIONE TESTO */
+        ::selection { background-color: #f48fb1; color: #2c2c2c; }
+
         /* VARIABILI COLORI */
         :root {
             --fucsia: #d81b60;
@@ -63,8 +101,8 @@
         @keyframes pulseLogo { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
         @keyframes fadeInOut { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
-        /* BARRA DEGLI ANNUNCI (PROMO BAR) */
-        .promo-bar { background: linear-gradient(90deg, var(--fucsia), var(--rosa-chiaro)); color: white; text-align: center; padding: 10px 15px; font-size: 13px; font-weight: 600; letter-spacing: 1px; position: relative; z-index: 90; box-shadow: 0 2px 10px rgba(216, 27, 96, 0.2); text-transform: uppercase;}
+        /* BARRA DEGLI ANNUNCI (PROMO BAR PRIMAVERILE) */
+        .promo-bar { background: linear-gradient(90deg, #ff9a9e, #fecfef); color: var(--fucsia); text-align: center; padding: 10px 15px; font-size: 13px; font-weight: 600; letter-spacing: 1px; position: relative; z-index: 90; box-shadow: 0 2px 10px rgba(216, 27, 96, 0.2); text-transform: uppercase;}
 
         /* PATTERN ICONE FLUTTUANTI SULLO SFONDO */
         .floating-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -3; overflow: hidden; }
@@ -145,6 +183,10 @@
         .floating-wishlist:hover { transform: scale(1.1); border-color: var(--fucsia); }
         .wishlist-badge { position: absolute; top: -5px; right: -5px; background-color: var(--fucsia); color: white; font-size: 12px; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
+        /* TASTO WHATSAPP */
+        .floating-whatsapp { position: fixed; bottom: 30px; left: 30px; background-color: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4); z-index: 90; transition: 0.3s; text-decoration: none; }
+        .floating-whatsapp:hover { transform: scale(1.1) rotate(10deg); color: white; }
+
         .back-to-top { background-color: rgba(255, 255, 255, 0.9); color: var(--fucsia); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); cursor: pointer; transition: 0.3s; border: 1px solid var(--rosa-chiaro); position: fixed; bottom: 180px; right: 37px; z-index: 89; opacity: 0; visibility: hidden;}
         .back-to-top.show { opacity: 1; visibility: visible; }
         .back-to-top:hover { background-color: var(--fucsia); color: white; transform: translateY(-5px); }
@@ -211,9 +253,13 @@
         .wishlist-btn.active i { font-weight: 900; }
         .wishlist-btn:hover { transform: scale(1.1); }
 
+        /* TASTO ELIMINA PER ADMIN */
+        .delete-admin-btn { position: absolute; top: 60px; right: 15px; background-color: #ff4d4d; color: white; padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.3s; display: flex; align-items: center; gap: 5px; }
+        .delete-admin-btn:hover { background-color: #cc0000; transform: scale(1.05); }
+
         /* BARRA DI RICERCA ISTANTANEA */
-        .search-container { max-width: 400px; margin: 0 auto 30px auto; position: relative; }
-        .search-container i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--testo-chiaro); }
+        .search-container { max-width: 400px; margin: 0 auto 30px auto; position: relative; display: flex; align-items: center; }
+        .search-container i { position: absolute; left: 15px; color: var(--testo-chiaro); font-size: 16px; z-index: 5; pointer-events: none; }
         .search-input { width: 100%; padding: 12px 15px 12px 45px; border: 2px solid #eee; border-radius: 30px; font-family: 'Poppins', sans-serif; font-size: 14px; outline: none; transition: 0.3s; box-sizing: border-box; background-color: #fafafa; }
         .search-input:focus { border-color: var(--rosa-chiaro); background-color: #fff; box-shadow: 0 5px 15px rgba(244,143,177,0.2); }
 
@@ -232,11 +278,18 @@
         .swatch-blue { background-color: #a2c4e0; }
         .swatch-pink { background-color: #f48fb1; }
 
+        /* TAGLIE A PILLOLA */
+        .size-selector { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+        .size-selector input { display: none; }
+        .size-pill { padding: 8px 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--testo-chiaro); cursor: pointer; transition: all 0.3s ease; background: #fafafa; }
+        .size-selector input:checked + .size-pill { border-color: var(--fucsia); background-color: var(--fucsia); color: white; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); transform: scale(1.05); }
+        .size-selector label:hover .size-pill { border-color: var(--rosa-chiaro); }
+
         /* CURSORE MAGICO */
         #magic-cursor { display: none; }
         @media (pointer: fine) {
             body, a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .floating-cart, .floating-wishlist, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label, .wishlist-btn { cursor: none !important; }
-            #magic-cursor { display: block; position: fixed; width: 12px; height: 12px; background-color: var(--fucsia); border-radius: 50%; pointer-events: none; z-index: 999999; transform: translate(-50%, -50%); transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; }
+            #magic-cursor { display: block; position: fixed; width: 12px; height: 12px; background-color: var(--fucsia); border-radius: 50%; pointer-events: none !important; mix-blend-mode: multiply; z-index: 999999; transform: translate(-50%, -50%); transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; }
             #magic-cursor.hover { width: 45px; height: 45px; background-color: rgba(216, 27, 96, 0.2); border: 2px solid var(--fucsia); }
         }
 
@@ -300,7 +353,7 @@
         /* SEZIONE COMPONI COLLANA */
         .componi-box { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); border: 1px solid rgba(255,255,255,0.6); margin-bottom: 30px;}
         
-        .charm-card { background: white; padding: 15px; border-radius: 15px; width: 150px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; transition: 0.3s; box-sizing: border-box;}
+        .charm-card { background: white; padding: 15px; border-radius: 15px; width: 150px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; transition: 0.3s; box-sizing: border-box; position: relative;}
         .charm-card:not(.skeleton-charm):hover { border-color: var(--rosa-chiaro); transform: translateY(-5px);}
         .charm-image { width: 100%; height: 100px; object-fit: cover; border-radius: 10px; margin-bottom: 10px;}
         .charm-title { font-size: 14px; margin-bottom: 5px; }
@@ -347,38 +400,6 @@
             .floating-wishlist { right: 15px; bottom: 80px; width: 50px; height: 50px; font-size: 20px;}
             .back-to-top { right: 20px; bottom: 145px; width: 40px; height: 40px; font-size: 18px;}
         }
-        /* TAGLIE A PILLOLA */
-.size-selector {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-.size-selector input {
-    display: none;
-}
-.size-pill {
-    padding: 8px 15px;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--testo-chiaro);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: #fafafa;
-}
-.size-selector input:checked + .size-pill {
-    border-color: var(--fucsia);
-    background-color: var(--fucsia);
-    color: white;
-    box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3);
-    transform: scale(1.05);
-}
-.size-selector label:hover .size-pill {
-    border-color: var(--rosa-chiaro);
-}
     </style>
 </head>
 <body>
@@ -464,6 +485,7 @@
         <a href="#contatti" onclick="showSection('contatti'); return false;">✉️ Contatti</a>
         <a href="#faq" onclick="showSection('faq'); return false;">❓ Domande Frequenti</a>
         <a href="#legale" onclick="showSection('legale'); return false;">📄 Note Legali</a>
+        <a href="#sezione-admin" onclick="showSection('sezione-admin'); return false;">🔒 Area Admin</a>
     </div>
 
     <div id="myCartSidebar" class="cart-sidebar">
@@ -556,6 +578,10 @@
         <div class="cart-badge" id="cart-badge-count">0</div>
     </div>
 
+    <a href="https://wa.me/39TuoNumero" target="_blank" class="floating-whatsapp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
     <div class="back-to-top" id="backToTopBtn" onclick="scrollToTop()">
         <i class="fas fa-chevron-up"></i>
     </div>
@@ -597,8 +623,8 @@
             <div class="home-text reveal" style="text-align: center;">
                 <h2>Grazie per il tuo Ordine! 🎉</h2>
                 <i class="fas fa-check-circle" style="font-size: 60px; color: #4CAF50; margin-bottom: 20px;"></i>
-               <p style="font-size: 18px;">Il tuo pagamento è andato a buon fine e stiamo già preparando il tuo pacco!<br>
-<strong>Riceverai il codice di tracciamento via email appena spedito. 📦</strong></p> 
+                <p style="font-size: 18px;">Il tuo pagamento è andato a buon fine e stiamo già preparando il tuo pacco!<br>
+                <strong>Riceverai il codice di tracciamento via email appena spedito. 📦</strong></p> 
                 <div class="photo-notice" style="margin-top: 30px;">
                     <i class="fas fa-camera" style="font-size: 24px; color: var(--fucsia); margin-bottom: 10px;"></i><br>
                     <strong>Hai acquistato un prodotto personalizzato con foto?</strong><br><br>
@@ -615,6 +641,7 @@
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchBar" class="search-input" placeholder="Cerca un prodotto (es. Cuore, Azzurro...)" onkeyup="filtraProdotti()">
             </div>
+            
             <div class="sort-container reveal" style="text-align: center; margin-bottom: 25px;">
                 <select id="sortProdotti" class="custom-textarea" style="width: auto; padding: 10px 20px; border-radius: 30px; height: auto; cursor: pointer; display: inline-block;" onchange="applicaOrdinamento()">
                     <option value="">Ordina per...</option>
@@ -634,13 +661,11 @@
                 <div class="product-container" id="lista-prodotti">
                     <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
                     <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
-                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
                 </div>
             </div>
 
             <div id="cat-fiocchi" class="cat-content">
                 <div class="product-container" id="lista-fiocchi">
-                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
                     <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
                     <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
                 </div>
@@ -836,14 +861,12 @@
                 <div class="product-container" id="lista-ciondoli">
                     <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
                     <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
-                    <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
                 </div>
             </div>
 
             <div class="componi-box reveal">
                 <h3 style="text-align: center; color: var(--testo-scuro);">3. Scegli le perline (Max 10)</h3>
                 <div class="product-container" id="lista-perline">
-                    <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
                     <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
                     <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
                 </div>
@@ -893,6 +916,38 @@
                 <p class="legal-text"><strong>Condizioni di Vendita:</strong> Opero nel pieno rispetto della normativa come hobbista (vendita occasionale di opere del proprio ingegno creativo) e non possiedo Partita IVA. I prodotti proposti sono frutto di lavoro artigianale e possono presentare lievi imperfezioni che ne garantiscono l'unicità.</p>
                 <p class="legal-text"><strong>Privacy e Cookie Policy:</strong> La tua privacy è importante. I dati forniti in fase di acquisto (nome, indirizzo, cellulare) vengono utilizzati esclusivamente per la gestione e la spedizione dell'ordine e non verranno mai ceduti a terzi. Questo sito utilizza solo "cookie tecnici" strettamente necessari per il funzionamento del carrello e la memorizzazione locale dei dati di spedizione sul tuo dispositivo.</p>
                 <p class="legal-text"><strong>Assistenza e Resi:</strong> Per qualsiasi problema con il tuo ordine, contattaci subito alla nostra email <a href="https://mail.google.com/mail/?view=cm&fs=1&to=3lcreationsfordogs1@gmail.com" target="_blank">3lcreationsfordogs1@gmail.com</a> o sui nostri canali social. Essendo la maggior parte dei prodotti realizzati su misura e personalizzati (es. stampe fotografiche, ricami), i resi non sono previsti se non per evidente difetto di fabbricazione, ma troveremo in ogni caso una soluzione insieme!</p>
+            </div>
+        </div>
+
+        <div id="sezione-admin" class="content-section">
+            <h2 class="reveal" style="display:block; text-align:center;">Area Riservata 🔒</h2>
+            
+            <div id="admin-login-box" class="componi-box reveal" style="max-width: 400px; margin: 0 auto;">
+                <h3 style="text-align: center; color: var(--testo-scuro);">Accesso Admin</h3>
+                <input type="email" id="admin-email" placeholder="La tua email" class="custom-textarea" style="height:40px;">
+                <input type="password" id="admin-pwd" placeholder="Password" class="custom-textarea" style="height:40px;">
+                <button onclick="loginAdmin()" class="checkout-btn">Accedi</button>
+            </div>
+
+            <div id="admin-panel" class="componi-box reveal" style="display:none; max-width: 500px; margin: 0 auto; border: 2px dashed var(--fucsia);">
+                <h3 style="text-align: center; color: var(--fucsia);">Pannello di Controllo</h3>
+                <p style="text-align:center; font-size: 13px; color: var(--testo-chiaro);">Benvenuta, <strong id="admin-user-email"></strong>!</p>
+                
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                
+                <h4 style="text-align: center; margin-bottom: 10px; color: var(--testo-scuro);">Aggiungi Nuovo Prodotto</h4>
+                <input type="text" id="new-titolo" placeholder="Nome Prodotto (es. Collana Cuore)" class="custom-textarea" style="height:40px;">
+                <input type="number" id="new-prezzo" placeholder="Prezzo (es. 15.50)" class="custom-textarea" style="height:40px;">
+                <select id="new-categoria" class="custom-textarea" style="height:40px; margin-bottom: 15px;">
+                    <option value="collane">Collane</option>
+                    <option value="fiocchi">Fiocchi</option>
+                    <option value="ciondoli">Ciondoli (Per collana)</option>
+                    <option value="perline">Perline (Per collana)</option>
+                </select>
+                <input type="text" id="new-immagine" placeholder="URL Immagine (es. cuore.png)" class="custom-textarea" style="height:40px;">
+                
+                <button onclick="salvaProdottoSuFirebase()" class="checkout-btn" style="margin-bottom: 15px;">Pubblica Prodotto <i class="fas fa-upload"></i></button>
+                <button onclick="logoutAdmin()" class="checkout-btn" style="background-color: #777; box-shadow: none;">Esci in sicurezza <i class="fas fa-sign-out-alt"></i></button>
             </div>
         </div>
 
@@ -988,7 +1043,7 @@
             }
         }
 
-        // === 1. GESTIONE MENU E TRANSIZIONI APP-LIKE ===
+        // === GESTIONE MENU E TRANSIZIONI APP-LIKE ===
         function openNav() { 
             document.getElementById("mySidebar").style.width = "250px"; 
             document.getElementById("menuOverlay").style.display = "block";
@@ -1021,7 +1076,6 @@
             targetSection.classList.add('active');
             window.scrollTo(0, 0);
             if (updateUrl) { history.pushState(null, null, '#' + sectionId); }
-            if (window.instgrm) { window.instgrm.Embeds.process(); }
             setTimeout(observeElements, 100);
         }
         
@@ -1226,7 +1280,7 @@
             document.getElementById('cookie-banner').classList.remove('show');
         }
 
-        function showToast(message) {
+        window.showToast = function(message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = 'toast';
@@ -1256,16 +1310,16 @@
             }
         }
 
-        function openWishlist() {
+        window.openWishlist = function() {
             let cartWidth = window.innerWidth > 768 ? "380px" : "100%";
             document.getElementById("myWishlistSidebar").style.width = cartWidth;
         }
 
-        function closeWishlist() {
+        window.closeWishlist = function() {
             document.getElementById("myWishlistSidebar").style.width = "0";
         }
 
-        function toggleWishlist(nome, prezzo, immagine, element) {
+        window.toggleWishlist = function(nome, prezzo, immagine, element) {
             const index = wishlist.findIndex(item => item.nome === nome);
             if(index > -1) {
                 wishlist.splice(index, 1);
@@ -1288,7 +1342,7 @@
             aggiornaWishlistUI();
         }
 
-        function rimuoviDaWishlist(index) {
+        window.rimuoviDaWishlist = function(index) {
             let itemNome = wishlist[index].nome;
             wishlist.splice(index, 1);
             salvaWishlist();
@@ -1311,7 +1365,12 @@
             badge.innerText = wishlist.length;
 
             if (wishlist.length === 0) {
-                contenitore.innerHTML = '<p style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">Nessun prodotto nei preferiti.</p>';
+                contenitore.innerHTML = `
+                    <div style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">
+                        <i class="far fa-heart" style="font-size: 40px; color: #eee; margin-bottom: 15px; display:block;"></i>
+                        Nessun prodotto nei preferiti.<br>
+                        <span style="font-size: 12px;">Salva qui i tuoi prodotti del cuore ❤️</span>
+                    </div>`;
                 return;
             }
 
@@ -1330,104 +1389,55 @@
                 `;
             });
         }
-// === ORDINAMENTO PRODOTTI E COMPONENTI ===
 
-// Funzione "Motore" che sposta fisicamente le card nel DOM
-function ordinaElementi(idContenitore, classeCard, selettoreTitolo, selettorePrezzo, criterio) {
-    const contenitore = document.getElementById(idContenitore);
-    if (!contenitore) return;
+        // === ORDINAMENTO PRODOTTI E COMPONENTI ===
+        function ordinaElementi(idContenitore, classeCard, selettoreTitolo, selettorePrezzo, criterio) {
+            const contenitore = document.getElementById(idContenitore);
+            if (!contenitore) return;
 
-    // 1. Prendi tutte le card dentro il contenitore
-    let cards = Array.from(contenitore.querySelectorAll('.' + classeCard));
+            let cards = Array.from(contenitore.querySelectorAll('.' + classeCard));
+            cards = cards.filter(card => !card.classList.contains('skeleton-card') && !card.classList.contains('skeleton-charm'));
 
-    // 2. Escludi le card "fantasma" del caricamento (skeleton)
-    cards = cards.filter(card => !card.classList.contains('skeleton-card') && !card.classList.contains('skeleton-charm'));
+            cards.sort((a, b) => {
+                let titoloA = a.querySelector(selettoreTitolo).innerText.toLowerCase();
+                let titoloB = b.querySelector(selettoreTitolo).innerText.toLowerCase();
 
-    // 3. Ordina l'array di card
-    cards.sort((a, b) => {
-        // Estrai i titoli
-        let titoloA = a.querySelector(selettoreTitolo).innerText.toLowerCase();
-        let titoloB = b.querySelector(selettoreTitolo).innerText.toLowerCase();
+                let txtPrezzoA = a.querySelector(selettorePrezzo).innerText.replace(/[^\d.,]/g, '').replace(',', '.');
+                let txtPrezzoB = b.querySelector(selettorePrezzo).innerText.replace(/[^\d.,]/g, '').replace(',', '.');
+                
+                let prezzoA = parseFloat(txtPrezzoA) || 0;
+                let prezzoB = parseFloat(txtPrezzoB) || 0;
 
-        // Estrai i prezzi pulendoli dal simbolo € e da testi come "+"
-        let txtPrezzoA = a.querySelector(selettorePrezzo).innerText.replace(/[^\d.,]/g, '').replace(',', '.');
-        let txtPrezzoB = b.querySelector(selettorePrezzo).innerText.replace(/[^\d.,]/g, '').replace(',', '.');
-        
-        let prezzoA = parseFloat(txtPrezzoA) || 0;
-        let prezzoB = parseFloat(txtPrezzoB) || 0;
+                if (criterio === 'prezzo-asc') return prezzoA - prezzoB;
+                if (criterio === 'prezzo-desc') return prezzoB - prezzoA;
+                if (criterio === 'nome-asc') return titoloA.localeCompare(titoloB);
+                if (criterio === 'nome-desc') return titoloB.localeCompare(titoloA);
+                return 0; 
+            });
 
-        // Applica il criterio scelto
-        if (criterio === 'prezzo-asc') return prezzoA - prezzoB;
-        if (criterio === 'prezzo-desc') return prezzoB - prezzoA;
-        if (criterio === 'nome-asc') return titoloA.localeCompare(titoloB);
-        if (criterio === 'nome-desc') return titoloB.localeCompare(titoloA);
-        return 0; 
-    });
+            cards.forEach(card => contenitore.appendChild(card));
+        }
 
-    // 4. Riattacca le card ordinate nel contenitore
-    cards.forEach(card => contenitore.appendChild(card));
-}
+        window.applicaOrdinamento = function() {
+            let criterio = document.getElementById('sortProdotti').value;
+            if(!criterio) return;
 
-// Funzione collegata al menu a tendina dei Prodotti Principali
-function applicaOrdinamento() {
-    let criterio = document.getElementById('sortProdotti').value;
-    if(!criterio) return; // Se seleziona "Ordina per...", non fa nulla
+            if(document.getElementById('cat-collane').classList.contains('active')) {
+                ordinaElementi('lista-prodotti', 'product-card', 'h3', '.price', criterio);
+            } else if(document.getElementById('cat-fiocchi').classList.contains('active')) {
+                ordinaElementi('lista-fiocchi', 'product-card', 'h3', '.price', criterio);
+            }
+        }
 
-    // Controlla quale categoria è aperta in questo momento e ordina quella
-    if(document.getElementById('cat-collane').classList.contains('active')) {
-        ordinaElementi('lista-prodotti', 'product-card', 'h3', '.price', criterio);
-    } else if(document.getElementById('cat-fiocchi').classList.contains('active')) {
-        ordinaElementi('lista-fiocchi', 'product-card', 'h3', '.price', criterio);
-    }
-}
+        window.applicaOrdinamentoComponenti = function() {
+            let criterio = document.getElementById('sortComponenti').value;
+            if(!criterio) return;
 
-// Funzione collegata al menu a tendina di Ciondoli e Perline
-function applicaOrdinamentoComponenti() {
-    let criterio = document.getElementById('sortComponenti').value;
-    if(!criterio) return;
+            ordinaElementi('lista-ciondoli', 'charm-card', '.charm-title', '.charm-price', criterio);
+            ordinaElementi('lista-perline', 'charm-card', '.charm-title', '.charm-price', criterio);
+        }
 
-    // Ordina simultaneamente sia la griglia dei ciondoli che quella delle perline
-    ordinaElementi('lista-ciondoli', 'charm-card', '.charm-title', '.charm-price', criterio);
-    ordinaElementi('lista-perline', 'charm-card', '.charm-title', '.charm-price', criterio);
-}
-        // === INIZIALIZZAZIONE AL CARICAMENTO ===
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                const splash = document.getElementById('splash-screen');
-                if (splash) {
-                    splash.style.opacity = '0';
-                    setTimeout(() => { splash.style.display = 'none'; }, 600);
-                }
-            }, 800);
-
-            var hash = window.location.hash.substring(1); 
-            if (hash) showSection(hash, false); else showSection('home', false); 
-            caricaDatiSpedizioneSalvata(); 
-            caricaCarrello(); // MEMORIA CARRELLO
-            caricaWishlist(); // MEMORIA WISHLIST
-            initHomeSlider(); 
-            calcolaDataConsegna();
-            observeElements(); 
-            checkCookies();
-        });
-
-        window.addEventListener('popstate', function() {
-            var hash = window.location.hash.substring(1);
-            showSection(hash || 'home', false);
-        });
-
-        // === 3. IMPOSTAZIONI SITO E PAYPAL ===
-        const googleSheetCOLLANE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTChc9qUuZv7PYOwwQReUb9uRiKbPZINyd-UVZg32J-7nf4yA5cENjh8kkvtD96lRqzlju3z6TodfUZ/pub?output=csv';
-        const googleSheetFIOCCHI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQkWteQfpUAIPq95EgKnzqU2yZcMobrYgbMsx1XFT_Mju0DuCDqI4hA9HSQ_RybRi14GPBcG6Ark5GE/pub?output=csv';
-        const googleSheetCIONDOLI = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRl2ORNAWbnaRGglufp8VlsF-AO1rV2xX3cN9ki3yiLqXfaH943s2SuQ41QKgFk4rks3fsckw5-ZQuB/pub?output=csv';
-        const googleSheetPERLINE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOGsgGXu7uJH0Xq1x104XYwppdPddbFkhQxTsYe86pcB8MFM4dDWzDUsDGQndLsti5WXKuJLfKw1J/pub?output=csv';
-
-        const emailPayPal = 'luciaxxxo@alice.it'; 
-        const costoSpedizioneFisso = 8.00;
-        const urlDelSito = 'https://3lcreations.github.io/web/';
-        const nomeNegozio = '3L Creations';
-
-        // === 4. LOGICA CARRELLO E MEMORIA DI FERRO ===
+        // === LOGICA CARRELLO ===
         let carrello = [];
 
         function salvaCarrello() {
@@ -1442,19 +1452,19 @@ function applicaOrdinamentoComponenti() {
             }
         }
 
-        function openCart() {
+        window.openCart = function() {
             let cartWidth = window.innerWidth > 768 ? "380px" : "100%";
             document.getElementById("myCartSidebar").style.width = cartWidth;
         }
 
-        function closeCart() {
+        window.closeCart = function() {
             document.getElementById("myCartSidebar").style.width = "0";
             setTimeout(nascondiFormSpedizione, 500); 
         }
 
-        function aggiungiProdotto(nome, prezzo, immagine) {
+        window.aggiungiProdotto = function(nome, prezzo, immagine) {
             carrello.push({ nome: nome, prezzo: parseFloat(prezzo), immagine: immagine });
-            salvaCarrello(); // SALVA IN MEMORIA
+            salvaCarrello();
             aggiornaCarrelloUI();
             
             const cartBtn = document.querySelector('.floating-cart');
@@ -1479,9 +1489,9 @@ function applicaOrdinamentoComponenti() {
             showToast("Aggiunto al carrello!");
         }
 
-        function rimuoviProdotto(index) {
+        window.rimuoviProdotto = function(index) {
             carrello.splice(index, 1);
-            salvaCarrello(); // SALVA IN MEMORIA
+            salvaCarrello();
             aggiornaCarrelloUI();
             if(carrello.length === 0) { nascondiFormSpedizione(); }
         }
@@ -1497,7 +1507,12 @@ function applicaOrdinamentoComponenti() {
             badge.innerText = carrello.length;
             
             if (carrello.length === 0) {
-                contenitore.innerHTML = '<p style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">Il carrello è vuoto.</p>';
+                contenitore.innerHTML = `
+                    <div style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">
+                        <i class="fas fa-shopping-basket" style="font-size: 40px; color: #eee; margin-bottom: 15px; display:block;"></i>
+                        Il carrello è vuoto.<br>
+                        <span style="font-size: 12px;">È il momento perfetto per riempirlo! ✨</span>
+                    </div>`;
                 totalLabel.innerText = "€0.00";
                 subtotalContainer.style.display = "none";
                 shippingContainer.style.display = "none";
@@ -1521,29 +1536,27 @@ function applicaOrdinamentoComponenti() {
                 `;
             });
 
-
-
-            let totaleScontrino = subtotale + costoSpedizioneFisso;
+            let totaleScontrino = subtotale + 8.00; // 8.00 è costoSpedizioneFisso
             subtotalLabel.innerText = `€${subtotale.toFixed(2)}`;
             totalLabel.innerText = `€${totaleScontrino.toFixed(2)}`;
             subtotalContainer.style.display = "flex";
             shippingContainer.style.display = "flex";
         }
 
-        function mostraFormSpedizione() {
-            if (carrello.length === 0) { 
+        window.mostraFormSpedizione = function() {
+            if (carrello.length === 0) { 
                 showToast("Il carrello è vuoto! 🛒"); 
                 return; 
             }
-            document.getElementById('cart-content-view').style.display = 'none';
-            document.getElementById('checkout-form-view').style.display = 'block';
-        }
-        function nascondiFormSpedizione() {
+            document.getElementById('cart-content-view').style.display = 'none';
+            document.getElementById('checkout-form-view').style.display = 'block';
+        }
+        window.nascondiFormSpedizione = function() {
             document.getElementById('checkout-form-view').style.display = 'none';
             document.getElementById('cart-content-view').style.display = 'flex';
         }
 
-        function inviaOrdineAPayPal(event) {
+        window.inviaOrdineAPayPal = function(event) {
             event.preventDefault();
             salvaDatiSpedizione();
 
@@ -1554,11 +1567,11 @@ function applicaOrdinamentoComponenti() {
             let cap = document.getElementById('cap').value;
             let telefono = document.getElementById('telefono').value;
 
-            let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=${emailPayPal}&currency_code=EUR&handling_cart=${costoSpedizioneFisso.toFixed(2)}`;
+            let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=luciaxxxo@alice.it&currency_code=EUR&handling_cart=8.00`;
 
-            paypalUrl += `&return=${encodeURIComponent(urlDelSito + '#grazie')}`;
-            paypalUrl += `&cancel_return=${encodeURIComponent(urlDelSito)}`;
-            paypalUrl += `&cbt=${encodeURIComponent("Torna al negozio " + nomeNegozio)}`;
+            paypalUrl += `&return=${encodeURIComponent('https://3lcreations.github.io/web/#grazie')}`;
+            paypalUrl += `&cancel_return=${encodeURIComponent('https://3lcreations.github.io/web/')}`;
+            paypalUrl += `&cbt=${encodeURIComponent("Torna al negozio 3L Creations")}`;
             paypalUrl += `&rm=2`;
 
             carrello.forEach((item, index) => {
@@ -1574,140 +1587,228 @@ function applicaOrdinamentoComponenti() {
             paypalUrl += `&country=IT`; 
             paypalUrl += `&night_phone_a=${encodeURIComponent(telefono)}`;
 
-            // Svuota carrello dopo l'invio
             carrello = [];
             salvaCarrello();
 
             window.location.href = paypalUrl;
         }
 
-        // === 5. CARICAMENTO DATI DA GOOGLE SHEETS ===
-        function caricaProdottiGenerico(urlSheet, idContenitore, messaggioVuoto) {
-            Papa.parse(urlSheet, {
-                download: true, header: true,
-                transformHeader: function(h) { return h.trim().toLowerCase(); },
-                complete: function(risultato) {
-                    var prodotti = risultato.data;
-                    var contenitore = document.getElementById(idContenitore);
-                    if (!contenitore) return;
-                    
-                    if (!prodotti || prodotti.length === 0) {
-                        contenitore.innerHTML = `<p class="loading-text">${messaggioVuoto}</p>`;
-                        return;
-                    }
-                    
-                    contenitore.innerHTML = '';
-                    let count = 0;
-                    
-                    prodotti.forEach(function(riga) {
-                        if (riga.titolo && riga.titolo.trim() !== "") {
-                            count++;
-                            var immagine = riga.immagine ? riga.immagine : 'logo.png';
-                            
-                            var prezzoPulito = riga.prezzo ? riga.prezzo.replace(',', '.') : '0';
-                            var prezzoNum = parseFloat(prezzoPulito) || 0;
-                            var titoloPulito = riga.titolo.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+        // === LOGICA FIREBASE: PRODOTTI, COMPONENTI E ADMIN ===
+        
+        // ADMIN AUTH STATE
+        window.aggiornaUIAdmin = function(user) {
+            const loginBox = document.getElementById('admin-login-box');
+            const adminPanel = document.getElementById('admin-panel');
+            
+            if (user && user.email === "mauro7leo10@gmail.comm") {
+                if(loginBox) loginBox.style.display = 'none';
+                if(adminPanel) {
+                    adminPanel.style.display = 'block';
+                    document.getElementById('admin-user-email').innerText = user.email;
+                }
+                // Ricarichiamo le griglie per mostrare i tasti Elimina
+                window.caricaProdottiFirebase('collane', 'lista-prodotti');
+                window.caricaProdottiFirebase('fiocchi', 'lista-fiocchi');
+                window.caricaProdottiFirebase('ciondoli', 'lista-ciondoli');
+                window.caricaProdottiFirebase('perline', 'lista-perline');
+            } else {
+                if(loginBox) loginBox.style.display = 'block';
+                if(adminPanel) adminPanel.style.display = 'none';
+            }
+        }
 
-                            var badgeHTML = '';
-                            if (riga.badge && riga.badge.trim() !== "") {
-                                badgeHTML = `<div class="product-badge">${riga.badge.trim()}</div>`;
-                            }
+        window.loginAdmin = async function() {
+            const email = document.getElementById('admin-email').value;
+            const pwd = document.getElementById('admin-pwd').value;
+            if(!window.fbSignIn) { showToast("Firebase non caricato."); return; }
+            try {
+                await window.fbSignIn(window.auth, email, pwd);
+                showToast("Accesso autorizzato! 🔓");
+                document.getElementById('admin-email').value = "";
+                document.getElementById('admin-pwd').value = "";
+            } catch (error) {
+                showToast("Email o Password errati. ❌");
+                console.error(error);
+            }
+        };
 
-                            // CONTROLLO SE GIA' NEI PREFERITI
-                            let isWished = wishlist.some(w => w.nome === titoloPulito);
+        window.logoutAdmin = async function() {
+            try {
+                await window.fbSignOut(window.auth);
+                showToast("Disconnessa in sicurezza. 🔒");
+                showSection('home');
+                location.reload(); // Per sicurezza togliamo i tasti Elimina visivamente
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        window.salvaProdottoSuFirebase = async function() {
+            if (!window.auth.currentUser || window.auth.currentUser.email !== "mauro7leo10@gmail.com") {
+                showToast("Non hai i permessi per farlo!");
+                return;
+            }
+
+            const titolo = document.getElementById('new-titolo').value;
+            const prezzo = document.getElementById('new-prezzo').value;
+            const categoria = document.getElementById('new-categoria').value;
+            const immagine = document.getElementById('new-immagine').value || 'logo.png';
+
+            if(!titolo || !prezzo) { showToast("Compila Nome e Prezzo!"); return; }
+
+            try {
+                await window.fbAddDoc(window.fbCollection(window.db, "prodotti"), {
+                    titolo: titolo,
+                    prezzo: parseFloat(prezzo),
+                    categoria: categoria,
+                    immagine: immagine,
+                    data_creazione: new Date()
+                });
+                
+                showToast("Prodotto aggiunto! 🎉");
+                document.getElementById('new-titolo').value = '';
+                document.getElementById('new-prezzo').value = '';
+                document.getElementById('new-immagine').value = '';
+                
+                // Aggiorna la vista corretta
+                window.caricaProdottiFirebase(categoria, 'lista-' + categoria);
+                
+            } catch (e) {
+                showToast("Errore di rete. Riprova.");
+                console.error(e);
+            }
+        };
+
+        window.eliminaProdotto = async function(idProdotto, nomeProdotto) {
+            if (confirm(`Sei sicura di voler eliminare "${nomeProdotto}"? L'azione è irreversibile.`)) {
+                try {
+                    const prodottoRef = window.fbDoc(window.db, "prodotti", idProdotto);
+                    await window.fbDeleteDoc(prodottoRef);
+                    showToast("Prodotto rimosso! 🗑️");
+                    
+                    // Ricarichiamo le griglie
+                    window.caricaProdottiFirebase('collane', 'lista-prodotti');
+                    window.caricaProdottiFirebase('fiocchi', 'lista-fiocchi');
+                    window.caricaProdottiFirebase('ciondoli', 'lista-ciondoli');
+                    window.caricaProdottiFirebase('perline', 'lista-perline');
+                } catch (e) {
+                    console.error(e);
+                    showToast("Errore durante l'eliminazione.");
+                }
+            }
+        };
+
+        // MOTORE DI LETTURA UNICO DA FIREBASE
+        window.caricaProdottiFirebase = async function(categoria, idContenitore) {
+            const contenitore = document.getElementById(idContenitore);
+            if (!contenitore) return;
+
+            try {
+                if(!window.fbGetDocs) {
+                    // Aspetta un momento se Firebase non è ancora pronto
+                    setTimeout(() => window.caricaProdottiFirebase(categoria, idContenitore), 500);
+                    return;
+                }
+
+                const querySnapshot = await window.fbGetDocs(window.fbCollection(window.db, "prodotti"));
+                contenitore.innerHTML = '';
+                let count = 0;
+
+                const isAdmin = window.auth && window.auth.currentUser && window.auth.currentUser.email === "mauro7leo10@gmail.com";
+
+                querySnapshot.forEach((doc) => {
+                    const riga = doc.data();
+                    if (riga.categoria === categoria) {
+                        count++;
+                        const idProdotto = doc.id;
+                        const immagine = riga.immagine || 'logo.png';
+                        const prezzoNum = parseFloat(riga.prezzo) || 0;
+                        const titolo = riga.titolo.replace(/'/g, "\\'"); 
+
+                        let btnElimina = isAdmin ? 
+                            `<div class="delete-admin-btn" onclick="eliminaProdotto('${idProdotto}', '${titolo}')"><i class="fas fa-trash-alt"></i> Elimina</div>` : '';
+
+                        if(categoria === 'collane' || categoria === 'fiocchi') {
+                            let isWished = wishlist.some(w => w.nome === riga.titolo);
                             let heartClass = isWished ? 'fas' : 'far';
                             let activeClass = isWished ? 'active' : '';
 
-                            var cardHTML = `
-                                <div class="product-card reveal">
-                                    ${badgeHTML}
-                                    <div class="wishlist-btn ${activeClass}" onclick="toggleWishlist('${titoloPulito}', ${prezzoNum}, '${immagine}', this)"><i class="${heartClass} fa-heart"></i></div>
-                                    <img src="${immagine}" alt="${titoloPulito}" class="product-image" onerror="this.src='logo.png'">
+                            const cardHTML = `
+                                <div class="product-card reveal visible" style="position:relative;">
+                                    ${btnElimina}
+                                    <div class="wishlist-btn ${activeClass}" onclick="toggleWishlist('${titolo}', ${prezzoNum}, '${immagine}', this)">
+                                        <i class="${heartClass} fa-heart"></i>
+                                    </div>
+                                    <img src="${immagine}" alt="${titolo}" class="product-image" onerror="this.src='logo.png'">
                                     <h3>${riga.titolo}</h3>
                                     <div class="price">€${prezzoNum.toFixed(2)}</div>
-                                    <button onclick="aggiungiProdotto('${titoloPulito}', ${prezzoNum}, '${immagine}')" class="buy-button-paypal">
+                                    <button onclick="aggiungiProdotto('${titolo}', ${prezzoNum}, '${immagine}')" class="buy-button-paypal">
                                         Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
                                     </button>
                                 </div>`;
                             contenitore.insertAdjacentHTML('beforeend', cardHTML);
+                        } else {
+                            // Ciondoli e Perline
+                            let chkClass = categoria === 'ciondoli' ? 'charm-checkbox' : 'perlina-checkbox';
+                            const charmHTML = `
+                                <div class="charm-card reveal visible" style="position:relative;">
+                                    ${btnElimina}
+                                    <img src="${immagine}" alt="${titolo}" class="charm-image" onerror="this.src='logo.png'">
+                                    <div class="charm-title">${riga.titolo}</div>
+                                    <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
+                                    <input type="checkbox" class="${chkClass}" data-titolo="${titolo}" data-prezzo="${prezzoNum}" data-immagine="${immagine}" onchange="calcolaTotaleCiondoli(event)">
+                                </div>`;
+                            contenitore.insertAdjacentHTML('beforeend', charmHTML);
                         }
-                    });
-                    
-                    if(count === 0) {
-                        contenitore.innerHTML = `<p class="loading-text">${messaggioVuoto}</p>`;
                     }
-                    observeElements();
-                },
-                error: function() {
-                     var contenitore = document.getElementById(idContenitore);
-                     if (contenitore) contenitore.innerHTML = `<p class="loading-text">${messaggioVuoto}</p>`;
+                });
+
+                if (count === 0) contenitore.innerHTML = "<p class='loading-text'>Nessun prodotto trovato in questa categoria.</p>";
+                observeElements();
+            } catch (e) {
+                console.error("Errore caricamento: ", e);
+            }
+        };
+
+        // === INIZIALIZZAZIONE AL CARICAMENTO ===
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => { splash.style.display = 'none'; }, 600);
                 }
-            });
-        }
+            }, 800);
 
-        caricaProdottiGenerico(googleSheetCOLLANE, 'lista-prodotti', 'Nessuna collana disponibile al momento.');
-        caricaProdottiGenerico(googleSheetFIOCCHI, 'lista-fiocchi', 'Nessun fiocco disponibile al momento.');
+            var hash = window.location.hash.substring(1); 
+            if (hash) showSection(hash, false); else showSection('home', false); 
+            
+            caricaDatiSpedizioneSalvata(); 
+            caricaCarrello(); 
+            caricaWishlist(); 
+            initHomeSlider(); 
+            calcolaDataConsegna();
+            observeElements(); 
+            checkCookies();
 
-        Papa.parse(googleSheetCIONDOLI, {
-            download: true, header: true,
-            transformHeader: function(h) { return h.trim().toLowerCase(); },
-            complete: function(risultato) {
-                var ciondoli = risultato.data;
-                var contenitore = document.getElementById('lista-ciondoli');
-                contenitore.innerHTML = '';
-                ciondoli.forEach(function(riga) {
-                    if (riga.titolo && riga.titolo.trim() !== "") {
-                        var immagine = riga.immagine ? riga.immagine : 'logo.png';
-                        var prezzoPulito = riga.prezzo ? riga.prezzo.replace(',', '.') : '0';
-                        var prezzoNum = parseFloat(prezzoPulito) || 0;
-                        
-                        var cardHTML = `
-                            <div class="charm-card reveal">
-                                <img src="${immagine}" alt="${riga.titolo}" class="charm-image" onerror="this.src='logo.png'">
-                                <div class="charm-title">${riga.titolo}</div>
-                                <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
-                                <input type="checkbox" class="charm-checkbox" data-titolo="${riga.titolo}" data-prezzo="${prezzoNum}" data-immagine="${immagine}" onchange="calcolaTotaleCiondoli(event)">
-                            </div>`;
-                        contenitore.insertAdjacentHTML('beforeend', cardHTML);
-                    }
-                });
-                observeElements();
-            }
+            // Carichiamo tutte le categorie da Firebase
+            window.caricaProdottiFirebase('collane', 'lista-prodotti');
+            window.caricaProdottiFirebase('fiocchi', 'lista-fiocchi');
+            window.caricaProdottiFirebase('ciondoli', 'lista-ciondoli');
+            window.caricaProdottiFirebase('perline', 'lista-perline');
         });
 
-        Papa.parse(googleSheetPERLINE, {
-            download: true, header: true,
-            transformHeader: function(h) { return h.trim().toLowerCase(); },
-            complete: function(risultato) {
-                var perline = risultato.data;
-                var contenitore = document.getElementById('lista-perline');
-                contenitore.innerHTML = '';
-                perline.forEach(function(riga) {
-                    if (riga.titolo && riga.titolo.trim() !== "") {
-                        var immagine = riga.immagine ? riga.immagine : 'logo.png';
-                        var prezzoPulito = riga.prezzo ? riga.prezzo.replace(',', '.') : '0';
-                        var prezzoNum = parseFloat(prezzoPulito) || 0;
-                        
-                        var cardHTML = `
-                            <div class="charm-card reveal">
-                                <img src="${immagine}" alt="${riga.titolo}" class="charm-image" onerror="this.src='logo.png'">
-                                <div class="charm-title">${riga.titolo}</div>
-                                <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
-                                <input type="checkbox" class="perlina-checkbox" data-titolo="${riga.titolo}" data-prezzo="${prezzoNum}" data-immagine="${immagine}" onchange="calcolaTotaleCiondoli(event)">
-                            </div>`;
-                        contenitore.insertAdjacentHTML('beforeend', cardHTML);
-                    }
-                });
-                observeElements();
-            }
+        window.addEventListener('popstate', function() {
+            var hash = window.location.hash.substring(1);
+            showSection(hash || 'home', false);
         });
 
-        // === 6. FUNZIONI PER PRODOTTI PERSONALIZZATI ===
-        function aggiornaAnteprima(idImg, srcNuova) {
+        // === FUNZIONI PER PRODOTTI PERSONALIZZATI ===
+        window.aggiornaAnteprima = function(idImg, srcNuova) {
             document.getElementById(idImg).src = srcNuova;
         }
 
-        function aggiungiPersonalizzatoCompleto(nomeBase, prezzo, textAreaId, radioName, imgId, coloreFisso = null, tagliaId = null) {
+        window.aggiungiPersonalizzatoCompleto = function(nomeBase, prezzo, textAreaId, radioName, imgId, coloreFisso = null, tagliaId = null) {
             let note = document.getElementById(textAreaId).value.trim();
             let colore = coloreFisso;
             
@@ -1748,8 +1849,8 @@ function applicaOrdinamentoComponenti() {
             document.getElementById(textAreaId).value = ""; 
         }
 
-        // === 7. CERVELLO COMPONI COLLANA ===
-        function calcolaTotaleCiondoli(event) {
+        // === CERVELLO COMPONI COLLANA ===
+        window.calcolaTotaleCiondoli = function(event) {
             let prezzoBaseCatenina = 5.00;
             let totale = prezzoBaseCatenina;
             let numeroCiondoli = 0;
@@ -1774,7 +1875,7 @@ function applicaOrdinamentoComponenti() {
             }
 
             if (numeroPerline > 10) {
-                alert("Puoi scegliere al massimo 10 perline per collana!");
+                showToast("Massimo 10 pezzi raggiunti! 🛑")
                 if(event && event.target.classList.contains('perlina-checkbox')) { event.target.checked = false; } 
                 return calcolaTotaleCiondoli(); 
             }
@@ -1782,15 +1883,15 @@ function applicaOrdinamentoComponenti() {
             document.getElementById('prezzo-totale-ciondoli').innerText = totale.toFixed(2);
         }
 
-        function aggiungiCollanaCompostaAlCarrello(event) {
+        window.aggiungiCollanaCompostaAlCarrello = function(event) {
             event.preventDefault(); 
             let checkboxesCiondoli = document.querySelectorAll('.charm-checkbox:checked');
             let checkboxesPerline = document.querySelectorAll('.perlina-checkbox:checked');
             
             if (checkboxesCiondoli.length === 0 && checkboxesPerline.length === 0) {
-                showToast("Scegli almeno 1 ciondolo o perlina! ✨");
-                return;
-            }
+                showToast("Scegli almeno 1 ciondolo o perlina! ✨");
+                return;
+            }
 
             let ciondoliSelezionati = [];
             let perlineSelezionate = [];
