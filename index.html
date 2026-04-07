@@ -1016,7 +1016,7 @@
     <script>
         // === GESTIONE CLIENTI E SINCRONIZZAZIONE CLOUD ===
 
-     window.registraCliente = async function() {
+    window.registraCliente = async function() {
             const email = document.getElementById('user-email').value;
             const pwd = document.getElementById('user-pwd').value;
             const nome = document.getElementById('user-nome').value.trim();
@@ -1047,6 +1047,12 @@
                 // Pulizia campi
                 document.getElementById('user-nome').value = '';
                 document.getElementById('user-cognome').value = '';
+                
+                // ASPETTA 1.5 SECONDI E POI PORTA ALLA HOME
+                setTimeout(() => {
+                    showSection('home');
+                }, 1500);
+
             } catch (error) {
                 showToast("Errore: " + error.message);
             }
@@ -1079,7 +1085,7 @@
             }
         };
 
-        window.loginCliente = async function() {
+       window.loginCliente = async function() {
             const email = document.getElementById('user-email').value;
             const pwd = document.getElementById('user-pwd').value;
             try {
@@ -1087,7 +1093,12 @@
                 showToast("Bentornato/a! ❤️");
                 document.getElementById('user-email').value = '';
                 document.getElementById('user-pwd').value = '';
-                // I dati verranno scaricati in automatico dall'Ascoltatore onAuthStateChanged
+                
+                // ASPETTA 1.5 SECONDI E POI PORTA ALLA HOME
+                setTimeout(() => {
+                    showSection('home');
+                }, 1500);
+                
             } catch (error) {
                 showToast("Email o Password errati ❌");
             }
@@ -1812,7 +1823,7 @@
             }
         }
 
-        window.loginAdmin = async function() {
+       window.loginAdmin = async function() {
             const email = document.getElementById('admin-email').value;
             const pwd = document.getElementById('admin-pwd').value;
             if(!window.fbSignIn) { showToast("Firebase non caricato."); return; }
@@ -1821,6 +1832,9 @@
                 showToast("Accesso autorizzato! 🔓");
                 document.getElementById('admin-email').value = "";
                 document.getElementById('admin-pwd').value = "";
+                
+                // PORTA DIRETTAMENTE ALL'AREA ADMIN
+                showSection('sezione-admin');
             } catch (error) {
                 showToast("Email o Password errati. ❌");
                 console.error(error);
