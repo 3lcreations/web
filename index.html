@@ -175,10 +175,31 @@ window.storage = storage;
         .form-row { display: flex; gap: 10px; }
 
         /* DATA DI CONSEGNA DINAMICA */
-        .delivery-estimate { font-size: 12px; color: var(--testo-chiaro); text-align: center; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .delivery-estimate i { color: var(--fucsia); }
-        .delivery-estimate strong { color: var(--testo-scuro); }
-
+       /* DATA DI CONSEGNA DINAMICA RISALTATA */
+        .delivery-estimate { 
+            font-size: 13px; 
+            color: var(--testo-scuro); 
+            background-color: rgba(244, 143, 177, 0.15); 
+            padding: 12px 15px; 
+            border-radius: 10px; 
+            border: 1px solid var(--fucsia); /* <-- Linea continua */
+            margin-bottom: 15px; 
+            margin-top: 5px;
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            line-height: 1.5; 
+            text-align: left; /* Migliora la lettura se il testo va a capo */
+        }
+        .delivery-estimate i { 
+            color: var(--fucsia); 
+            font-size: 24px; 
+            flex-shrink: 0; /* Impedisce all'icona di rimpicciolirsi o sfalsarsi */
+        }
+        .delivery-estimate strong { 
+            color: var(--fucsia); 
+            font-weight: 600; 
+        }
         /* PULSANTI FLUTTUANTI E TORNA SU */
         .floating-cart { position: fixed; bottom: 30px; right: 30px; background-color: var(--fucsia); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 20px rgba(216, 27, 96, 0.4); cursor: pointer; z-index: 90; transition: 0.3s;}
         .floating-cart:hover { transform: scale(1.1); }
@@ -518,7 +539,7 @@ window.storage = storage;
             <div class="cart-items" id="cart-items-container">
                 <p style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">Il carrello è vuoto.</p>
             </div>
-            <div class="cart-footer">
+           <div class="cart-footer">
                 <div class="cart-subtotal-line" id="cart-subtotal-container" style="display: none;">
                     <span>Subtotale:</span>
                     <span id="cart-subtotal-price">€0.00</span>
@@ -531,8 +552,10 @@ window.storage = storage;
                     <span>Totale (Sped. inc.):</span>
                     <span id="cart-total-price">€0.00</span>
                 </div>
-                <button class="checkout-btn" onclick="mostraFormSpedizione()">Procedi al Pagamento <i class="fas fa-arrow-right"></i></button>
+                
                 <div id="dynamic-delivery-date" class="delivery-estimate"></div>
+                
+                <button class="checkout-btn" onclick="mostraFormSpedizione()">Procedi al Pagamento <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
 
@@ -1437,7 +1460,7 @@ window.storage = storage;
             localStorage.setItem('datiSpedizione3L', JSON.stringify(dati));
         }
 
-        // === DATA DI CONSEGNA DINAMICA ===
+       // === DATA DI CONSEGNA DINAMICA ===
         function calcolaDataConsegna() {
             const today = new Date();
             const minDate = new Date(today);
@@ -1451,7 +1474,8 @@ window.storage = storage;
             
             const deliveryEl = document.getElementById('dynamic-delivery-date');
             if(deliveryEl) {
-                deliveryEl.innerHTML = `<i class="fas fa-box-open"></i> Ordina oggi, consegna stimata tra il <strong>${minStr}</strong> e il <strong>${maxStr}</strong>`;
+                // Abbiamo aggiunto uno <span> attorno al testo per stabilizzare l'allineamento!
+                deliveryEl.innerHTML = `<i class="fas fa-box-open"></i> <span>Ordina oggi, consegna stimata tra il <strong>${minStr}</strong> e il <strong>${maxStr}</strong></span>`;
             }
         }
 
@@ -2068,18 +2092,18 @@ window.storage = storage;
             }
         };
         // === LOGICA: I MIEI ORDINI ===
-      // === LOGICA: I MIEI ORDINI (Versione Sicura) ===
+     // === LOGICA: I MIEI ORDINI (Versione con Diagnostica) ===
         window.caricaOrdiniPersonali = async function() {
             const container = document.getElementById('lista-miei-ordini');
             const user = window.auth.currentUser;
             
-            // Se non c'è utente connesso o non trova il contenitore, si ferma senza errori
             if (!user) return; 
 
             if (container) container.innerHTML = "<p style='text-align:center; color: var(--testo-chiaro);'><i class='fas fa-spinner fa-spin'></i> Caricamento in corso...</p>";
 
             try {
-                const ordiniRef = window.fbCollection(window.db, "utenti", user.uid, "ordini");
+                // MODIFICA 1: Percorso scritto tutto attaccato (risolve bug di lettura su Firebase)
+                const ordiniRef = window.fbCollection(window.db, "utenti/" + user.uid + "/ordini");
                 const querySnapshot = await window.fbGetDocs(ordiniRef);
                 
                 if (querySnapshot.empty) {
@@ -2096,7 +2120,6 @@ window.storage = storage;
                     ordini.push({ id: doc.id, ...doc.data() });
                 });
 
-                // Ordinamento a prova di errore (se manca la data non va in blocco)
                 ordini.sort((a, b) => {
                     let timeA = (a.data && typeof a.data.toMillis === 'function') ? a.data.toMillis() : 0;
                     let timeB = (b.data && typeof b.data.toMillis === 'function') ? b.data.toMillis() : 0;
@@ -2106,18 +2129,16 @@ window.storage = storage;
                 if (container) container.innerHTML = "";
                 
                 ordini.forEach(ordine => {
-                    // Estrazione data sicura
                     let dataOdierna = new Date();
                     if (ordine.data && typeof ordine.data.toDate === 'function') {
                         dataOdierna = ordine.data.toDate();
                     } else if (ordine.data) {
-                        dataOdierna = new Date(ordine.data); // Fallback di emergenza
+                        dataOdierna = new Date(ordine.data); 
                     }
                     
                     let dataFormat = dataOdierna.toLocaleDateString('it-IT');
                     let orarioFormat = dataOdierna.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
                     
-                    // Estrazione prodotti sicura
                     let listaProdottiHTML = "";
                     if (ordine.carrello && Array.isArray(ordine.carrello)) {
                         listaProdottiHTML = ordine.carrello.map(p => `<li>${p.nome || 'Prodotto'} - <strong>€${(p.prezzo || 0).toFixed(2)}</strong></li>`).join('');
@@ -2144,7 +2165,12 @@ window.storage = storage;
                 });
             } catch (e) {
                 console.error("Errore nel caricamento ordini:", e);
-                if (container) container.innerHTML = "<p style='text-align:center; color: var(--fucsia);'>Ops! C'è stato un piccolo errore. Ricarica la pagina o riprova tra poco.</p>";
+                // MODIFICA 2: Ora stampa il motivo ESATTO dell'errore a schermo!
+                if (container) container.innerHTML = `
+                    <div style="text-align:center; color: red; padding: 20px; background: #fff0f0; border-radius: 10px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 30px; margin-bottom: 10px;"></i><br>
+                        <strong>Errore di sistema:</strong><br>${e.message}
+                    </div>`;
             }
         };
         // === GESTIONE MODIFICA PRODOTTO COMPLETA (ADMIN) ===
