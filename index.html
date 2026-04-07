@@ -26,8 +26,8 @@
     
     <script type="module">
      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-      import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+      import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+      import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
       // ⚠️ SOSTITUISCI QUESTI DATI CON QUELLI DELLA TUA CONSOLE FIREBASE ⚠️
    const firebaseConfig = {
   apiKey: "AIzaSyACRdFw2Ao9UbYw5O0h2PrA3n-CfoAgOLE",
@@ -49,10 +49,12 @@
       window.fbAddDoc = addDoc;
       window.fbDeleteDoc = deleteDoc;
       window.fbUpdateDoc = updateDoc;
+      window.fbSetDoc = setDoc; // NUOVO
+      window.fbGetDoc = getDoc; // NUOVO
       window.fbDoc = doc;
       window.fbSignIn = signInWithEmailAndPassword;
+      window.fbCreateUser = createUserWithEmailAndPassword; // NUOVO
       window.fbSignOut = signOut;
-
       // Ascoltatore di Login/Logout in tempo reale
       onAuthStateChanged(window.auth, (user) => {
           if (window.aggiornaUIAdmin) {
@@ -473,7 +475,8 @@
         <img src="logo.png" alt="Logo 3L Creations" class="sidebar-logo">
         
         <a href="#home" onclick="showSection('home'); return false;">🏠 Home</a>
-        
+        <div class="menu-title">Area Personale</div>
+        <a href="#profilo" onclick="showSection('profilo'); return false;">👤 Accedi / Registrati</a>
         <div class="menu-title">Prodotti Pronti</div>
         <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('collane'); return false;">📿 Collane</a>
         <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('fiocchi'); return false;">🎀 Fiocchi</a>
@@ -893,7 +896,42 @@
                 <a href="https://mail.google.com/mail/?view=cm&fs=1&to=3lcreationsfordogs1@gmail.com" target="_blank" class="social-link"><i class="fas fa-envelope social-icon"></i><span><strong>Email:</strong> 3lcreationsfordogs1@gmail.com</span></a>
             </div>
         </div>
+<div id="profilo" class="content-section">
+            <h2 class="reveal" style="display:block; text-align:center;">La tua Area Personale</h2>
+            
+            <div id="user-login-box" class="componi-box reveal" style="max-width: 400px; margin: 0 auto;">
+                <h3 id="auth-title" style="text-align: center; color: var(--testo-scuro);">Accedi</h3>
+                <p style="text-align:center; font-size: 12px; color: var(--testo-chiaro); margin-bottom: 15px;">Salva il tuo carrello e i tuoi preferiti su tutti i dispositivi!</p>
+                
+                <div id="register-fields" class="form-row" style="display: none;">
+                    <div class="form-group" style="flex: 1;">
+                        <input type="text" id="user-nome" placeholder="Nome" class="custom-textarea" style="height:40px;">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <input type="text" id="user-cognome" placeholder="Cognome" class="custom-textarea" style="height:40px;">
+                    </div>
+                </div>
 
+                <input type="email" id="user-email" placeholder="La tua email" class="custom-textarea" style="height:40px;">
+                <input type="password" id="user-pwd" placeholder="Password (min 6 caratteri)" class="custom-textarea" style="height:40px;">
+                
+                <button id="btn-login" onclick="loginCliente()" class="checkout-btn" style="width: 100%; margin-bottom: 10px;">Accedi</button>
+                <button id="btn-register" onclick="registraCliente()" class="checkout-btn" style="width: 100%; margin-bottom: 10px; background-color: var(--rosa-chiaro); color: white; display: none;">Crea Account</button>
+                
+                <p id="toggle-auth-text" style="text-align:center; font-size: 13px; color: var(--testo-chiaro); margin-top: 10px;">
+                    Non hai un account? <strong onclick="toggleAuthMode()" style="color: var(--fucsia); cursor: pointer;">Registrati</strong>
+                </p>
+            </div>
+
+            <div id="user-dashboard" class="componi-box reveal" style="display:none; max-width: 400px; margin: 0 auto; text-align: center;">
+                <h3 style="color: var(--fucsia);">Ciao <span id="user-nome-display"></span>! ✨</h3>
+                <p style="font-size: 13px; color: var(--testo-chiaro); margin-bottom: 20px;">Il tuo carrello e i tuoi preferiti sono sincronizzati.</p>
+                <button onclick="logoutCliente()" class="checkout-btn" style="background-color: #777; width: auto; padding: 10px 30px;">Esci dall'account</button>
+            </div>
+        </div>
+
+    
+    
         <div id="faq" class="content-section">
             <h2 class="reveal" style="display:block; text-align:center;">Domande Frequenti (FAQ)</h2>
             <div class="home-text">
@@ -976,6 +1014,140 @@
     </footer>
 
     <script>
+        // === GESTIONE CLIENTI E SINCRONIZZAZIONE CLOUD ===
+
+     window.registraCliente = async function() {
+            const email = document.getElementById('user-email').value;
+            const pwd = document.getElementById('user-pwd').value;
+            const nome = document.getElementById('user-nome').value.trim();
+            const cognome = document.getElementById('user-cognome').value.trim();
+
+            if(!email || pwd.length < 6 || !nome || !cognome) { 
+                showToast("Compila tutti i campi, inclusi Nome e Cognome!"); 
+                return; 
+            }
+            
+            try {
+                // Imposta SUBITO il nome nella grafica per non farlo sparire
+                document.getElementById('user-nome-display').innerText = nome;
+
+                const userCredential = await window.fbCreateUser(window.auth, email, pwd);
+                const user = userCredential.user;
+                
+                // Salviamo i dettagli nel database utenti
+                const userRef = window.fbDoc(window.db, "utenti", user.uid);
+                await window.fbSetDoc(userRef, {
+                    nome: nome,
+                    cognome: cognome,
+                    carrello: carrello,
+                    wishlist: wishlist
+                }, { merge: true });
+
+                showToast("Benvenuto/a " + nome + "! 🎉");
+                // Pulizia campi
+                document.getElementById('user-nome').value = '';
+                document.getElementById('user-cognome').value = '';
+            } catch (error) {
+                showToast("Errore: " + error.message);
+            }
+        };
+// === GESTIONE ANIMAZIONE MODULO LOGIN/REGISTRAZIONE ===
+        let isLoginMode = true;
+        
+        window.toggleAuthMode = function() {
+            isLoginMode = !isLoginMode;
+            const regFields = document.getElementById('register-fields');
+            const btnLogin = document.getElementById('btn-login');
+            const btnRegister = document.getElementById('btn-register');
+            const authTitle = document.getElementById('auth-title');
+            const toggleText = document.getElementById('toggle-auth-text');
+
+            if (isLoginMode) {
+                // Vista ACCESSO
+                regFields.style.display = 'none';
+                btnLogin.style.display = 'block';
+                btnRegister.style.display = 'none';
+                authTitle.innerText = "Accedi";
+                toggleText.innerHTML = 'Non hai un account? <strong onclick="toggleAuthMode()" style="color: var(--fucsia); cursor: pointer;">Registrati</strong>';
+            } else {
+                // Vista REGISTRAZIONE
+                regFields.style.display = 'flex';
+                btnLogin.style.display = 'none';
+                btnRegister.style.display = 'block';
+                authTitle.innerText = "Crea un Account";
+                toggleText.innerHTML = 'Hai già un account? <strong onclick="toggleAuthMode()" style="color: var(--fucsia); cursor: pointer;">Accedi</strong>';
+            }
+        };
+
+        window.loginCliente = async function() {
+            const email = document.getElementById('user-email').value;
+            const pwd = document.getElementById('user-pwd').value;
+            try {
+                await window.fbSignIn(window.auth, email, pwd);
+                showToast("Bentornato/a! ❤️");
+                document.getElementById('user-email').value = '';
+                document.getElementById('user-pwd').value = '';
+                // I dati verranno scaricati in automatico dall'Ascoltatore onAuthStateChanged
+            } catch (error) {
+                showToast("Email o Password errati ❌");
+            }
+        };
+
+        window.logoutCliente = async function() {
+            try {
+                await window.fbSignOut(window.auth);
+                showToast("Hai effettuato il logout. 👋");
+                // Svuotiamo il carrello locale per sicurezza
+                carrello = []; wishlist = [];
+                salvaCarrello(); salvaWishlist();
+                aggiornaCarrelloUI(); aggiornaWishlistUI();
+            } catch (error) { console.error(error); }
+        };
+
+        // Salva i dati dal sito a Firebase
+        window.sincronizzaDatiVersoCloud = async function() {
+            const user = window.auth.currentUser;
+            // Controlla se è connesso e se NON è un admin
+            if (user && user.email !== "3lcreationsfordogs1@gmail.com" && user.email !== "mauro7leo10@gmail.com") {
+                const userRef = window.fbDoc(window.db, "utenti", user.uid);
+                try {
+                    await window.fbSetDoc(userRef, {
+                        carrello: carrello,
+                        wishlist: wishlist
+                    }, { merge: true });
+                } catch(e) { console.error("Errore sync cloud", e); }
+            }
+        };
+
+        // Scarica i dati da Firebase al sito
+      window.scaricaDatiDalCloud = async function(uid) {
+            try {
+                const userRef = window.fbDoc(window.db, "utenti", uid);
+                const docSnap = await window.fbGetDoc(userRef);
+                if (docSnap.exists()) {
+                    const dati = docSnap.data();
+                    
+                    // Applichiamo il nome alla dashboard (con paracadute)
+                    if (dati && dati.nome) {
+                        document.getElementById('user-nome-display').innerText = dati.nome;
+                    } else {
+                        document.getElementById('user-nome-display').innerText = "Cliente";
+                    }
+
+                    if (dati.carrello) carrello = dati.carrello;
+                    if (dati.wishlist) wishlist = dati.wishlist;
+                    
+                    localStorage.setItem('carrello3L', JSON.stringify(carrello));
+                    localStorage.setItem('wishlist3L', JSON.stringify(wishlist));
+                    aggiornaCarrelloUI();
+                    aggiornaWishlistUI();
+                } else {
+                    // Se l'utente è nuovissimo e non ha ancora dati
+                    document.getElementById('user-nome-display').innerText = "Cliente";
+                    sincronizzaDatiVersoCloud();
+                }
+            } catch (e) { console.error("Errore download cloud", e); }
+        };
         // === CURSORE MAGICO ===
         if (window.matchMedia("(pointer: fine)").matches) {
             const cursor = document.createElement('div');
@@ -1302,6 +1474,7 @@
 
         function salvaWishlist() {
             localStorage.setItem('wishlist3L', JSON.stringify(wishlist));
+            if(window.sincronizzaDatiVersoCloud) window.sincronizzaDatiVersoCloud(); // AGGIUNTO!
         }
 
         function caricaWishlist() {
@@ -1444,6 +1617,7 @@
 
         function salvaCarrello() {
             localStorage.setItem('carrello3L', JSON.stringify(carrello));
+            if(window.sincronizzaDatiVersoCloud) window.sincronizzaDatiVersoCloud(); // AGGIUNTO!
         }
 
         function caricaCarrello() {
@@ -1598,24 +1772,43 @@
         // === LOGICA FIREBASE: PRODOTTI, COMPONENTI E ADMIN ===
         
         // ADMIN AUTH STATE
-        window.aggiornaUIAdmin = function(user) {
-            const loginBox = document.getElementById('admin-login-box');
+      window.aggiornaUIAdmin = function(user) {
+            const loginBoxAdmin = document.getElementById('admin-login-box');
             const adminPanel = document.getElementById('admin-panel');
             
-            if (user && user.email === "mauro7leo10@gmail.com") {
-                if(loginBox) loginBox.style.display = 'none';
-                if(adminPanel) {
-                    adminPanel.style.display = 'block';
-                    document.getElementById('admin-user-email').innerText = user.email;
+            // Variabili Pannello Clienti
+            const userLoginBox = document.getElementById('user-login-box');
+            const userDashboard = document.getElementById('user-dashboard');
+
+            if (user) {
+                // UTENTE CONNESSO! È admin o cliente?
+                if (user.email === "mauro7leo10@gmail.com") {
+                    // È UN ADMIN
+                    if(loginBoxAdmin) loginBoxAdmin.style.display = 'none';
+                    if(adminPanel) {
+                        adminPanel.style.display = 'block';
+                        document.getElementById('admin-user-email').innerText = user.email;
+                    }
+                    window.caricaProdottiFirebase('collane', 'lista-prodotti');
+                    window.caricaProdottiFirebase('fiocchi', 'lista-fiocchi');
+                    window.caricaProdottiFirebase('ciondoli', 'lista-ciondoli');
+                    window.caricaProdottiFirebase('perline', 'lista-perline');
+                } else {
+                    // È UN CLIENTE NORMALE
+                    if(userLoginBox) userLoginBox.style.display = 'none';
+                    if(userDashboard) {
+                        userDashboard.style.display = 'block';
+                    }
+                    // SCARICA I SUOI DATI PERSONALI E IL NOME!
+                    scaricaDatiDalCloud(user.uid); 
                 }
-                // Ricarichiamo le griglie per mostrare i tasti Elimina
-                window.caricaProdottiFirebase('collane', 'lista-prodotti');
-                window.caricaProdottiFirebase('fiocchi', 'lista-fiocchi');
-                window.caricaProdottiFirebase('ciondoli', 'lista-ciondoli');
-                window.caricaProdottiFirebase('perline', 'lista-perline');
             } else {
-                if(loginBox) loginBox.style.display = 'block';
+                // NESSUNO È CONNESSO
+                if(loginBoxAdmin) loginBoxAdmin.style.display = 'block';
                 if(adminPanel) adminPanel.style.display = 'none';
+                
+                if(userLoginBox) userLoginBox.style.display = 'block';
+                if(userDashboard) userDashboard.style.display = 'none';
             }
         }
 
