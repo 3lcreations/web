@@ -27,7 +27,7 @@
     <script type="module">
      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
       import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-      import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+      import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
       import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
       // ⚠️ SOSTITUISCI QUESTI DATI CON QUELLI DELLA TUA CONSOLE FIREBASE ⚠️
    const firebaseConfig = {
@@ -46,6 +46,7 @@
       window.auth = getAuth(app);
       
       // Esportiamo le funzioni per usarle nel JS normale
+      window.fbResetPwd = sendPasswordResetEmail;
       window.fbCollection = collection;
       window.fbGetDocs = getDocs;
       window.fbAddDoc = addDoc;
@@ -934,10 +935,14 @@ window.storage = storage;
                     </div>
                 </div>
 
-                <input type="email" id="user-email" placeholder="La tua email" class="custom-textarea" style="height:40px;">
-                <input type="password" id="user-pwd" placeholder="Password (min 6 caratteri)" class="custom-textarea" style="height:40px;">
-                
-                <button id="btn-login" onclick="loginCliente()" class="checkout-btn" style="width: 100%; margin-bottom: 10px;">Accedi</button>
+               <input type="email" id="user-email" placeholder="La tua email" class="custom-textarea" style="height:40px;">
+<input type="password" id="user-pwd" placeholder="Password (min 6 caratteri)" class="custom-textarea" style="height:40px;">
+
+<p id="forgot-pwd-link" style="text-align: right; font-size: 11px; margin-top: -10px; margin-bottom: 15px;">
+    <span onclick="recuperaPassword()" style="color: var(--fucsia); cursor: pointer; text-decoration: underline;">Password dimenticata?</span>
+</p>
+
+<button id="btn-login" onclick="loginCliente()" class="checkout-btn" style="width: 100%; margin-bottom: 10px;">Accedi</button>
                 <button id="btn-register" onclick="registraCliente()" class="checkout-btn" style="width: 100%; margin-bottom: 10px; display: none;">Crea Account</button>
                 
                 <p id="toggle-auth-text" style="text-align:center; font-size: 13px; color: var(--testo-chiaro); margin-top: 10px;">
@@ -1126,19 +1131,21 @@ window.storage = storage;
 // === GESTIONE ANIMAZIONE MODULO LOGIN/REGISTRAZIONE ===
         let isLoginMode = true;
         
-        window.toggleAuthMode = function() {
+       window.toggleAuthMode = function() {
             isLoginMode = !isLoginMode;
             const regFields = document.getElementById('register-fields');
             const btnLogin = document.getElementById('btn-login');
             const btnRegister = document.getElementById('btn-register');
             const authTitle = document.getElementById('auth-title');
             const toggleText = document.getElementById('toggle-auth-text');
+            const forgotPwd = document.getElementById('forgot-pwd-link'); // <--- Aggiunto
 
             if (isLoginMode) {
                 // Vista ACCESSO
                 regFields.style.display = 'none';
                 btnLogin.style.display = 'block';
                 btnRegister.style.display = 'none';
+                if(forgotPwd) forgotPwd.style.display = 'block'; // Mostra il link
                 authTitle.innerText = "Accedi";
                 toggleText.innerHTML = 'Non hai un account? <strong onclick="toggleAuthMode()" style="color: var(--fucsia); cursor: pointer;">Registrati</strong>';
             } else {
@@ -1146,6 +1153,7 @@ window.storage = storage;
                 regFields.style.display = 'flex';
                 btnLogin.style.display = 'none';
                 btnRegister.style.display = 'block';
+                if(forgotPwd) forgotPwd.style.display = 'none'; // Nascondi il link
                 authTitle.innerText = "Crea un Account";
                 toggleText.innerHTML = 'Hai già un account? <strong onclick="toggleAuthMode()" style="color: var(--fucsia); cursor: pointer;">Accedi</strong>';
             }
@@ -1167,6 +1175,28 @@ window.storage = storage;
                 
             } catch (error) {
                 showToast("Email o Password errati ❌");
+            }
+        };
+        window.recuperaPassword = async function() {
+            const email = document.getElementById('user-email').value.trim();
+            
+            if (!email) {
+                showToast("Inserisci la tua email qui sopra per recuperare la password! 📧");
+                return;
+            }
+            
+            showToast("Invio email in corso... ⏳");
+            
+            try {
+                await window.fbResetPwd(window.auth, email);
+                showToast("Email inviata! Controlla la tua casella di posta elettronica (anche nello Spam). ✉️");
+            } catch (error) {
+                console.error(error);
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email') {
+                    showToast("Email non trovata o non valida. ❌");
+                } else {
+                    showToast("Errore durante l'invio. Riprova più tardi.");
+                }
             }
         };
 
