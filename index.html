@@ -395,7 +395,12 @@ window.storage = storage;
         .footer-social { font-size: 20px; margin: 15px 0; display: flex; justify-content: center; gap: 15px; }
 
         .loading-text { font-size: 18px; color: var(--testo-chiaro); font-style: italic; width: 100%; text-align: center;}
-
+/* PULSANTE CARICA FOTO PERSONALIZZATO */
+        .file-upload-wrapper { position: relative; margin-bottom: 20px; text-align: center; }
+        .file-upload-input { display: none; } /* Nascondiamo il bottone brutto di sistema */
+        .file-upload-btn { background-color: var(--fucsia); color: white; padding: 12px 25px; border-radius: 30px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); width: 100%; box-sizing: border-box; }
+        .file-upload-btn:hover { background-color: #ad144d; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(216, 27, 96, 0.4); }
+        .file-upload-name { display: block; margin-top: 10px; font-size: 12px; color: var(--testo-chiaro); font-style: italic; word-break: break-all; }
         @media (max-width: 768px) {
             header { padding: 40px 15px; }
             .header-video { width: 280px; } 
@@ -608,13 +613,13 @@ window.storage = storage;
 
             <div class="home-slider-area reveal">
                 <div class="home-slider-track" id="home-slider-track">
-                    <div class="home-slide"><img src="menu1.jpg" alt="Vetrina 1" onerror="this.src='logo.png'"></div>
-                    <div class="home-slide"><img src="menu2.jpg" alt="Vetrina 2" onerror="this.src='logo.png'"></div>
-                    <div class="home-slide"><img src="menu3.jpg" alt="Vetrina 3" onerror="this.src='logo.png'"></div>
-                    <div class="home-slide"><img src="menu4.jpg" alt="Vetrina 4" onerror="this.src='logo.png'"></div>
-                    <div class="home-slide"><img src="menu5.jpg" alt="Vetrina 5" onerror="this.src='logo.png'"></div>
-                    <div class="home-slide"><img src="menu6.jpg" alt="Vetrina 6" onerror="this.src='logo.png'"></div>
-                    <div class="home-slide"><img src="menu7.jpg" alt="Vetrina 7" onerror="this.src='logo.png'"></div>
+                    <div class="home-slide"><img id="home-img-1" src="menu1.jpg" alt="Vetrina 1" onerror="this.src='logo.png'"></div>
+<div class="home-slide"><img id="home-img-2" src="menu2.jpg" alt="Vetrina 2" onerror="this.src='logo.png'"></div>
+<div class="home-slide"><img id="home-img-3" src="menu3.jpg" alt="Vetrina 3" onerror="this.src='logo.png'"></div>
+<div class="home-slide"><img id="home-img-4" src="menu4.jpg" alt="Vetrina 4" onerror="this.src='logo.png'"></div>
+<div class="home-slide"><img id="home-img-5" src="menu5.jpg" alt="Vetrina 5" onerror="this.src='logo.png'"></div>
+<div class="home-slide"><img id="home-img-6" src="menu6.jpg" alt="Vetrina 6" onerror="this.src='logo.png'"></div>
+<div class="home-slide"><img id="home-img-7" src="menu7.jpg" alt="Vetrina 7" onerror="this.src='logo.png'"></div>
                 </div>
             </div>
 
@@ -686,23 +691,19 @@ window.storage = storage;
         <div id="crea-maglietta" class="content-section">
             <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Maglietta</h2>
             
-            <div class="photo-notice reveal">
-                <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi una maglia personalizzata?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto a uno dei nostri contatti indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
-            </div>
+           
 
             <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
                 
                 <div class="swatch-container">
                     <label class="swatch-label">
-                        <input type="radio" name="col-maglia" value="Bianco" checked onchange="aggiornaAnteprima('img-maglia', 'bianco-tshirt.png')">
+                        <input type="radio" name="col-maglia" value="Bianco" checked onchange="aggiornaAnteprima('img-maglia', 'tshirt_bianca')">
                         <div class="swatch-circle swatch-white"></div>
                         Bianco
                     </label>
                     <label class="swatch-label">
-                        <input type="radio" name="col-maglia" value="Nero" onchange="aggiornaAnteprima('img-maglia', 'nero-tshirt.png')">
+                        <input type="radio" name="col-maglia" value="Nero" onchange="aggiornaAnteprima('img-maglia', 'tshirt_nera')">
                         <div class="swatch-circle swatch-black"></div>
                         Nero
                     </label>
@@ -720,10 +721,17 @@ window.storage = storage;
                     <label><input type="radio" name="taglia-maglia" value="XXL"> <div class="size-pill">XXL</div></label>
                 </div>
 
-                <h3 style="text-align: center; color: var(--testo-scuro);">3. Dettagli Personalizzazione</h3>
+               <h3 style="text-align: center; color: var(--testo-scuro);">3. Dettagli Personalizzazione</h3>
                 <textarea id="nota-maglietta" class="custom-textarea" placeholder="Inserisci cosa vuoi ricamare o stampare..."></textarea>
-                <button onclick="aggiungiPersonalizzatoCompleto('Maglietta', 20.00, 'nota-maglietta', 'col-maglia', 'img-maglia', null, 'taglia-maglia')" class="checkout-btn">
-                    Aggiungi al Carrello €20.00 <i class="fas fa-cart-plus"></i>
+                
+               <div class="file-upload-wrapper">
+                    <input type="file" id="foto-maglietta" class="file-upload-input" accept="image/*" onchange="aggiornaNomeFile(this, 'nome-foto-maglietta')">
+                    <label for="foto-maglietta" class="file-upload-btn"><i class="fas fa-image"></i> Scegli Immagine (Obbligatoria)</label>
+                    <span id="nome-foto-maglietta" class="file-upload-name">Nessuna immagine selezionata</span>
+                </div>
+                
+               <button onclick="aggiungiPersonalizzatoCompleto('Maglietta', window.prezziBase.maglietta, 'nota-maglietta', 'col-maglia', 'img-maglia', null, 'taglia-maglia', 'foto-maglietta')" class="checkout-btn">
+                    Aggiungi al Carrello €<span id="label-prezzo-maglietta">20.00</span> <i class="fas fa-cart-plus"></i>
                 </button>
             </div>
         </div>
@@ -731,23 +739,19 @@ window.storage = storage;
         <div id="crea-pelosetto" class="content-section">
             <h2 class="reveal" style="display:block; text-align:center;">Crea maglia pelosetto 🐾</h2>
             
-            <div class="photo-notice reveal">
-                <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi una maglia personalizzata per il tuo pelosetto?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto a uno dei nostri contatti indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
-            </div>
+            
 
             <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
                 
                 <div class="swatch-container">
                     <label class="swatch-label">
-                        <input type="radio" name="col-pelosetto" value="Bianco" checked onchange="aggiornaAnteprima('img-pelosetto', 'bianco-pelosetto.png')">
+                        <input type="radio" name="col-pelosetto" value="Bianco" checked onchange="aggiornaAnteprima('img-pelosetto', 'pelosetto_bianco')">
                         <div class="swatch-circle swatch-white"></div>
                         Bianco
                     </label>
                     <label class="swatch-label">
-                        <input type="radio" name="col-pelosetto" value="Nero" onchange="aggiornaAnteprima('img-pelosetto', 'nero-pelosetto.png')">
+                        <input type="radio" name="col-pelosetto" value="Nero" onchange="aggiornaAnteprima('img-pelosetto', 'pelosetto_nero')">
                         <div class="swatch-circle swatch-black"></div>
                         Nero
                     </label>
@@ -766,8 +770,15 @@ window.storage = storage;
 
                 <h3 style="text-align: center; color: var(--testo-scuro);">3. Dettagli Personalizzazione</h3>
                 <textarea id="nota-pelosetto" class="custom-textarea" placeholder="Inserisci cosa vuoi ricamare o stampare..."></textarea>
-                <button onclick="aggiungiPersonalizzatoCompleto('Maglia Pelosetto', 18.00, 'nota-pelosetto', 'col-pelosetto', 'img-pelosetto', null, 'taglia-pelosetto')" class="checkout-btn">
-                    Aggiungi al Carrello €18.00 <i class="fas fa-cart-plus"></i>
+                
+               <div class="file-upload-wrapper">
+                    <input type="file" id="foto-pelosetto" class="file-upload-input" accept="image/*" onchange="aggiornaNomeFile(this, 'nome-foto-pelosetto')">
+                    <label for="foto-pelosetto" class="file-upload-btn"><i class="fas fa-image"></i> Scegli Immagine (Obbligatoria)</label>
+                    <span id="nome-foto-pelosetto" class="file-upload-name">Nessuna immagine selezionata</span>
+                </div>
+                
+               <button onclick="aggiungiPersonalizzatoCompleto('Maglia Pelosetto', window.prezziBase.pelosetto, 'nota-pelosetto', 'col-pelosetto', 'img-pelosetto', null, 'taglia-pelosetto', 'foto-pelosetto')" class="checkout-btn">
+                    Aggiungi al Carrello €<span id="label-prezzo-pelosetto">18.00</span> <i class="fas fa-cart-plus"></i>
                 </button>
             </div>
         </div>
@@ -775,28 +786,24 @@ window.storage = storage;
         <div id="crea-pochette" class="content-section">
             <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Pochette</h2>
             
-            <div class="photo-notice reveal">
-                <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi una pochette personalizzata?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto a uno dei nostri contatti indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
-            </div>
+          
 
             <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
                 <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
                 
                 <div class="swatch-container">
                     <label class="swatch-label">
-                        <input type="radio" name="col-pochette" value="Azzurro" checked onchange="aggiornaAnteprima('img-pochette', 'azzurro-p.png')">
+                        <input type="radio" name="col-pochette" value="Azzurro" checked onchange="aggiornaAnteprima('img-pochette', 'pochette_azzurra')">
                         <div class="swatch-circle swatch-blue"></div>
                         Azzurro
                     </label>
                     <label class="swatch-label">
-                        <input type="radio" name="col-pochette" value="Rosa" onchange="aggiornaAnteprima('img-pochette', 'rosa-p.png')">
+                        <input type="radio" name="col-pochette" value="Rosa" onchange="aggiornaAnteprima('img-pochette', 'pochette_rosa')">
                         <div class="swatch-circle swatch-pink"></div>
                         Rosa
                     </label>
                     <label class="swatch-label">
-                        <input type="radio" name="col-pochette" value="Nero" onchange="aggiornaAnteprima('img-pochette', 'nero-p.png')">
+                        <input type="radio" name="col-pochette" value="Nero" onchange="aggiornaAnteprima('img-pochette', 'pochette_nera')">
                         <div class="swatch-circle swatch-black"></div>
                         Nero
                     </label>
@@ -806,29 +813,38 @@ window.storage = storage;
                 
                 <h3 style="text-align: center; color: var(--testo-scuro);">2. Dettagli Personalizzazione</h3>
                 <textarea id="nota-pochette" class="custom-textarea" placeholder="Descrivi il tuo ricamo qui..."></textarea>
-                <button onclick="aggiungiPersonalizzatoCompleto('Pochette', 15.00, 'nota-pochette', 'col-pochette', 'img-pochette')" class="checkout-btn">
-                    Aggiungi al Carrello €15.00 <i class="fas fa-cart-plus"></i>
+                
+                <div class="file-upload-wrapper">
+                    <input type="file" id="foto-pochette" class="file-upload-input" accept="image/*" onchange="aggiornaNomeFile(this, 'nome-foto-pochette')">
+                    <label for="foto-pochette" class="file-upload-btn"><i class="fas fa-image"></i> Scegli Immagine (Obbligatoria)</label>
+                    <span id="nome-foto-pochette" class="file-upload-name">Nessuna immagine selezionata</span>
+                </div>
+
+               <button onclick="aggiungiPersonalizzatoCompleto('Pochette', window.prezziBase.pochette, 'nota-pochette', 'col-pochette', 'img-pochette', null, null, 'foto-pochette')" class="checkout-btn">
+                    Aggiungi al Carrello €<span id="label-prezzo-pochette">15.00</span> <i class="fas fa-cart-plus"></i>
                 </button>
             </div>
         </div>
 
-        <div id="crea-borsa" class="content-section">
+       <div id="crea-borsa" class="content-section">
             <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Borsa</h2>
-            
-            <div class="photo-notice reveal">
-                <i class="fas fa-camera" style="font-size: 20px; color: var(--fucsia); margin-bottom: 10px; display: block;"></i>
-                <strong>Vuoi una borsa personalizzata?</strong><br>
-                È facilissimo! Scrivi le tue istruzioni nel box qui sotto e completa l'acquisto. Subito dopo, inviaci la foto a uno dei nostri contatti indicando il tuo Nome e Cognome. Ci prenderemo cura di tutto noi!
-            </div>
 
             <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
                 <h3 style="text-align: center; color: var(--testo-scuro);">Colore Unico: Bianco</h3>
-                <img src="bianco-borsa.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
+                
+                <img id="img-borsa" src="bianco-borsa.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
                 
                 <h3 style="text-align: center; color: var(--testo-scuro);">Dettagli Personalizzazione</h3>
                 <textarea id="nota-borsa" class="custom-textarea" placeholder="Descrivi il tuo ricamo per la borsa..."></textarea>
-                <button onclick="aggiungiPersonalizzatoCompleto('Borsa', 25.00, 'nota-borsa', null, 'bianco-borsa.png', 'Bianco')" class="checkout-btn">
-                    Aggiungi al Carrello €25.00 <i class="fas fa-cart-plus"></i>
+                
+                <div class="file-upload-wrapper">
+                    <input type="file" id="foto-borsa" class="file-upload-input" accept="image/*" onchange="aggiornaNomeFile(this, 'nome-foto-borsa')">
+                    <label for="foto-borsa" class="file-upload-btn"><i class="fas fa-image"></i> Scegli Immagine (Obbligatoria)</label>
+                    <span id="nome-foto-borsa" class="file-upload-name">Nessuna immagine selezionata</span>
+                </div>
+
+               <button onclick="aggiungiPersonalizzatoCompleto('Borsa', window.prezziBase.borsa, 'nota-borsa', null, 'img-borsa', 'Bianco', null, 'foto-borsa')" class="checkout-btn">
+                    Aggiungi al Carrello €<span id="label-prezzo-borsa">25.00</span> <i class="fas fa-cart-plus"></i>
                 </button>
             </div>
         </div>
@@ -837,7 +853,7 @@ window.storage = storage;
             <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Collana Unica</h2>
             
             <div class="componi-box reveal">
-                <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il colore della catenina (Inclusa: €5.00)</h3>
+                <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il colore della catenina (Inclusa: €<span id="label-prezzo-catenina">5.00</span>)</h3>
                 
                 <div class="swatch-container">
                     <label class="swatch-label">
@@ -922,7 +938,7 @@ window.storage = storage;
                 <input type="password" id="user-pwd" placeholder="Password (min 6 caratteri)" class="custom-textarea" style="height:40px;">
                 
                 <button id="btn-login" onclick="loginCliente()" class="checkout-btn" style="width: 100%; margin-bottom: 10px;">Accedi</button>
-                <button id="btn-register" onclick="registraCliente()" class="checkout-btn" style="width: 100%; margin-bottom: 10px; background-color: var(--rosa-chiaro); color: white; display: none;">Crea Account</button>
+                <button id="btn-register" onclick="registraCliente()" class="checkout-btn" style="width: 100%; margin-bottom: 10px; display: none;">Crea Account</button>
                 
                 <p id="toggle-auth-text" style="text-align:center; font-size: 13px; color: var(--testo-chiaro); margin-top: 10px;">
                     Non hai un account? <strong onclick="toggleAuthMode()" style="color: var(--fucsia); cursor: pointer;">Registrati</strong>
@@ -995,6 +1011,46 @@ window.storage = storage;
 <input type="hidden" id="new-immagine-url">
                 
                 <button onclick="salvaProdottoSuFirebase()" class="checkout-btn" style="margin-bottom: 15px;">Pubblica Prodotto <i class="fas fa-upload"></i></button>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
+                
+                <h4 style="text-align: center; margin-bottom: 10px; color: var(--testo-scuro);">Personalizza Foto del Sito</h4>
+                <p style="text-align:center; font-size: 11px; color: var(--testo-chiaro); margin-bottom: 15px;">Cambia le foto della vetrina o le basi dei prodotti da personalizzare.</p>
+                
+                <select id="admin-site-img-key" class="custom-textarea" style="height: auto; min-height: 48px; padding: 10px 15px; margin-bottom: 15px;">
+                    <option value="home_1">Vetrina Home 1</option>
+                    <option value="home_2">Vetrina Home 2</option>
+                    <option value="home_3">Vetrina Home 3</option>
+                    <option value="home_4">Vetrina Home 4</option>
+                    <option value="home_5">Vetrina Home 5</option>
+                    <option value="home_6">Vetrina Home 6</option>
+                    <option value="home_7">Vetrina Home 7</option>
+                    <option value="tshirt_bianca">Base: Maglietta Bianca</option>
+                    <option value="tshirt_nera">Base: Maglietta Nera</option>
+                    <option value="pelosetto_bianco">Base: Pelosetto Bianco</option>
+                    <option value="pelosetto_nero">Base: Pelosetto Nero</option>
+                    <option value="pochette_azzurra">Base: Pochette Azzurra</option>
+                    <option value="pochette_rosa">Base: Pochette Rosa</option>
+                    <option value="pochette_nera">Base: Pochette Nera</option>
+                    <option value="borsa_bianca">Base: Borsa Bianca</option>
+                </select>
+                
+                <input type="file" id="admin-site-img-file" class="custom-textarea" style="height: auto; padding: 10px; margin-bottom: 15px;" accept="image/*">
+                <button onclick="salvaImmagineSito()" class="checkout-btn" style="margin-bottom: 25px; background-color: #ff9800;">Aggiorna Foto <i class="fas fa-image"></i></button>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
+                
+                <h4 style="text-align: center; margin-bottom: 10px; color: var(--testo-scuro);">Modifica Prezzi Personalizzabili</h4>
+                <p style="text-align:center; font-size: 11px; color: var(--testo-chiaro); margin-bottom: 15px;">Cambia i prezzi base dei prodotti neutri da ricamare/stampare.</p>
+                
+                <select id="admin-base-price-key" class="custom-textarea" style="height: auto; min-height: 48px; padding: 10px 15px; margin-bottom: 15px;">
+                    <option value="catenina">Catenina Base Collana</option>
+                    <option value="maglietta">Maglietta Umani</option>
+                    <option value="pelosetto">Maglia Pelosetto</option>
+                    <option value="pochette">Pochette</option>
+                    <option value="borsa">Borsa</option>
+                </select>
+                
+                <input type="number" id="admin-base-price-val" class="custom-textarea" style="height: 40px; margin-bottom: 15px;" step="0.01" placeholder="Nuovo prezzo (es. 22.50)">
+                <button onclick="salvaPrezzoBase()" class="checkout-btn" style="margin-bottom: 25px; background-color: #ff9800;">Aggiorna Prezzo <i class="fas fa-euro-sign"></i></button>
                 <button onclick="logoutAdmin()" class="checkout-btn" style="background-color: #777; box-shadow: none;">Esci in sicurezza <i class="fas fa-sign-out-alt"></i></button>
             </div>
         </div>
@@ -2008,7 +2064,7 @@ window.storage = storage;
             }
         };
 
-       // MOTORE DI LETTURA UNICO DA FIREBASE
+      // MOTORE DI LETTURA UNICO DA FIREBASE
         window.caricaProdottiFirebase = async function(categoria, idContenitore) {
             const contenitore = document.getElementById(idContenitore);
             if (!contenitore) return;
@@ -2035,7 +2091,10 @@ window.storage = storage;
                         const titolo = riga.titolo.replace(/'/g, "\\'"); 
                         const badgeTesto = riga.badge ? riga.badge.replace(/'/g, "\\'") : '';
 
-                        // Tasti Admin (Il tasto modifica ora passa anche l'immagine!)
+                        // 🕵️‍♀️ IL DETECTIVE ENTRA IN AZIONE QUI:
+                        window.aggiornaImmaginiSalvate(riga.titolo, immagine);
+
+                        // Tasti Admin
                         let btnElimina = isAdmin ? `<div class="delete-admin-btn" onclick="eliminaProdotto('${idProdotto}', '${titolo}')"><i class="fas fa-trash-alt"></i> Elimina</div>` : '';
                         let btnModifica = isAdmin ? `<div class="edit-admin-btn" onclick="apriModaleModifica('${idProdotto}', '${titolo}', ${prezzoNum}, '${badgeTesto}', '${immagine}')"><i class="fas fa-edit"></i> Modifica</div>` : '';
 
@@ -2087,9 +2146,166 @@ window.storage = storage;
                 console.error("Errore caricamento: ", e);
             }
         };
+// === GESTIONE IMMAGINI DINAMICHE SITO ===
+        
+        // 1. Qui mettiamo le foto di "emergenza" se su Firebase non c'è nulla
+        window.immaginiSitoDinamiche = {
+            home_1: 'menu1.jpg', home_2: 'menu2.jpg', home_3: 'menu3.jpg', home_4: 'menu4.jpg', home_5: 'menu5.jpg', home_6: 'menu6.jpg', home_7: 'menu7.jpg',
+            tshirt_bianca: 'bianco-tshirt.png', tshirt_nera: 'nero-tshirt.png',
+            pelosetto_bianco: 'bianco-pelosetto.png', pelosetto_nero: 'nero-pelosetto.png',
+            pochette_azzurra: 'azzurro-p.png', pochette_rosa: 'rosa-p.png', pochette_nera: 'nero-p.png',
+            borsa_bianca: 'bianco-borsa.png'
+        };
 
+        // 2. Modifichiamo la vecchia funzione aggiornaAnteprima
+        window.aggiornaAnteprima = function(idImg, chiaveImmagine) {
+            // Prende il link dinamico invece del vecchio file .png
+            document.getElementById(idImg).src = window.immaginiSitoDinamiche[chiaveImmagine] || 'logo.png';
+        }
+
+       // Dizionario Prezzi Base di Emergenza
+        window.prezziBase = { catenina: 5.00, maglietta: 20.00, pelosetto: 18.00, pochette: 15.00, borsa: 25.00 };
+
+        // Motore Impostazioni Sito Potenziato
+        window.caricaImpostazioniSito = async function() {
+            try {
+                // 1. CARICA FOTO
+                const docRefImg = window.fbDoc(window.db, "impostazioni", "immagini_sito");
+                const docSnapImg = await window.fbGetDoc(docRefImg);
+                if(docSnapImg.exists()) { window.immaginiSitoDinamiche = { ...window.immaginiSitoDinamiche, ...docSnapImg.data() }; }
+                
+                // 2. CARICA PREZZI BASE
+                const docRefPrezzi = window.fbDoc(window.db, "impostazioni", "prezzi_base");
+                const docSnapPrezzi = await window.fbGetDoc(docRefPrezzi);
+                if(docSnapPrezzi.exists()) { window.prezziBase = { ...window.prezziBase, ...docSnapPrezzi.data() }; }
+
+                // APPLICA FOTO
+                for(let i=1; i<=7; i++) {
+                    const img = document.getElementById('home-img-'+i);
+                    if(img) img.src = window.immaginiSitoDinamiche['home_'+i];
+                }
+                const maglia = document.getElementById('img-maglia'); if(maglia) maglia.src = window.immaginiSitoDinamiche['tshirt_bianca'];
+                const pelo = document.getElementById('img-pelosetto'); if(pelo) pelo.src = window.immaginiSitoDinamiche['pelosetto_bianco'];
+                const pochette = document.getElementById('img-pochette'); if(pochette) pochette.src = window.immaginiSitoDinamiche['pochette_azzurra'];
+                const borsa = document.getElementById('img-borsa'); if(borsa) borsa.src = window.immaginiSitoDinamiche['borsa_bianca'];
+                
+                // APPLICA PREZZI NEI BOTTONI
+                const lCat = document.getElementById('label-prezzo-catenina'); if(lCat) lCat.innerText = window.prezziBase.catenina.toFixed(2);
+                const lMag = document.getElementById('label-prezzo-maglietta'); if(lMag) lMag.innerText = window.prezziBase.maglietta.toFixed(2);
+                const lPel = document.getElementById('label-prezzo-pelosetto'); if(lPel) lPel.innerText = window.prezziBase.pelosetto.toFixed(2);
+                const lPoc = document.getElementById('label-prezzo-pochette'); if(lPoc) lPoc.innerText = window.prezziBase.pochette.toFixed(2);
+                const lBor = document.getElementById('label-prezzo-borsa'); if(lBor) lBor.innerText = window.prezziBase.borsa.toFixed(2);
+
+                calcolaTotaleCiondoli(); // Aggiorna il totale della collana
+            } catch(e) { console.error("Errore caricamento impostazioni:", e); }
+        };
+
+        // Salva i Nuovi Prezzi
+        window.salvaPrezzoBase = async function() {
+            const chiave = document.getElementById('admin-base-price-key').value;
+            const nuovoPrezzo = parseFloat(document.getElementById('admin-base-price-val').value);
+
+            if(isNaN(nuovoPrezzo) || nuovoPrezzo <= 0) {
+                showToast("Inserisci un prezzo valido e maggiore di zero!");
+                return;
+            }
+            showToast("Aggiornamento prezzo in corso... ⏳");
+            try {
+                const docRef = window.fbDoc(window.db, "impostazioni", "prezzi_base");
+                await window.fbSetDoc(docRef, {
+                    [chiave]: nuovoPrezzo
+                }, { merge: true });
+
+                showToast("Prezzo aggiornato con successo! 🎉");
+                document.getElementById('admin-base-price-val').value = '';
+                
+                // Ricarica le impostazioni per aggiornare tutti i bottoni del sito in tempo reale
+                caricaImpostazioniSito();
+            } catch(e) {
+                console.error(e);
+                showToast("Errore durante l'aggiornamento. ❌");
+            }
+        };
+
+        // 4. La funzione per l'Admin che carica la nuova foto
+        window.salvaImmagineSito = async function() {
+            const chiave = document.getElementById('admin-site-img-key').value;
+            const fileInput = document.getElementById('admin-site-img-file');
+            
+            if(fileInput.files.length === 0) {
+                showToast("Devi prima selezionare una foto dal telefono!");
+                return;
+            }
+            
+            showToast("Caricamento foto in corso... ⏳");
+            
+            try {
+                const file = fileInput.files[0];
+                const apiKey = "083194e5388c019411d6fc6f0ea35b20"; // <--- ⚠️ INCOLLA QUI LA TUA CHIAVE IMGBB!!!
+                const formData = new FormData();
+                formData.append("image", file);
+
+                // Carica la foto su ImgBB
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (!data.success) throw new Error("Errore ImgBB");
+                const imageUrl = data.data.url;
+                
+                // Salva il link su Firebase nella cartella "impostazioni"
+                const docRef = window.fbDoc(window.db, "impostazioni", "immagini_sito");
+                await window.fbSetDoc(docRef, {
+                    [chiave]: imageUrl
+                }, { merge: true });
+                
+                showToast("Foto del sito aggiornata! 🎉");
+                fileInput.value = '';
+                
+                // Ricarica le foto per fartele vedere subito
+                caricaImpostazioniSito();
+                
+            } catch(e) {
+                console.error(e);
+                showToast("Errore durante l'aggiornamento. ❌");
+            }
+        };
+        // === AGGIORNAMENTO AUTOMATICO FOTO CARRELLO/WISHLIST ===
+        window.aggiornaImmaginiSalvate = function(titoloOriginale, nuovaImmagine) {
+            let carrelloModificato = false;
+            let wishlistModificata = false;
+
+            // 1. Controlla e aggiorna il Carrello
+            carrello.forEach(item => {
+                if (item.nome === titoloOriginale && item.immagine !== nuovaImmagine) {
+                    item.immagine = nuovaImmagine;
+                    carrelloModificato = true;
+                }
+            });
+
+            // 2. Controlla e aggiorna i Preferiti
+            wishlist.forEach(item => {
+                if (item.nome === titoloOriginale && item.immagine !== nuovaImmagine) {
+                    item.immagine = nuovaImmagine;
+                    wishlistModificata = true;
+                }
+            });
+
+            // 3. Se ha trovato qualcosa di vecchio, salva e aggiorna la grafica!
+            if (carrelloModificato) {
+                salvaCarrello();
+                aggiornaCarrelloUI();
+            }
+            if (wishlistModificata) {
+                salvaWishlist();
+                aggiornaWishlistUI();
+            }
+        };
         // === INIZIALIZZAZIONE AL CARICAMENTO ===
         window.addEventListener('load', function() {
+          
             setTimeout(function() {
                 const splash = document.getElementById('splash-screen');
                 if (splash) {
@@ -2110,6 +2326,7 @@ window.storage = storage;
             checkCookies();
 
             // Carichiamo tutte le categorie da Firebase
+            window.caricaImpostazioniSito();
             window.caricaProdottiFirebase('collane', 'lista-prodotti');
             window.caricaProdottiFirebase('fiocchi', 'lista-fiocchi');
             window.caricaProdottiFirebase('ciondoli', 'lista-ciondoli');
@@ -2126,7 +2343,22 @@ window.storage = storage;
             document.getElementById(idImg).src = srcNuova;
         }
 
-        window.aggiungiPersonalizzatoCompleto = function(nomeBase, prezzo, textAreaId, radioName, imgId, coloreFisso = null, tagliaId = null) {
+        // === FUNZIONE PER MOSTRARE IL NOME DELLA FOTO SCELTA ===
+        window.aggiornaNomeFile = function(inputElement, spanId) {
+            const span = document.getElementById(spanId);
+            if (inputElement.files && inputElement.files.length > 0) {
+                span.innerHTML = `<i class="fas fa-check-circle"></i> Foto selezionata: ${inputElement.files[0].name}`;
+                span.style.color = "var(--fucsia)";
+                span.style.fontWeight = "600";
+            } else {
+                span.innerText = "Nessuna immagine selezionata";
+                span.style.color = "var(--testo-chiaro)";
+                span.style.fontWeight = "normal";
+            }
+        };
+
+        // === AGGIUNTA PRODOTTO PERSONALIZZATO AL CARRELLO ===
+        window.aggiungiPersonalizzatoCompleto = async function(nomeBase, prezzo, textAreaId, radioName, imgId, coloreFisso = null, tagliaId = null, fileInputId = null) {
             let note = document.getElementById(textAreaId).value.trim();
             let colore = coloreFisso;
             
@@ -2139,6 +2371,45 @@ window.storage = storage;
             if (typeof imgId === 'string' && document.getElementById(imgId)) {
                 immagineUrl = document.getElementById(imgId).src;
             }
+
+            // --- MAGIA: CARICAMENTO FOTO CLIENTE SU IMGBB ---
+            let linkFotoCaricata = "";
+            if (fileInputId) {
+                const fileInput = document.getElementById(fileInputId);
+                
+                // 🛑 CONTROLLO OBBLIGATORIO: Se non ha messo la foto, fermati!
+                if (!fileInput || fileInput.files.length === 0) {
+                    showToast("Attenzione! Devi inserire un'immagine! 📸");
+                    return; // Blocca tutto l'inserimento
+                }
+
+                if (fileInput && fileInput.files.length > 0) {
+                    showToast("Caricamento foto in corso... attendi ⏳");
+                    const file = fileInput.files[0];
+                    const apiKey = "083194e5388c019411d6fc6f0ea35b20"; // ⚠️ RIMETTI LA TUA CHIAVE IMGBB QUI!
+                    const formData = new FormData();
+                    formData.append("image", file);
+
+                    try {
+                        const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+                            method: "POST",
+                            body: formData
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                            linkFotoCaricata = data.data.url;
+                            showToast("Foto caricata! Aggiungo al carrello... ✅");
+                        } else {
+                            throw new Error("Errore ImgBB");
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        showToast("Errore caricamento foto. Riprova. ❌");
+                        return; // Blocca tutto se la foto non si carica
+                    }
+                }
+            }
+            // ------------------------------------------------
             
             let nomeFinale = `${nomeBase} [Colore: ${colore}]`;
             
@@ -2147,9 +2418,6 @@ window.storage = storage;
                 let tagliaElement = document.getElementById(tagliaId);
                 
                 if (tagliaElement) {
-                    taglia = tagliaElement.value; // Se usi un vecchio <select>
-                } else {
-                    // Se usi le nuove pillole (radio buttons)
                     let radioSelezionato = document.querySelector(`input[name="${tagliaId}"]:checked`);
                     if (radioSelezionato) taglia = radioSelezionato.value; 
                 }
@@ -2163,15 +2431,34 @@ window.storage = storage;
                 nomeFinale += ` - Note: ${note}`;
             }
 
+            // Aggiungiamo il link della foto al nome del prodotto per PayPal!
+            if (linkFotoCaricata !== "") {
+                nomeFinale += ` - Foto: ${linkFotoCaricata}`;
+            }
+
             aggiungiProdotto(nomeFinale, prezzo, immagineUrl);
+            
+            // Pulizia form dopo l'aggiunta
             document.getElementById(textAreaId).value = ""; 
+            if (fileInputId && document.getElementById(fileInputId)) {
+                document.getElementById(fileInputId).value = "";
+                // Resetta anche il testino sotto al pulsante
+                const spanNome = document.getElementById('nome-' + fileInputId);
+                if(spanNome) {
+                    spanNome.innerText = "Nessuna immagine selezionata";
+                    spanNome.style.color = "var(--testo-chiaro)";
+                    spanNome.style.fontWeight = "normal";
+                }
+            }
         }
 
         // === CERVELLO COMPONI COLLANA ===
-        window.calcolaTotaleCiondoli = function(event) {
-            let prezzoBaseCatenina = 5.00;
+       window.calcolaTotaleCiondoli = function(event) {
+            // Usa il prezzo dinamico invece di 5 fissi!
+            let prezzoBaseCatenina = window.prezziBase ? window.prezziBase.catenina : 5.00;
             let totale = prezzoBaseCatenina;
             let numeroCiondoli = 0;
+// ... (il resto della funzione rimane uguale)
             let numeroPerline = 0;
             
             let checkboxesCiondoli = document.querySelectorAll('.charm-checkbox:checked');
@@ -2201,7 +2488,7 @@ window.storage = storage;
             document.getElementById('prezzo-totale-ciondoli').innerText = totale.toFixed(2);
         }
 
-        window.aggiungiCollanaCompostaAlCarrello = function(event) {
+       window.aggiungiCollanaCompostaAlCarrello = function(event) {
             event.preventDefault(); 
             let checkboxesCiondoli = document.querySelectorAll('.charm-checkbox:checked');
             let checkboxesPerline = document.querySelectorAll('.perlina-checkbox:checked');
@@ -2213,8 +2500,10 @@ window.storage = storage;
 
             let ciondoliSelezionati = [];
             let perlineSelezionate = [];
-            let totale = 5.00; 
-
+            
+            // Usa il prezzo dinamico!
+            let totale = window.prezziBase ? window.prezziBase.catenina : 5.00; 
+// ... (il resto della funzione rimane uguale)
             checkboxesCiondoli.forEach(function(box) {
                 totale += parseFloat(box.getAttribute('data-prezzo'));
                 ciondoliSelezionati.push(box.getAttribute('data-titolo'));
