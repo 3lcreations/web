@@ -1745,12 +1745,14 @@ window.storage = storage;
             setTimeout(nascondiFormSpedizione, 500); 
         }
 
-        window.aggiungiProdotto = function(nome, prezzo, immagine) {
-            carrello.push({ nome: nome, prezzo: parseFloat(prezzo), immagine: immagine });
+      window.aggiungiProdotto = function(nome, prezzo, immagine, fotoCliente = "") {
+            // Aggiungiamo lo scompartimento segreto "fotoCliente"
+            carrello.push({ nome: nome, prezzo: parseFloat(prezzo), immagine: immagine, fotoCliente: fotoCliente });
             salvaCarrello();
             aggiornaCarrelloUI();
             
             const cartBtn = document.querySelector('.floating-cart');
+            // ... (il resto della funzione con le stelline/scintille rimane identico)
             if(cartBtn) {
                 cartBtn.classList.remove('bounce');
                 void cartBtn.offsetWidth; 
@@ -1857,9 +1859,16 @@ window.storage = storage;
             paypalUrl += `&cbt=${encodeURIComponent("Torna al negozio 3L Creations")}`;
             paypalUrl += `&rm=2`;
 
-            carrello.forEach((item, index) => {
+           carrello.forEach((item, index) => {
                 let i = index + 1; 
-                paypalUrl += `&item_name_${i}=${encodeURIComponent(item.nome)}&amount_${i}=${item.prezzo.toFixed(2)}&quantity_${i}=1`;
+                
+                // Ricompone il nome e la foto solo per l'email di PayPal
+                let nomePerPayPal = item.nome;
+                if (item.fotoCliente && item.fotoCliente !== "") {
+                    nomePerPayPal += ` - Foto scaricabile: ${item.fotoCliente}`;
+                }
+                
+                paypalUrl += `&item_name_${i}=${encodeURIComponent(nomePerPayPal)}&amount_${i}=${item.prezzo.toFixed(2)}&quantity_${i}=1`;
             });
 
             paypalUrl += `&first_name=${encodeURIComponent(nome)}`;
@@ -2463,12 +2472,8 @@ window.storage = storage;
                 nomeFinale += ` - Note: ${note}`;
             }
 
-            // Aggiungiamo il link della foto al nome del prodotto per PayPal!
-            if (linkFotoCaricata !== "") {
-                nomeFinale += ` - Foto: ${linkFotoCaricata}`;
-            }
-
-            aggiungiProdotto(nomeFinale, prezzo, immagineUrl);
+         // Passiamo il link come 4° parametro segreto, senza sporcare il nome!
+            aggiungiProdotto(nomeFinale, prezzo, immagineUrl, linkFotoCaricata);
             
             // Pulizia form dopo l'aggiunta
             document.getElementById(textAreaId).value = ""; 
