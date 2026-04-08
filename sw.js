@@ -12,57 +12,39 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// GESTIONE BACKGROUND
-messaging.onBackgroundMessage((payload) => {
-  // Se Firebase gestisce già la notifica visiva, non facciamo nulla qui per evitare i doppi
-  if (payload.notification) return;
+// Forza il Service Worker a prendere il controllo immediatamente
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (event) => event.waitUntil(clients.claim()));
 
-  const title = payload.data?.title || "3L Creations";
+messaging.onBackgroundMessage((payload) => {
+  if (payload.notification) return;
   const options = {
     body: payload.data?.body || "Novità in arrivo! ✨",
     icon: 'favicon.png',
     badge: 'favicon.png',
-    tag: '3l-unique-msg',
-    data: { url: payload.data?.url || 'https://3lcreations.github.io/web/' }
+    data: { url: 'https://3lcreations.github.io/web/' }
   };
-  return self.registration.showNotification(title, options);
+  return self.registration.showNotification(payload.data?.title || "3L Creations", options);
 });
 
-// GESTIONE CLICK (IL CUORE DEL PROBLEMA)
 self.addEventListener('notificationclick', function(event) {
     event.notification.close();
 
-    // 1. Definiamo l'unico posto dove deve andare l'app
-    const BASE_URL = 'https://3lcreations.github.io/web/';
-    
-    // 2. Cerchiamo di capire dove voleva mandarci Firebase
-    let linkDaAprire = event.notification.data?.url || 
-                       event.notification.data?.FCM_MSG?.notification?.click_action || 
-                       BASE_URL;
-
-    // 3. IL FILTRO DI SICUREZZA:
-    // Se il link non contiene "/web/", lo forziamo noi aggiungendolo.
-    // Trasformiamo "https://3lcreations.github.io/" in "https://3lcreations.github.io/web/"
-    if (typeof linkDaAprire === 'string' && !linkDaAprire.includes('/web/')) {
-        // Rimuoviamo la parte finale se c'è solo la slash e aggiungiamo /web/
-        let pulito = linkDaAprire.endsWith('/') ? linkDaAprire.slice(0, -1) : linkDaAprire;
-        linkDaAprire = pulito + '/web/';
-    }
-
-    console.log("Forzo l'apertura su:", linkDaAprire);
+    // L'UNICA DESTINAZIONE POSSIBILE
+    const URL_SICURO = 'https://3lcreations.github.io/web/';
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
-            // Se c'è una finestra già aperta del sito, usiamo quella
+            // Se c'è una scheda aperta, la forziamo ad andare all'URL sicuro
             for (let i = 0; i < clientList.length; i++) {
                 let client = clientList[i];
                 if ('focus' in client) {
-                    return client.navigate(linkDaAprire).then(c => c.focus());
+                    return client.navigate(URL_SICURO).then(c => c.focus());
                 }
             }
-            // Altrimenti ne apriamo una nuova di zecca con il link corretto
+            // Se è tutto chiuso, apriamo solo e soltanto l'URL sicuro
             if (clients.openWindow) {
-                return clients.openWindow(linkDaAprire);
+                return clients.openWindow(URL_SICURO);
             }
         })
     );
