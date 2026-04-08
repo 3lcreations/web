@@ -41,19 +41,45 @@ messaging.onBackgroundMessage(function(payload) {
     return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-// Click sulla notifica
+// === COSA SUCCEDE AL CLICK SULLA NOTIFICA (Versione Corazzata) ===
 self.addEventListener('notificationclick', function(event) {
-    event.notification.close();
-    // Cerca l'URL nei dati (sia che arrivi da notification che da data)
-    const targetUrl = event.notification.data?.url || event.notification.data || 'https://3lcreations.github.io/web/';
+    event.notification.close(); // Chiude il fumetto
+
+    // IL RADAR DEI LINK: Cerca l'URL in 3 posti diversi
+    // 1. Nei dati personalizzati 'url'
+    // 2. Nel campo standard di Firebase 'click_action'
+    // 3. Se non trova nulla, usa il link sicuro di 3L Creations con /web/
+    let targetUrl = 'https://3lcreations.github.io/web/';
+
+    if (event.notification.data) {
+        // Cerca nel campo 'url' che mettiamo noi
+        if (event.notification.data.url) {
+            targetUrl = event.notification.data.url;
+        } 
+        // Cerca nel campo segreto di Firebase (FCM_MSG)
+        else if (event.notification.data.FCM_MSG && event.notification.data.FCM_MSG.notification && event.notification.data.FCM_MSG.notification.click_action) {
+            targetUrl = event.notification.data.FCM_MSG.notification.click_action;
+        }
+    }
+
+    // Assicuriamoci che l'URL sia completo (se per caso arrivasse un link relativo)
+    if (!targetUrl.startsWith('http')) {
+        targetUrl = 'https://3lcreations.github.io/web/' + (targetUrl.startsWith('/') ? targetUrl.substring(1) : targetUrl);
+    }
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
+            // Se il sito è già aperto in una scheda, carichiamo l'URL lì e mettiamola in primo piano
             for (let i = 0; i < clientList.length; i++) {
                 let client = clientList[i];
-                if (client.url === targetUrl && 'focus' in client) return client.focus();
+                if ('focus' in client) {
+                    return client.navigate(targetUrl).then(c => c.focus());
+                }
             }
-            if (clients.openWindow) return clients.openWindow(targetUrl);
+            // Se il sito è chiuso, apri una nuova finestra
+            if (clients.openWindow) {
+                return clients.openWindow(targetUrl);
+            }
         })
     );
 });
