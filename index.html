@@ -762,6 +762,46 @@ window.storage = storage;
         .timeline-step.active .timeline-label {
             color: var(--fucsia);
         }
+        /* === 1. BARRA DI NAVIGAZIONE IN BASSO (APP MOBILE) === */
+        .bottom-nav-bar { display: none; }
+        
+        @media (max-width: 768px) {
+            .bottom-nav-bar {
+                display: flex; justify-content: space-around; align-items: center;
+                position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
+                background: rgba(255,255,255,0.95); backdrop-filter: blur(15px);
+                border-top: 1px solid #eee; z-index: 9999; 
+                padding-bottom: env(safe-area-inset-bottom); /* Supporto per iPhone moderni */
+                box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            }
+            .bottom-nav-item {
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                color: #aaaaaa; font-size: 10px; width: 25%; position: relative; cursor: pointer; transition: 0.3s;
+            }
+            .bottom-nav-item i { font-size: 22px; margin-bottom: 4px; transition: 0.3s; }
+            .bottom-nav-item:active, .bottom-nav-item.active { color: var(--fucsia); }
+            .bottom-nav-item:active i { transform: scale(0.9); } /* Effetto pressione */
+            
+            .nav-badge {
+                position: absolute; top: 0px; right: 15px; background: var(--fucsia); color: white;
+                font-size: 9px; font-weight: bold; width: 16px; height: 16px; border-radius: 50%;
+                display: flex; align-items: center; justify-content: center; border: 2px solid white;
+            }
+            
+            /* Riorganizziamo i pulsanti fluttuanti per far spazio alla barra */
+            .floating-cart { bottom: 85px; } /* Alziamo il carrello */
+            .floating-wishlist { display: none; } /* Nascondiamo il cuore, ora è nella barra in basso! */
+            .back-to-top { bottom: 155px; }
+            footer { padding-bottom: 100px; } /* Più spazio in fondo al sito */
+        }
+
+        /* === 2. SCHERMATA OFFLINE === */
+        #offline-screen {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: var(--sfondo); z-index: 9999999; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box;
+        }
+        .offline-icon { font-size: 70px; color: #ccc; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
     </style>
 </head>
 <body>
@@ -1068,6 +1108,9 @@ window.storage = storage;
                         </p>
                         
                       <div class="buy-button-container" id="dettaglio-btn-container" data-nome="" data-prezzo="" data-immagine=""></div>
+                      <button onclick="condividiProdotto(); vibra();" class="checkout-btn" style="background-color: transparent; color: var(--fucsia); border: 2px solid var(--fucsia); margin-top: 15px; box-shadow: none;">
+                            Invia a un'amica <i class="fas fa-share-alt"></i>
+                        </button>
                     </div>
 
                 </div> </div> </div>
@@ -2067,6 +2110,7 @@ window.storage = storage;
         }
 
         window.toggleWishlist = function(nome, prezzo, immagine, element) {
+            vibra();
             const index = wishlist.findIndex(item => item.nome === nome);
             if(index > -1) {
                 wishlist.splice(index, 1);
@@ -2110,6 +2154,7 @@ window.storage = storage;
             const badge = document.getElementById('wishlist-badge-count');
             
             badge.innerText = wishlist.length;
+            const navBadge = document.getElementById('nav-wish-badge'); if(navBadge) navBadge.innerText = wishlist.length;
 
             if (wishlist.length === 0) {
                 contenitore.innerHTML = `
@@ -2215,6 +2260,7 @@ window.storage = storage;
 
         // AGGIUNGE O INCREMENTA
         window.aggiungiProdotto = function(nome, prezzo, immagine, fotoCliente = "", event = null) {
+            vibra();
             let index = carrello.findIndex(item => item.nome === nome);
             
             if (index > -1) {
@@ -2239,6 +2285,7 @@ window.storage = storage;
 
         // DECREMENTA O RIMUOVE
         window.decrementaProdotto = function(nome) {
+            vibra();
             let index = carrello.findIndex(item => item.nome === nome);
             if (index > -1) {
                 if (carrello[index].quantita > 1) {
@@ -2291,6 +2338,40 @@ window.storage = storage;
                 }
             });
         }
+        // === 1. MOTORE VIBRAZIONE (HAPTIC FEEDBACK) ===
+        window.vibra = function() {
+            // Se il telefono supporta la vibrazione, fa un micro-scatto (40 millisecondi)
+            if (navigator.vibrate) { navigator.vibrate(40); }
+        };
+
+        // === 2. MOTORE CONDIVISIONE NATIVA (WEB SHARE API) ===
+        window.condividiProdotto = function() {
+            const titolo = document.getElementById('dettaglio-titolo').innerText;
+            
+            // Se il dispositivo supporta la condivisione nativa (WhatsApp, Instagram, ecc)
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Guarda su 3L Creations',
+                    text: `Ho trovato questo prodotto stupendo fatto a mano: ${titolo}! 😍 Guarda qui:`,
+                    url: window.location.href
+                }).catch((error) => console.log('Condivisione annullata', error));
+            } else {
+                // Se è da un PC vecchio che non ha la condivisione, copia il link
+                navigator.clipboard.writeText(window.location.href);
+                showToast("Link copiato! Pronta per condividerlo. 🔗");
+            }
+        };
+
+        // === 3. RILEVATORE ASSENZA INTERNET (OFFLINE) ===
+        window.addEventListener('offline', () => {
+            document.getElementById('offline-screen').style.display = 'flex';
+            if(navigator.vibrate) navigator.vibrate([100, 100, 100]); // 3 scatti di allarme
+        });
+        
+        window.addEventListener('online', () => {
+            document.getElementById('offline-screen').style.display = 'none';
+            showToast("Connessione tornata! Evviva! 🎉");
+        });
 
         function aggiornaCarrelloUI() {
             const contenitore = document.getElementById('cart-items-container');
@@ -3704,6 +3785,18 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
         <strong style="color: var(--fucsia);">Installa l'App su iPhone 🍏</strong><br><br>
         1. Tocca l'icona <strong>Condividi</strong> <i class="fas fa-external-link-square-alt" style="color: #007aff;"></i> in basso nel tuo browser.<br>
         2. Scorri e seleziona <strong>"Aggiungi alla schermata Home"</strong> <i class="fas fa-plus-square" style="color: var(--testo-scuro);"></i>.
+    </div>
+    <div class="bottom-nav-bar">
+        <div class="bottom-nav-item active" onclick="showSection('home'); vibra();"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="bottom-nav-item" onclick="showSection('acquista'); vibra();"><i class="fas fa-search"></i><span>Esplora</span></div>
+        <div class="bottom-nav-item" onclick="openWishlist(); vibra();"><i class="fas fa-heart"></i><span>Preferiti</span><div class="nav-badge" id="nav-wish-badge">0</div></div>
+        <div class="bottom-nav-item" onclick="showSection('profilo'); vibra();"><i class="fas fa-user"></i><span>Profilo</span></div>
+    </div>
+
+    <div id="offline-screen">
+        <i class="fas fa-paw offline-icon"></i>
+        <h2 style="color: var(--fucsia); border: none; margin-bottom: 10px;">Ops! Sei Offline 🐾</h2>
+        <p style="color: var(--testo-chiaro); font-size: 15px;">Sembra che il tuo cagnolino abbia morso il cavo del Wi-Fi.<br>Controlla la tua connessione internet per continuare lo shopping su 3L Creations!</p>
     </div>
 </body>
 </html>
