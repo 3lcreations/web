@@ -29,6 +29,7 @@
       import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
       import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
       import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+      import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
       // ⚠️ SOSTITUISCI QUESTI DATI CON QUELLI DELLA TUA CONSOLE FIREBASE ⚠️
    const firebaseConfig = {
   apiKey: "AIzaSyACRdFw2Ao9UbYw5O0h2PrA3n-CfoAgOLE",
@@ -62,6 +63,7 @@
 window.fbUpload = uploadBytes;
 window.fbGetUrl = getDownloadURL;
 window.storage = storage;
+window.messaging = getMessaging(app);
       // Ascoltatore di Login/Logout in tempo reale
       onAuthStateChanged(window.auth, (user) => {
           if (window.aggiornaUIAdmin) {
@@ -1418,6 +1420,10 @@ window.storage = storage;
                 <button onclick="showSection('miei-ordini'); caricaOrdiniPersonali();"  class="checkout-btn" style="width: 100%; margin-bottom: 15px;">
                     I Miei Ordini 📦
                 </button>
+
+                <button id="btn-notifiche" onclick="attivaNotifiche()" class="checkout-btn" style="width: 100%; margin-bottom: 15px; background-color: #2196F3; box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);">
+                    Attiva Notifiche Novità 🔔
+                </button>
                 
                 <button onclick="logoutCliente()" class="checkout-btn" style="background-color: #777; width: auto; padding: 10px 30px; box-shadow: none;">
                     Esci dall'account
@@ -1473,6 +1479,11 @@ window.storage = storage;
 
             <div id="admin-panel" class="componi-box reveal" style="display:none; max-width: 500px; margin: 0 auto; border: 2px dashed var(--fucsia);">
                 <h3 style="text-align: center; color: var(--fucsia);">Pannello di Controllo</h3>
+                <div style="background: #fff9fb; border: 1px solid var(--rosa-chiaro); padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 15px;">
+                    <i class="fas fa-bell" style="color: var(--fucsia); font-size: 20px; margin-bottom: 5px;"></i><br>
+                    <span style="font-size: 12px; color: var(--testo-scuro);">Clienti iscritti alle notifiche:</span>
+                    <strong id="admin-iscritti-count" style="color: var(--fucsia); font-size: 16px; margin-left: 5px;">0</strong>
+                </div>
                 <p style="text-align:center; font-size: 13px; color: var(--testo-chiaro);">Benvenuta, <strong id="admin-user-email"></strong>!</p>
                 
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
@@ -1578,6 +1589,19 @@ window.storage = storage;
     </footer>
 
     <script>
+        window.attivaNotifiche = async function() {
+    // Chiediamo il permesso al browser
+    const permission = await Notification.requestPermission();
+    
+    if (permission === 'granted') {
+        showToast("Notifiche attivate con successo! 🔔");
+        // Qui andrebbe la logica Firebase per ottenere il Token
+        // Per ora simuliamo il successo
+        console.log("Permesso accordato. Pronto per ricevere il Token.");
+    } else {
+        showToast("Hai negato il permesso alle notifiche.");
+    }
+};
         // === GESTIONE CLIENTI E SINCRONIZZAZIONE CLOUD ===
 
     window.registraCliente = async function() {
@@ -2535,7 +2559,13 @@ window.storage = storage;
                 if (user.email === "mauro7leo10@gmail.com" || user.email === "3lcreationsfordogs1@gmail.com") {
                     // === L'UTENTE È UN ADMIN ===
                     let nomeAdmin = user.email === "mauro7leo10@gmail.com" ? "Mauro" : "Lucia";
-
+// Conta quanti hanno attivato le notifiche
+                    window.fbGetDocs(window.fbCollection(window.db, "utenti")).then(snap => {
+                        let iscritti = 0;
+                        snap.forEach(doc => { if(doc.data().pushToken) iscritti++; });
+                        const countEl = document.getElementById('admin-iscritti-count');
+                        if(countEl) countEl.innerText = iscritti;
+                    });
                     // 1. IMPOSTAZIONI AREA SEGRETA (Admin Panel)
                     window.caricaOrdiniAdmin();
                     if(loginBoxAdmin) loginBoxAdmin.style.display = 'none';
@@ -3799,6 +3829,49 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
             showSection('dettaglio-prodotto');
             setTimeout(sincronizzaBottoniCard, 50); 
         };
+        // === MOTORE NOTIFICHE PUSH ===
+        window.attivaNotifiche = async function() {
+            try {
+                // 1. Chiediamo il permesso al cliente
+                const permission = await Notification.requestPermission();
+                
+                if (permission === 'granted') {
+                    showToast("Permesso accordato! Genero il collegamento... ⏳");
+                    
+                    // 2. Recuperiamo il Service Worker che abbiamo creato prima
+                    const registration = await navigator.serviceWorker.getRegistration();
+                    
+                    // 3. GENERIAMO IL TOKEN (INCOLLA QUI LA TUA CHIAVE VAPID!)
+                    const currentToken = await getToken(window.messaging, { 
+                        vapidKey: 'BBn1hAiAWWsnQSrjQOio_87NSezuzX1H4AM340qMqO5NizmKfSLmR7auQPjwV-dtDly-XH1EjFh0d2Tw_WRGj38', 
+                        serviceWorkerRegistration: registration 
+                    });
+
+                    if (currentToken) {
+                        console.log("Token ricevuto:", currentToken);
+                        
+                        // 4. Salviamo il Token nel profilo del cliente nel Database
+                        const user = window.auth.currentUser;
+                        if (user && user.email !== "3lcreationsfordogs1@gmail.com" && user.email !== "mauro7leo10@gmail.com") {
+                            await window.fbSetDoc(window.fbDoc(window.db, "utenti", user.uid), {
+                                pushToken: currentToken
+                            }, { merge: true });
+                        }
+                        
+                        showToast("Notifiche attivate con successo! 🔔");
+                        document.getElementById('btn-notifiche').style.display = 'none'; // Nascondiamo il bottone
+                        vibra();
+                    } else {
+                        showToast("Impossibile generare il codice. Riprova.");
+                    }
+                } else {
+                    showToast("Hai bloccato le notifiche. 🔕");
+                }
+            } catch (error) {
+                console.error('Errore notifiche:', error);
+                showToast("Errore durante l'attivazione delle notifiche.");
+            }
+        };
     </script>
 <div id="edit-modal">
         <div class="componi-box">
@@ -3831,6 +3904,38 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 </label>
             </div>
 
+           <label class="label-admin">Aggiorna Foto (Sostituisce le attuali)</label>
+<div class="file-upload-wrapper" style="margin-top: 5px;">
+    <input type="file" id="edit-immagine-file" class="file-upload-input" accept="image/*" multiple onchange="aggiornaNomeFile(this, 'nome-edit-foto')">
+    <label for="edit-immagine-file" class="file-upload-btn" style="background-color: var(--rosa-chiaro); color: var(--testo-scuro);">
+        <i class="fas fa-sync-alt"></i> Scegli nuove foto
+    </label>
+    <span id="nome-edit-foto" class="file-upload-name">Lascia vuoto per non cambiare</span>
+</div>
+            
+            <button onclick="salvaModificaSuFirebase()" class="checkout-btn" style="width: 100%; padding: 12px; font-size: 15px;">Salva Modifiche <i class="fas fa-save"></i></button>
+        </div>
+    </div>
+    <div id="ios-install-prompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 15px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.2); border: 2px solid var(--rosa-chiaro); z-index: 999999; width: 90%; max-width: 350px; text-align: center; font-size: 14px; color: var(--testo-scuro);">
+        <span onclick="document.getElementById('ios-install-prompt').style.display='none'" style="position: absolute; top: 5px; right: 10px; font-size: 20px; color: var(--testo-chiaro); cursor: pointer;">&times;</span>
+        <strong style="color: var(--fucsia);">Installa l'App su iPhone 🍏</strong><br><br>
+        1. Tocca l'icona <strong>Condividi</strong> <i class="fas fa-external-link-square-alt" style="color: #007aff;"></i> in basso nel tuo browser.<br>
+        2. Scorri e seleziona <strong>"Aggiungi alla schermata Home"</strong> <i class="fas fa-plus-square" style="color: var(--testo-scuro);"></i>.
+    </div>
+    <div class="bottom-nav-bar">
+        <div class="bottom-nav-item active" onclick="showSection('home'); vibra();"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="bottom-nav-item" onclick="showSection('acquista'); vibra();"><i class="fas fa-search"></i><span>Esplora</span></div>
+        <div class="bottom-nav-item" onclick="openWishlist(); vibra();"><i class="fas fa-heart"></i><span>Preferiti</span><div class="nav-badge" id="nav-wish-badge">0</div></div>
+        <div class="bottom-nav-item" onclick="showSection('profilo'); vibra();"><i class="fas fa-user"></i><span>Profilo</span></div>
+    </div>
+
+    <div id="offline-screen">
+        <i class="fas fa-paw offline-icon"></i>
+        <h2 style="color: var(--fucsia); border: none; margin-bottom: 10px;">Ops! Sei Offline 🐾</h2>
+        <p style="color: var(--testo-chiaro); font-size: 15px;">Sembra che il tuo cagnolino abbia morso il cavo del Wi-Fi.<br>Controlla la tua connessione internet per continuare lo shopping su 3L Creations!</p>
+    </div>
+</body>
+</html>
            <label class="label-admin">Aggiorna Foto (Sostituisce le attuali)</label>
 <div class="file-upload-wrapper" style="margin-top: 5px;">
     <input type="file" id="edit-immagine-file" class="file-upload-input" accept="image/*" multiple onchange="aggiornaNomeFile(this, 'nome-edit-foto')">
