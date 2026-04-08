@@ -595,7 +595,7 @@ window.storage = storage;
         
         <a href="#home" onclick="showSection('home'); return false;">🏠 Home</a>
         <div class="menu-title">Area Personale</div>
-        <a href="#profilo" onclick="showSection('profilo'); return false;">👤 Accedi / Registrati</a>
+        <a href="#" id="nav-account-link" onclick="showSection('profilo'); closeNav(); return false;"><i class="fas fa-user"></i> Accedi / Registrati</a>
         <a href="#miei-ordini" id="nav-miei-ordini" onclick="showSection('miei-ordini'); caricaOrdiniPersonali(); return false;" style="display:none;">📦 I miei ordini</a>
         <div class="menu-title">Prodotti Pronti</div>
         <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('collane'); return false;">📿 Collane</a>
@@ -2078,6 +2078,7 @@ window.storage = storage;
         // === LOGICA FIREBASE: PRODOTTI, COMPONENTI E ADMIN ===
         
         // ADMIN AUTH STATE
+     // ADMIN AUTH STATE
       window.aggiornaUIAdmin = function(user) {
             const loginBoxAdmin = document.getElementById('admin-login-box');
             const adminPanel = document.getElementById('admin-panel');
@@ -2086,9 +2087,15 @@ window.storage = storage;
             const userLoginBox = document.getElementById('user-login-box');
             const userDashboard = document.getElementById('user-dashboard');
 
+            // --- NUOVO: RECUPERA IL LINK DEL MENU ---
+            const navLink = document.getElementById('nav-account-link');
+
             if (user) {
+                // --- NUOVO: CAMBIA IL TESTO (LOGGATO) ---
+                if (navLink) navLink.innerHTML = '<i class="fas fa-user-check"></i> Il mio account';
+
                 // UTENTE CONNESSO! È admin o cliente?
-                if (user.email === "mauro7leo10@gmail.com") {
+                if (user.email === "mauro7leo10@gmail.com" || user.email === "3lcreationsfordogs1@gmail.com") {
                     // È UN ADMIN
                     window.caricaOrdiniAdmin();
                     if(loginBoxAdmin) loginBoxAdmin.style.display = 'none';
@@ -2111,6 +2118,9 @@ window.storage = storage;
                     scaricaDatiDalCloud(user.uid); 
                 }
             } else {
+                // --- NUOVO: CAMBIA IL TESTO (SCOLLEGATO) ---
+                if (navLink) navLink.innerHTML = '<i class="fas fa-user"></i> Accedi / Registrati';
+
                 // NESSUNO È CONNESSO
                 if(document.getElementById('nav-miei-ordini')) document.getElementById('nav-miei-ordini').style.display = 'none';
                 if(loginBoxAdmin) loginBoxAdmin.style.display = 'block';
@@ -2149,12 +2159,14 @@ window.storage = storage;
                 console.error(error);
             }
         };
-
-       window.salvaProdottoSuFirebase = async function() {
-            if (!window.auth.currentUser || window.auth.currentUser.email !== "mauro7leo10@gmail.com") {
+window.salvaProdottoSuFirebase = async function() {
+            // AGGIORNATO: Ora il sito fa passare entrambe le email!
+            if (!window.auth.currentUser || (window.auth.currentUser.email !== "mauro7leo10@gmail.com" && window.auth.currentUser.email !== "3lcreationsfordogs1@gmail.com")) {
                 showToast("Non hai i permessi!");
                 return;
             }
+            
+            // ... il resto della funzione rimane uguale ...
 
             const titolo = document.getElementById('new-titolo').value;
             const prezzo = document.getElementById('new-prezzo').value;
@@ -2571,7 +2583,7 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 contenitore.innerHTML = '';
                 let count = 0;
 
-                const isAdmin = window.auth && window.auth.currentUser && window.auth.currentUser.email === "mauro7leo10@gmail.com";
+                const isAdmin = window.auth && window.auth.currentUser && (window.auth.currentUser.email === "mauro7leo10@gmail.com" || window.auth.currentUser.email === "3lcreationsfordogs1@gmail.com");;
 
                 querySnapshot.forEach((doc) => {
                     const riga = doc.data();
