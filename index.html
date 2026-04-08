@@ -82,14 +82,17 @@ window.messaging = getMessaging(app);
 
     <script>
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('PWA Pronta! ServiceWorker registrato.', registration.scope);
-                    })
-                    .catch(err => {
-                        console.log('Errore ServiceWorker:', err);
-                    });
+            window.addEventListener('load', function() {
+                // Aggiungiamo ?v=2 al nome del file per forzare il download della nuova versione
+                navigator.serviceWorker.register('sw.js?v=2', { scope: '/web/' })
+                .then(function(registration) {
+                    console.log('Nuovo ServiceWorker (V2) registrato!');
+                    
+                    // Forza l'aggiornamento immediato
+                    registration.update();
+                }).catch(function(err) {
+                    console.log('Errore:', err);
+                });
             });
         }
     </script>
