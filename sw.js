@@ -14,19 +14,23 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// === GESTIONE NOTIFICHE IN BACKGROUND ===
+// === GESTIONE NOTIFICHE (Anti-Duplicato) ===
 messaging.onBackgroundMessage(function(payload) {
-  console.log('Notifica ricevuta:', payload);
+  console.log('Notifica ricevuta in background:', payload);
 
-  // Se i campi sono vuoti, usiamo testi di default (evita l'undefined)
+  // Se Firebase ha già mostrato la notifica (perché il payload conteneva "notification"), ci fermiamo qui
+  if (payload.notification && !payload.data) {
+      return; 
+  }
+
   const notificationTitle = payload.notification?.title || "3L Creations";
   const notificationOptions = {
-    body: payload.notification?.body || "C'è una novità per te e il tuo pelosetto! ✨",
+    body: payload.notification?.body || "C'è una novità per te! ✨",
     icon: 'favicon.png',
     badge: 'favicon.png',
-    vibrate: [200, 100, 200],
+    tag: '3l-news', // <--- FONDAMENTALE: Impedisce i duplicati "sovrapponendo" le notifiche uguali
+    renotify: true, // Se arriva una nuova, vibra di nuovo ma non crea un fumetto extra
     data: {
-      // Se non specifichi un link su Firebase, manderà alla Home
       url: payload.data?.url || 'https://3lcreations.github.io/web/'
     }
   };
