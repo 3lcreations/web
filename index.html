@@ -832,6 +832,21 @@ window.messaging = getMessaging(app);
     </style>
 </head>
 <body>
+    <div id="popup-benvenuto-notifiche" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(3px);">
+        <div style="background: #fff9fb; padding: 25px; border-radius: 20px; text-align: center; max-width: 300px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 2px solid var(--rosa-chiaro);">
+            <i class="fas fa-gift" style="font-size: 40px; color: var(--fucsia); margin-bottom: 15px;"></i>
+            <h3 style="color: var(--fucsia); margin-top: 0; font-size: 22px;">Accetta le notifiche! 🎀</h3>
+            <p style="color: var(--testo-scuro); font-size: 15px; margin-bottom: 20px; line-height: 1.4;">Vuoi ricevere in anteprima le novità sui nuovi fiocchi, scorte limitate e sconti speciali?</p>
+            
+            <button id="btn-accetta-popup" style="background: var(--fucsia); color: white; border: none; padding: 12px 20px; border-radius: 25px; font-weight: bold; width: 100%; margin-bottom: 15px; font-size: 16px; cursor: pointer; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3);">
+                Sì, avvisami! 😍
+            </button>
+            <br>
+            <button id="btn-rifiuta-popup" style="background: transparent; color: #888; border: none; font-size: 14px; text-decoration: underline; cursor: pointer;">
+                No, grazie
+            </button>
+        </div>
+    </div>
 
     <div id="scroll-progress-container">
         <div id="scroll-progress-bar"></div>
@@ -3797,6 +3812,43 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 // Aspettiamo 1,5 secondi per dare tempo a Firebase di caricare l'utente
                 setTimeout(window.finalizzaOrdinePagato, 1500);
             }
+        });
+        // === LOGICA POP-UP DI BENVENUTO NOTIFICHE ===
+        window.addEventListener('load', function() {
+            // Controlliamo se ha già visto il popup in passato o se ha già deciso per le notifiche
+            const haGiaVistoPopup = localStorage.getItem('popupNotificheVisto');
+            
+            // Notification.permission === 'default' significa che non ha né accettato né bloccato
+            if (!haGiaVistoPopup && Notification.permission === 'default') {
+                
+                // Aspettiamo 2 secondi dopo l'apertura dell'app per non aggredirlo subito
+                setTimeout(() => {
+                    document.getElementById('popup-benvenuto-notifiche').style.display = 'flex';
+                }, 2000); 
+            }
+
+            // Cosa succede se clicca SÌ 😍
+            document.getElementById('btn-accetta-popup').addEventListener('click', () => {
+                // Nascondiamo il nostro popup
+                document.getElementById('popup-benvenuto-notifiche').style.display = 'none';
+                
+                // Ci segniamo che ha risposto, così non lo disturbiamo più
+                localStorage.setItem('popupNotificheVisto', 'true');
+                
+                // Richiamiamo la tua funzione magica che fa partire le notifiche vere e proprie!
+                if (window.attivaNotifiche) {
+                    window.attivaNotifiche();
+                }
+            });
+
+            // Cosa succede se clicca NO 😢
+            document.getElementById('btn-rifiuta-popup').addEventListener('click', () => {
+                // Nascondiamo il popup
+                document.getElementById('popup-benvenuto-notifiche').style.display = 'none';
+                
+                // Ci segniamo che ha rifiutato, così non lo assilliamo al prossimo accesso
+                localStorage.setItem('popupNotificheVisto', 'true');
+            });
         });
        // === GESTIONE PAGINA DETTAGLIO PRODOTTO ===
         window.apriDettaglioProdotto = function(titolo, prezzoNum, badge, descrizione, immagineCopertina, galleriaStringa) {
