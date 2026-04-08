@@ -1709,6 +1709,18 @@ window.storage = storage;
         
         function showSection(sectionId, updateUrl = true) {
             closeNav();
+            
+            // --- PROTEZIONE DETTAGLIO PRODOTTO (IL BUTTAFUORI) ---
+            if (sectionId === 'dettaglio-prodotto') {
+                const titoloProdotto = document.getElementById('dettaglio-titolo').innerText;
+                // Se il titolo è ancora quello finto di base, significa che è entrato dal link diretto
+                if (titoloProdotto === 'Nome Prodotto' || titoloProdotto.trim() === '') {
+                    sectionId = 'acquista'; // Cambia destinazione verso il negozio
+                    if (updateUrl) history.replaceState(null, null, '#acquista'); // Pulisce il link in alto
+                }
+            }
+            // -----------------------------------------------------
+
             let currentActive = document.querySelector('.content-section.active');
             let targetSection = document.getElementById(sectionId) || document.getElementById('home');
             
