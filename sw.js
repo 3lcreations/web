@@ -14,25 +14,27 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// === GESTIONE NOTIFICHE (Versione Definitiva Anti-Duplicato) ===
+// === GESTIONE NOTIFICHE (Versione Intelligente Anti-Duplicato) ===
 messaging.onBackgroundMessage(function(payload) {
-    console.log('Notifica ricevuta:', payload);
+    console.log('Notifica ricevuta in background:', payload);
 
-    // SE NE ARRIVANO DUE: Significa che Firebase la mostra già da solo.
-    // Se è presente l'oggetto 'notification', ci fermiamo e non facciamo showNotification.
+    // SE C'È UNA NOTIFICA NEL PAYLOAD:
+    // Firebase la mostrerà automaticamente. Se chiamiamo showNotification qui, ne escono due.
+    // Quindi, se payload.notification esiste, "killiamo" questa funzione e usciamo.
     if (payload.notification) {
+        console.log("Firebase mostra la notifica automaticamente. Io mi fermo.");
         return; 
     }
 
-    // Se invece mandi solo "Dati personalizzati", la mostriamo noi così:
-    const notificationTitle = payload.data.title || "3L Creations";
+    // Se invece mandi solo "Dati personalizzati" (senza titolo/testo standard), la mostriamo noi:
+    const notificationTitle = payload.data?.title || "3L Creations";
     const notificationOptions = {
-        body: payload.data.body || "C'è una novità per te! ✨",
+        body: payload.data?.body || "C'è una novità per te! ✨",
         icon: 'favicon.png',
         badge: 'favicon.png',
         tag: '3l-creations-tag',
         data: {
-            url: payload.data.url || 'https://3lcreations.github.io/web/'
+            url: payload.data?.url || 'https://3lcreations.github.io/web/'
         }
     };
 
