@@ -12,39 +12,49 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// Forza il Service Worker a prendere il controllo immediatamente
-self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', (event) => event.waitUntil(clients.claim()));
-
-messaging.onBackgroundMessage((payload) => {
-  if (payload.notification) return;
-  const options = {
-    body: payload.data?.body || "Novità in arrivo! ✨",
-    icon: 'favicon.png',
-    badge: 'favicon.png',
-    data: { url: 'https://3lcreations.github.io/web/' }
-  };
-  return self.registration.showNotification(payload.data?.title || "3L Creations", options);
+messaging.onBackgroundMessage(function(payload) {
+    if (payload.notification) return; // Evita i duplicati se Firebase fa già da solo
+    
+    const options = {
+        body: payload.data?.body || "Scopri le novità! ✨",
+        icon: 'favicon.png',
+        badge: 'favicon.png',
+        data: { url: 'https://3lcreations.github.io/web/' }
+    };
+    return self.registration.showNotification(payload.data?.title || "3L Creations", options);
 });
 
 self.addEventListener('notificationclick', function(event) {
     event.notification.close();
 
-    // L'UNICA DESTINAZIONE POSSIBILE
-    const URL_SICURO = 'https://3lcreations.github.io/web/';
+    // 1. URL DI BASE
+    let targetUrl = 'https://3lcreations.github.io/web/';
+
+    // 2. CERCA L'URL NELLE IMPOSTAZIONI DELLA NOTIFICA
+    if (event.notification.data) {
+        if (event.notification.data.url) {
+            targetUrl = event.notification.data.url;
+        } else if (event.notification.data.FCM_MSG && event.notification.data.FCM_MSG.notification && event.notification.data.FCM_MSG.notification.click_action) {
+            targetUrl = event.notification.data.FCM_MSG.notification.click_action;
+        }
+    }
+
+    // 3. LO SCUDO ANTI-RADICE (Il controllo finale)
+    // Se targetUrl è ESATTAMENTE "https://3lcreations.github.io" (con o senza slash) lo riscrive
+    if (targetUrl === 'https://3lcreations.github.io' || targetUrl === 'https://3lcreations.github.io/') {
+        targetUrl = 'https://3lcreations.github.io/web/';
+    }
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
-            // Se c'è una scheda aperta, la forziamo ad andare all'URL sicuro
             for (let i = 0; i < clientList.length; i++) {
                 let client = clientList[i];
                 if ('focus' in client) {
-                    return client.navigate(URL_SICURO).then(c => c.focus());
+                    return client.navigate(targetUrl).then(c => c.focus());
                 }
             }
-            // Se è tutto chiuso, apriamo solo e soltanto l'URL sicuro
             if (clients.openWindow) {
-                return clients.openWindow(URL_SICURO);
+                return clients.openWindow(targetUrl);
             }
         })
     );
