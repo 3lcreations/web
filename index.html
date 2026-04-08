@@ -1072,15 +1072,15 @@ window.storage = storage;
                 
                 <div id="register-fields" class="form-row" style="display: none;">
                     <div class="form-group" style="flex: 1;">
-                        <input type="text" id="user-nome" placeholder="Nome" class="custom-textarea" style="height:40px;">
+                        <input type="text" id="user-nome" placeholder="Nome" class="custom-textarea" style="height:40px;" onkeypress="gestisciInvioAuth(event)">
                     </div>
                     <div class="form-group" style="flex: 1;">
-                        <input type="text" id="user-cognome" placeholder="Cognome" class="custom-textarea" style="height:40px;">
+                        <input type="text" id="user-cognome" placeholder="Cognome" class="custom-textarea" style="height:40px;" onkeypress="gestisciInvioAuth(event)">
                     </div>
                 </div>
 
-               <input type="email" id="user-email" placeholder="La tua email" class="custom-textarea" style="height:40px;">
-<input type="password" id="user-pwd" placeholder="Password (min 6 caratteri)" class="custom-textarea" style="height:40px;">
+                <input type="email" id="user-email" placeholder="La tua email" class="custom-textarea" style="height:40px;" onkeypress="gestisciInvioAuth(event)">
+                <input type="password" id="user-pwd" placeholder="Password (min 6 caratteri)" class="custom-textarea" style="height:40px;" onkeypress="gestisciInvioAuth(event)">
 
 <p id="forgot-pwd-link" style="text-align: right; font-size: 11px; margin-top: -10px; margin-bottom: 15px;">
     <span onclick="recuperaPassword()" style="color: var(--fucsia); cursor: pointer; text-decoration: underline;">Password dimenticata?</span>
@@ -1094,10 +1094,14 @@ window.storage = storage;
                 </p>
             </div>
 
-          <div id="user-dashboard" class="componi-box reveal" style="display:none; max-width: 400px; margin: 0 auto; text-align: center;">
+        <div id="user-dashboard" class="componi-box reveal" style="display:none; max-width: 400px; margin: 0 auto; text-align: center;">
                 <h3 style="color: var(--fucsia);">Ciao <span id="user-nome-display"></span>! ✨</h3>
                 <p style="font-size: 13px; color: var(--testo-chiaro); margin-bottom: 20px;">La tua area personale sincronizzata su tutti i dispositivi.</p>
                 
+                <button id="btn-vai-admin" onclick="showSection('sezione-admin')" class="checkout-btn" style="width: 100%; margin-bottom: 15px; background-color: #ff9800; color: white; display: none; box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);">
+                    Pannello di Controllo ⚙️
+                </button>
+
                 <button onclick="openCart()" class="checkout-btn" style="width: 100%; margin-bottom: 15px;">
                     Il Mio Carrello 🛒
                 </button>
@@ -1106,7 +1110,7 @@ window.storage = storage;
                     I Miei Preferiti ❤️
                 </button>
                 
-                <button onclick="showSection('miei-ordini'); caricaOrdiniPersonali();" class="checkout-btn" style="width: 100%; margin-bottom: 15px;">
+                <button onclick="showSection('miei-ordini'); caricaOrdiniPersonali();"  class="checkout-btn" style="width: 100%; margin-bottom: 15px;">
                     I Miei Ordini 📦
                 </button>
                 
@@ -1157,8 +1161,8 @@ window.storage = storage;
             
             <div id="admin-login-box" class="componi-box reveal" style="max-width: 400px; margin: 0 auto;">
                 <h3 style="text-align: center; color: var(--testo-scuro);">Accesso Admin</h3>
-                <input type="email" id="admin-email" placeholder="La tua email" class="custom-textarea" style="height:40px;">
-                <input type="password" id="admin-pwd" placeholder="Password" class="custom-textarea" style="height:40px;">
+                <input type="email" id="admin-email" placeholder="La tua email" class="custom-textarea" style="height:40px;" onkeypress="if(event.key === 'Enter') loginAdmin()">
+                <input type="password" id="admin-pwd" placeholder="Password" class="custom-textarea" style="height:40px;" onkeypress="if(event.key === 'Enter') loginAdmin()">
                 <button onclick="loginAdmin()" class="checkout-btn">Accedi</button>
             </div>
 
@@ -1342,6 +1346,20 @@ window.storage = storage;
                 if(forgotPwd) forgotPwd.style.display = 'none'; // Nascondi il link
                 authTitle.innerText = "Crea un Account";
                 toggleText.innerHTML = 'Hai già un account? <strong onclick="toggleAuthMode()" style="color: var(--fucsia); cursor: pointer;">Accedi</strong>';
+            }
+        };
+        // === GESTIONE TASTO INVIO (ENTER) ===
+        window.gestisciInvioAuth = function(event) {
+            // Controlla se il tasto premuto è "Enter"
+            if (event.key === "Enter") {
+                event.preventDefault(); // Evita che la pagina faccia "salti" strani
+                
+                // Controlla in che modalità ci troviamo
+                if (isLoginMode) {
+                    loginCliente(); // Se stiamo accedendo
+                } else {
+                    registraCliente(); // Se ci stiamo registrando
+                }
             }
         };
 
@@ -2090,58 +2108,83 @@ window.storage = storage;
         // === LOGICA FIREBASE: PRODOTTI, COMPONENTI E ADMIN ===
         
         // ADMIN AUTH STATE
-     // ADMIN AUTH STATE
-      window.aggiornaUIAdmin = function(user) {
+    // ADMIN AUTH STATE
+        window.aggiornaUIAdmin = function(user) {
             const loginBoxAdmin = document.getElementById('admin-login-box');
             const adminPanel = document.getElementById('admin-panel');
             
             // Variabili Pannello Clienti
             const userLoginBox = document.getElementById('user-login-box');
             const userDashboard = document.getElementById('user-dashboard');
-
-            // --- NUOVO: RECUPERA IL LINK DEL MENU ---
             const navLink = document.getElementById('nav-account-link');
+            
+            // Variabile per il nuovo bottone
+            const btnVaiAdmin = document.getElementById('btn-vai-admin');
 
             if (user) {
-                // --- NUOVO: CAMBIA IL TESTO (LOGGATO) ---
                 if (navLink) navLink.innerHTML = '<i class="fas fa-user-check"></i> Il mio account';
 
-                // UTENTE CONNESSO! È admin o cliente?
                 if (user.email === "mauro7leo10@gmail.com" || user.email === "3lcreationsfordogs1@gmail.com") {
-                    // È UN ADMIN
+                    // === L'UTENTE È UN ADMIN ===
+                    let nomeAdmin = user.email === "mauro7leo10@gmail.com" ? "Mauro" : "Lucia";
+
+                    // 1. IMPOSTAZIONI AREA SEGRETA (Admin Panel)
                     window.caricaOrdiniAdmin();
                     if(loginBoxAdmin) loginBoxAdmin.style.display = 'none';
                     if(adminPanel) {
                         adminPanel.style.display = 'block';
-                        document.getElementById('admin-user-email').innerText = user.email;
+                        document.getElementById('admin-user-email').innerText = nomeAdmin; 
                     }
-                    window.caricaProdottiFirebase('collane', 'lista-prodotti');
-                    window.caricaProdottiFirebase('fiocchi', 'lista-fiocchi');
-                    window.caricaProdottiFirebase('ciondoli', 'lista-ciondoli');
-                    window.caricaProdottiFirebase('perline', 'lista-perline');
-                } else {
-                    // È UN CLIENTE NORMALE
+                    
+                    // 2. IMPOSTAZIONI AREA PROFILO ("Il Mio Account")
                     if(document.getElementById('nav-miei-ordini')) document.getElementById('nav-miei-ordini').style.display = 'block';
                     if(userLoginBox) userLoginBox.style.display = 'none';
                     if(userDashboard) {
                         userDashboard.style.display = 'block';
+                        document.getElementById('user-nome-display').innerText = nomeAdmin;
+                        
+                        const sottotitolo = userDashboard.querySelector('p');
+                        if(sottotitolo) sottotitolo.innerHTML = '<strong style="color: var(--fucsia); font-size: 14px;">Sei entrato/a come Amministratore 👑</strong>';
+                        
+                        // MOSTRA IL TASTO SCORCIATOIA ADMIN
+                        if(btnVaiAdmin) btnVaiAdmin.style.display = 'block';
+                    }
+
+                    // Carica i prodotti
+                    window.caricaProdottiFirebase('collane', 'lista-prodotti');
+                    window.caricaProdottiFirebase('fiocchi', 'lista-fiocchi');
+                    window.caricaProdottiFirebase('ciondoli', 'lista-ciondoli');
+                    window.caricaProdottiFirebase('perline', 'lista-perline');
+                    
+                } else {
+                    // === L'UTENTE È UN CLIENTE NORMALE ===
+                    if(document.getElementById('nav-miei-ordini')) document.getElementById('nav-miei-ordini').style.display = 'block';
+                    if(userLoginBox) userLoginBox.style.display = 'none';
+                    if(userDashboard) {
+                        userDashboard.style.display = 'block';
+                        
+                        const sottotitolo = userDashboard.querySelector('p');
+                        if(sottotitolo) sottotitolo.innerText = 'La tua area personale sincronizzata su tutti i dispositivi.';
+                        
+                        // NASCONDI IL TASTO SCORCIATOIA ADMIN AI CLIENTI
+                        if(btnVaiAdmin) btnVaiAdmin.style.display = 'none';
                     }
                     // SCARICA I SUOI DATI PERSONALI E IL NOME!
                     scaricaDatiDalCloud(user.uid); 
                 }
             } else {
-                // --- NUOVO: CAMBIA IL TESTO (SCOLLEGATO) ---
+                // === NESSUNO È CONNESSO (LOGOUT) ===
                 if (navLink) navLink.innerHTML = '<i class="fas fa-user"></i> Accedi / Registrati';
 
-                // NESSUNO È CONNESSO
                 if(document.getElementById('nav-miei-ordini')) document.getElementById('nav-miei-ordini').style.display = 'none';
                 if(loginBoxAdmin) loginBoxAdmin.style.display = 'block';
                 if(adminPanel) adminPanel.style.display = 'none';
                 
                 if(userLoginBox) userLoginBox.style.display = 'block';
                 if(userDashboard) userDashboard.style.display = 'none';
+                if(btnVaiAdmin) btnVaiAdmin.style.display = 'none'; // Nascondi il tasto
             }
-        }
+        };
 
        window.loginAdmin = async function() {
             const email = document.getElementById('admin-email').value;
