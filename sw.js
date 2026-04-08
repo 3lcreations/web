@@ -38,3 +38,33 @@ self.addEventListener('notificationclick', function(event) {
         clients.openWindow(event.notification.data.url)
     );
 });
+// === IMPORTAZIONI FIREBASE PER IL BACKGROUND ===
+importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js');
+
+// Inizializza Firebase anche qui "dietro le quinte"
+firebase.initializeApp({
+  apiKey: "AIzaSyACRdFw2Ao9UbYw5O0h2PrA3n-CfoAgOLE",
+  authDomain: "l-creations.firebaseapp.com",
+  projectId: "l-creations",
+  storageBucket: "l-creations.firebasestorage.app",
+  messagingSenderId: "747374445759",
+  appId: "1:747374445759:web:d9d7df4704ad81958f720a",
+  measurementId: "G-N8W4K0XD7M"
+});
+
+const messaging = firebase.messaging();
+
+// Cosa fare quando arriva un messaggio e l'app è chiusa
+messaging.onBackgroundMessage(function(payload) {
+  console.log('Ricevuta notifica in background: ', payload);
+  
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: 'favicon.png', // La tua icona
+    badge: 'favicon.png'
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});
