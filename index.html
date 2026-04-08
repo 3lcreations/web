@@ -3937,6 +3937,15 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 showToast("Errore durante l'attivazione delle notifiche.");
             }
         };
+// === CONTROLLO STATO NOTIFICHE ALL'AVVIO ===
+        window.addEventListener('load', function() {
+            if (window.Notification && Notification.permission === 'granted') {
+                const btnNotifiche = document.getElementById('btn-notifiche');
+                if (btnNotifiche) {
+                    btnNotifiche.style.display = 'none';
+                }
+            }
+        });
     </script>
 <div id="edit-modal">
         <div class="componi-box">
