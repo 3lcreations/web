@@ -3375,7 +3375,7 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 setTimeout(window.finalizzaOrdinePagato, 1500);
             }
         });
-        // === GESTIONE PAGINA DETTAGLIO PRODOTTO ===
+       // === GESTIONE PAGINA DETTAGLIO PRODOTTO ===
         window.apriDettaglioProdotto = function(titolo, prezzoNum, badge, descrizione, immagineCopertina, galleriaStringa) {
             // Convertiamo i dati in arrivo
             const prezzo = parseFloat(prezzoNum);
@@ -3385,10 +3385,13 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
             document.getElementById('dettaglio-titolo').innerText = titolo;
             document.getElementById('dettaglio-prezzo').innerText = `€${prezzo.toFixed(2)}`;
             document.getElementById('dettaglio-descrizione').innerText = descrizione || "Un prodotto unico, realizzato a mano con amore.";
+            
+            // Configuriamo il nuovo contenitore dinamico per i bottoni
             const contenitoreBtn = document.getElementById('dettaglio-btn-container');
-contenitoreBtn.setAttribute('data-nome', titolo);
-contenitoreBtn.setAttribute('data-prezzo', prezzo);
-contenitoreBtn.setAttribute('data-immagine', galleria[0]);
+            contenitoreBtn.setAttribute('data-nome', titolo);
+            contenitoreBtn.setAttribute('data-prezzo', prezzo);
+            contenitoreBtn.setAttribute('data-immagine', galleria[0]);
+            
             // Badge
             const badgeContainer = document.getElementById('dettaglio-badge');
             badgeContainer.innerHTML = badge && badge !== 'undefined' ? `<span style="background:var(--fucsia); color:white; padding: 5px 15px; border-radius: 20px; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing:1px;">${badge}</span>` : '';
@@ -3411,15 +3414,10 @@ contenitoreBtn.setAttribute('data-immagine', galleria[0]);
                 });
             }
 
-            // Configuriamo il tasto "Aggiungi al Carrello" gigante
-          // Apriamo la sezione e aggiorniamo il bottone
-    showSection('dettaglio-prodotto');
-    setTimeout(sincronizzaBottoniCard, 50); 
-};
-
-            // Apriamo la sezione!
+            // Apriamo la sezione e aggiorniamo il bottone
             showSection('dettaglio-prodotto');
-        
+            setTimeout(sincronizzaBottoniCard, 50); 
+        };
     </script>
 <div id="edit-modal">
         <div class="componi-box">
