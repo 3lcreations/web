@@ -14,50 +14,44 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// === GESTIONE NOTIFICHE (Versione Anti-Duplicato) ===
+// === GESTIONE NOTIFICHE (Versione Definitiva Anti-Duplicato) ===
 messaging.onBackgroundMessage(function(payload) {
     console.log('Notifica ricevuta:', payload);
 
-    // Se Firebase ha già i dati della notifica nel payload, 
-    // il browser spesso la mostra da solo. Se noi chiamiamo showNotification, ne escono due.
-    // Usiamo il TAG nel codice (non serve metterlo nella console) per schiacciarle in una sola.
-    
-    const notificationTitle = payload.notification?.title || "3L Creations";
+    // SE NE ARRIVANO DUE: Significa che Firebase la mostra già da solo.
+    // Se è presente l'oggetto 'notification', ci fermiamo e non facciamo showNotification.
+    if (payload.notification) {
+        return; 
+    }
+
+    // Se invece mandi solo "Dati personalizzati", la mostriamo noi così:
+    const notificationTitle = payload.data.title || "3L Creations";
     const notificationOptions = {
-        body: payload.notification?.body || "C'è una novità per te! ✨",
+        body: payload.data.body || "C'è una novità per te! ✨",
         icon: 'favicon.png',
         badge: 'favicon.png',
-        tag: '3l-creations-unique-tag', // <--- Questo "tag" nel codice forza il telefono a mostrare UNA sola notifica alla volta
-        renotify: true,
+        tag: '3l-creations-tag',
         data: {
-            url: payload.data?.url || 'https://3lcreations.github.io/web/'
+            url: payload.data.url || 'https://3lcreations.github.io/web/'
         }
     };
 
-    // Verifichiamo se dobbiamo mostrarla noi o se è già apparsa
     return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-// === COSA SUCCEDE AL CLICK SULLA NOTIFICA ===
+// Click sulla notifica
 self.addEventListener('notificationclick', function(event) {
-    event.notification.close(); // Chiude il fumetto della notifica
-
-    // Recuperiamo l'URL salvato (o usiamo la home come fallback)
-    const targetUrl = event.notification.data?.url || 'https://3lcreations.github.io/web/';
+    event.notification.close();
+    // Cerca l'URL nei dati (sia che arrivi da notification che da data)
+    const targetUrl = event.notification.data?.url || event.notification.data || 'https://3lcreations.github.io/web/';
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
-            // Se l'app è già aperta in una scheda, mettila in primo piano (focus)
             for (let i = 0; i < clientList.length; i++) {
                 let client = clientList[i];
-                if (client.url === targetUrl && 'focus' in client) {
-                    return client.focus();
-                }
+                if (client.url === targetUrl && 'focus' in client) return client.focus();
             }
-            // Se l'app è chiusa, aprila
-            if (clients.openWindow) {
-                return clients.openWindow(targetUrl);
-            }
+            if (clients.openWindow) return clients.openWindow(targetUrl);
         })
     );
 });
