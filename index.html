@@ -71,6 +71,72 @@ window.storage = storage;
     </script>
 
     <style>
+        /* === SELETTORE QUANTITÀ (CARDS E CARRELLO) === */
+        .buy-button-container {
+            width: 100%;
+            margin-top: auto;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fff9fb;
+            border: 2px solid var(--fucsia);
+            border-radius: 30px;
+            height: 45px;
+            box-sizing: border-box;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(216, 27, 96, 0.15);
+        }
+        
+        .qty-btn {
+            background: none;
+            border: none;
+            color: var(--fucsia);
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 45px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        
+        .qty-btn:hover { background-color: rgba(216, 27, 96, 0.1); }
+        
+        .qty-val {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--fucsia);
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        /* Variante piccola per il carrello laterale */
+        .cart-qty-mini {
+            height: 30px;
+            border-width: 1px;
+            border-radius: 15px;
+            width: 90px;
+            margin-top: 8px;
+            box-shadow: none;
+        }
+        .cart-qty-mini .qty-btn { width: 30px; font-size: 16px; }
+        .cart-qty-mini .qty-val { font-size: 13px; }
+        /* STATO AGGIUNTO AL CARRELLO */
+        .buy-button-paypal.added {
+            background-color: #2e7d32 !important; /* Verde scuro professionale */
+            border-color: #2e7d32 !important;
+            transform: scale(0.98); /* Leggero effetto pressione */
+        }
+
+        /* Piccola animazione per il cambio stato */
+        .buy-button-paypal {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
    /* === TASTO INDIETRO STILE MENU === */
         .back-to-cart-btn {
             display: inline-flex; /* Lo rende un rettangolo che si adatta al contenuto */
@@ -525,6 +591,31 @@ window.storage = storage;
             .floating-wishlist { right: 15px; bottom: 80px; width: 50px; height: 50px; font-size: 20px;}
             .back-to-top { right: 20px; bottom: 145px; width: 40px; height: 40px; font-size: 18px;}
         }
+        /* === ANIMAZIONI PULSANTI CARRELLO (EFFETTO POP/JELLY) === */
+        
+        /* 1. Creiamo l'animazione del rimbalzo */
+        @keyframes buttonPop {
+            0% { transform: scale(1); }
+            40% { transform: scale(0.92); } /* Si schiaccia */
+            70% { transform: scale(1.08); } /* Si allarga */
+            100% { transform: scale(1); } /* Torna normale */
+        }
+
+        /* 2. Se usi il selettore con + e -: lo fa rimbalzare appena appare */
+        .quantity-controls {
+            animation: buttonPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* 3. Effetto "pressione" fisica istantanea quando si clicca (per tutti i bottoni) */
+        .buy-button-paypal:active, .qty-btn:active {
+            transform: scale(0.9) !important;
+            transition: transform 0.1s ease;
+        }
+
+        /* 4. Se stai usando il tasto che diventa Verde ("Aggiunto!") */
+        .buy-button-paypal.added {
+            animation: buttonPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
     </style>
 </head>
 <body>
@@ -827,9 +918,7 @@ window.storage = storage;
                             Descrizione...
                         </p>
                         
-                        <button id="dettaglio-btn-acquista" class="checkout-btn" style="width: 100%; padding: 15px; font-size: 16px;">
-                            Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
-                        </button>
+                      <div class="buy-button-container" id="dettaglio-btn-container" data-nome="" data-prezzo="" data-immagine=""></div>
                     </div>
 
                 </div> </div> </div>
@@ -1934,19 +2023,22 @@ window.storage = storage;
             ordinaElementi('lista-perline', 'charm-card', '.charm-title', '.charm-price', criterio);
         }
 
-        // === LOGICA CARRELLO ===
+       // === LOGICA CARRELLO POTENZIATA (CON QUANTITÀ) ===
         let carrello = [];
 
         function salvaCarrello() {
             localStorage.setItem('carrello3L', JSON.stringify(carrello));
-            if(window.sincronizzaDatiVersoCloud) window.sincronizzaDatiVersoCloud(); // AGGIUNTO!
+            if(window.sincronizzaDatiVersoCloud) window.sincronizzaDatiVersoCloud(); 
         }
 
         function caricaCarrello() {
             const salvato = localStorage.getItem('carrello3L');
             if (salvato) {
                 carrello = JSON.parse(salvato);
+                // Protezione per i vecchi carrelli salvati senza quantità
+                carrello.forEach(item => { if(!item.quantita) item.quantita = 1; });
                 aggiornaCarrelloUI();
+                sincronizzaBottoniCard(); // Aggiorna la vetrina
             }
         }
 
@@ -1960,40 +2052,83 @@ window.storage = storage;
             setTimeout(nascondiFormSpedizione, 500); 
         }
 
-      window.aggiungiProdotto = function(nome, prezzo, immagine, fotoCliente = "") {
-            // Aggiungiamo lo scompartimento segreto "fotoCliente"
-            carrello.push({ nome: nome, prezzo: parseFloat(prezzo), immagine: immagine, fotoCliente: fotoCliente });
+        // AGGIUNGE O INCREMENTA
+        window.aggiungiProdotto = function(nome, prezzo, immagine, fotoCliente = "", event = null) {
+            let index = carrello.findIndex(item => item.nome === nome);
+            
+            if (index > -1) {
+                carrello[index].quantita++; // Se esiste già, aumenta di 1
+            } else {
+                carrello.push({ nome: nome, prezzo: parseFloat(prezzo), immagine: immagine, fotoCliente: fotoCliente, quantita: 1 });
+            }
+            
             salvaCarrello();
             aggiornaCarrelloUI();
-            
+            sincronizzaBottoniCard(); // Cambia i tasti in diretta!
+
+            // Animazione pallino rosso
             const cartBtn = document.querySelector('.floating-cart');
-            // ... (il resto della funzione con le stelline/scintille rimane identico)
             if(cartBtn) {
                 cartBtn.classList.remove('bounce');
                 void cartBtn.offsetWidth; 
                 cartBtn.classList.add('bounce');
-                
-                for(let i=0; i<6; i++) {
-                    let spark = document.createElement('div');
-                    spark.classList.add('sparkle');
-                    let angle = Math.random() * Math.PI * 2;
-                    let distance = Math.random() * 25 + 15;
-                    spark.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
-                    spark.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
-                    spark.style.left = '50%';
-                    spark.style.top = '50%';
-                    cartBtn.appendChild(spark);
-                    setTimeout(() => spark.remove(), 600);
-                }
             }
-            showToast("Aggiunto al carrello!");
+            if(!event) showToast("Aggiunto al carrello! 🛒"); // Toast solo se aggiunto da fuori (es. personalizza)
         }
 
+        // DECREMENTA O RIMUOVE
+        window.decrementaProdotto = function(nome) {
+            let index = carrello.findIndex(item => item.nome === nome);
+            if (index > -1) {
+                if (carrello[index].quantita > 1) {
+                    carrello[index].quantita--;
+                } else {
+                    carrello.splice(index, 1); // Rimuove se scende a zero
+                }
+                salvaCarrello();
+                aggiornaCarrelloUI();
+                sincronizzaBottoniCard();
+                if(carrello.length === 0) { nascondiFormSpedizione(); }
+            }
+        }
+
+        // RIMOZIONE TOTALE (Tasto X)
         window.rimuoviProdotto = function(index) {
             carrello.splice(index, 1);
             salvaCarrello();
             aggiornaCarrelloUI();
+            sincronizzaBottoniCard();
             if(carrello.length === 0) { nascondiFormSpedizione(); }
+        }
+
+        // IL MOTORE GRAFICO DEI TASTI (Trasforma "Aggiungi" in "+ 1 -")
+        window.sincronizzaBottoniCard = function() {
+            const containers = document.querySelectorAll('.buy-button-container');
+            containers.forEach(container => {
+                let nome = container.getAttribute('data-nome');
+                let prezzo = container.getAttribute('data-prezzo');
+                let immagine = container.getAttribute('data-immagine');
+                
+                let itemNelCarrello = carrello.find(item => item.nome === nome);
+                
+                if (itemNelCarrello) {
+                    // SE È NEL CARRELLO -> Mostra controlli + e -
+                    container.innerHTML = `
+                        <div class="quantity-controls">
+                            <button class="qty-btn" onclick="decrementaProdotto('${nome}')"><i class="fas fa-minus"></i></button>
+                            <span class="qty-val">${itemNelCarrello.quantita} nel carrello</span>
+                            <button class="qty-btn" onclick="aggiungiProdotto('${nome}', ${prezzo}, '${immagine}', '', event)"><i class="fas fa-plus"></i></button>
+                        </div>
+                    `;
+                } else {
+                    // SE NON È NEL CARRELLO -> Mostra tasto normale
+                    container.innerHTML = `
+                        <button onclick="aggiungiProdotto('${nome}', ${prezzo}, '${immagine}', '', event)" class="buy-button-paypal">
+                            Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
+                        </button>
+                    `;
+                }
+            });
         }
 
         function aggiornaCarrelloUI() {
@@ -2004,7 +2139,9 @@ window.storage = storage;
             const subtotalContainer = document.getElementById('cart-subtotal-container');
             const shippingContainer = document.getElementById('cart-shipping-container');
 
-            badge.innerText = carrello.length;
+            // Calcoliamo i pezzi totali (non solo il numero di righe)
+            let totalePezzi = carrello.reduce((sum, item) => sum + item.quantita, 0);
+            badge.innerText = totalePezzi;
             
             if (carrello.length === 0) {
                 contenitore.innerHTML = `
@@ -2023,15 +2160,24 @@ window.storage = storage;
             let subtotale = 0;
 
             carrello.forEach((item, index) => {
-                subtotale += item.prezzo;
+                let totaleRiga = item.prezzo * item.quantita;
+                subtotale += totaleRiga;
+                
                 contenitore.innerHTML += `
                     <div class="cart-item">
                         <img src="${item.immagine}" class="cart-item-img" onerror="this.src='logo.png'">
                         <div class="cart-item-info">
                             <div class="cart-item-title">${item.nome}</div>
-                            <div class="cart-item-price">€${item.prezzo.toFixed(2)}</div>
+                            <div class="cart-item-price">€${totaleRiga.toFixed(2)}</div>
+                            
+                            <div class="quantity-controls cart-qty-mini">
+                                <button class="qty-btn" onclick="decrementaProdotto('${item.nome}')"><i class="fas fa-minus"></i></button>
+                                <span class="qty-val">${item.quantita}</span>
+                                <button class="qty-btn" onclick="aggiungiProdotto('${item.nome}', ${item.prezzo}, '${item.immagine}')"><i class="fas fa-plus"></i></button>
+                            </div>
+                            
                         </div>
-                        <div class="cart-item-remove" onclick="rimuoviProdotto(${index})"><i class="fas fa-times-circle"></i></div>
+                        <div class="cart-item-remove" onclick="rimuoviProdotto(${index})" title="Rimuovi tutto"><i class="fas fa-times-circle"></i></div>
                     </div>
                 `;
             });
@@ -2044,10 +2190,7 @@ window.storage = storage;
         }
 
         window.mostraFormSpedizione = function() {
-            if (carrello.length === 0) { 
-                showToast("Il carrello è vuoto! 🛒"); 
-                return; 
-            }
+            if (carrello.length === 0) { showToast("Il carrello è vuoto! 🛒"); return; }
             document.getElementById('cart-content-view').style.display = 'none';
             document.getElementById('checkout-form-view').style.display = 'block';
         }
@@ -2056,7 +2199,7 @@ window.storage = storage;
             document.getElementById('cart-content-view').style.display = 'flex';
         }
 
-       window.inviaOrdineAPayPal = function(event) {
+        window.inviaOrdineAPayPal = function(event) {
             event.preventDefault();
             salvaDatiSpedizione();
 
@@ -2067,9 +2210,8 @@ window.storage = storage;
             let cap = document.getElementById('cap').value;
             let telefono = document.getElementById('telefono').value;
 
-            // 1. PARCHEGGIAMO L'ORDINE NEL BROWSER (in attesa di pagamento)
             let totaleOrdine = 8.00; 
-            carrello.forEach(item => totaleOrdine += item.prezzo);
+            carrello.forEach(item => totaleOrdine += (item.prezzo * item.quantita));
             
             let ordineInSospeso = {
                 carrello: carrello,
@@ -2078,7 +2220,6 @@ window.storage = storage;
             };
             localStorage.setItem('ordineInSospeso3L', JSON.stringify(ordineInSospeso));
 
-            // 2. COSTRUIAMO IL LINK PAYPAL
             let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=luciaxxxo@alice.it&currency_code=EUR&handling_cart=8.00`;
             paypalUrl += `&return=${encodeURIComponent('https://3lcreations.github.io/web/#grazie')}`;
             paypalUrl += `&cancel_return=${encodeURIComponent('https://3lcreations.github.io/web/')}`;
@@ -2091,7 +2232,8 @@ window.storage = storage;
                 if (item.fotoCliente && item.fotoCliente !== "") {
                     nomePerPayPal += ` - Foto: ${item.fotoCliente}`;
                 }
-                paypalUrl += `&item_name_${i}=${encodeURIComponent(nomePerPayPal)}&amount_${i}=${item.prezzo.toFixed(2)}&quantity_${i}=1`;
+                // INVIA A PAYPAL LA QUANTITÀ CORRETTA
+                paypalUrl += `&item_name_${i}=${encodeURIComponent(nomePerPayPal)}&amount_${i}=${item.prezzo.toFixed(2)}&quantity_${i}=${item.quantita}`;
             });
 
             paypalUrl += `&first_name=${encodeURIComponent(nome)}`;
@@ -2102,7 +2244,6 @@ window.storage = storage;
             paypalUrl += `&country=IT`; 
             paypalUrl += `&night_phone_a=${encodeURIComponent(telefono)}`;
 
-            // ATTENZIONE: Il carrello NON si svuota più qui!
             window.location.href = paypalUrl;
         };
         // === LOGICA FIREBASE: PRODOTTI, COMPONENTI E ADMIN ===
@@ -2610,15 +2751,15 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                                 <h3 style="cursor:pointer;" onclick="${onClickDettaglio}">${riga.titolo}</h3>
                                 
                                 <div class="price">€${prezzoNum.toFixed(2)}</div>
-                                <button onclick="aggiungiProdotto('${titolo}', ${prezzoNum}, '${immagine}')" class="buy-button-paypal">
-                                    Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
-                                </button>
+                                <div class="buy-button-container" data-nome="${titolo}" data-prezzo="${prezzoNum}" data-immagine="${immagine}"></div>
                             </div>`;
                         contenitore.insertAdjacentHTML('beforeend', cardHTML);
                     }
                 });
 
                 if (count === 0) contenitore.innerHTML = "<p style='width: 100%; color: var(--testo-chiaro); font-size: 14px;'>Nessun prodotto in evidenza al momento.</p>";
+                observeElements();
+                sincronizzaBottoniCard();
             } catch (e) {
                 console.error("Errore caricamento evidenza: ", e);
             }
@@ -2638,7 +2779,7 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 contenitore.innerHTML = '';
                 let count = 0;
 
-                const isAdmin = window.auth && window.auth.currentUser && (window.auth.currentUser.email === "mauro7leo10@gmail.com" || window.auth.currentUser.email === "3lcreationsfordogs1@gmail.com");;
+                const isAdmin = window.auth && window.auth.currentUser && (window.auth.currentUser.email === "mauro7leo10@gmail.com" || window.auth.currentUser.email === "3lcreationsfordogs1@gmail.com");
 
                 querySnapshot.forEach((doc) => {
                     const riga = doc.data();
@@ -2682,9 +2823,7 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                                     <h3 style="cursor:pointer;" onclick="${onClickDettaglio}">${riga.titolo}</h3>
                                     
                                     <div class="price">€${prezzoNum.toFixed(2)}</div>
-                                    <button onclick="aggiungiProdotto('${titolo}', ${prezzoNum}, '${immagine}')" class="buy-button-paypal">
-                                        Aggiungi al Carrello <i class="fas fa-cart-plus"></i>
-                                    </button>
+                                    <div class="buy-button-container" data-nome="${titolo}" data-prezzo="${prezzoNum}" data-immagine="${immagine}"></div>
                                 </div>`;
                             contenitore.insertAdjacentHTML('beforeend', cardHTML);
                         } else {
@@ -2707,10 +2846,12 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
 
                 if (count === 0) contenitore.innerHTML = "<p class='loading-text'>Nessun prodotto trovato in questa categoria.</p>";
                 observeElements();
+                sincronizzaBottoniCard();
             } catch (e) {
                 console.error("Errore caricamento: ", e);
             }
         };
+        
 // === GESTIONE IMMAGINI DINAMICHE SITO ===
         
         // 1. Qui mettiamo le foto di "emergenza" se su Firebase non c'è nulla
@@ -3244,7 +3385,10 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
             document.getElementById('dettaglio-titolo').innerText = titolo;
             document.getElementById('dettaglio-prezzo').innerText = `€${prezzo.toFixed(2)}`;
             document.getElementById('dettaglio-descrizione').innerText = descrizione || "Un prodotto unico, realizzato a mano con amore.";
-            
+            const contenitoreBtn = document.getElementById('dettaglio-btn-container');
+contenitoreBtn.setAttribute('data-nome', titolo);
+contenitoreBtn.setAttribute('data-prezzo', prezzo);
+contenitoreBtn.setAttribute('data-immagine', galleria[0]);
             // Badge
             const badgeContainer = document.getElementById('dettaglio-badge');
             badgeContainer.innerHTML = badge && badge !== 'undefined' ? `<span style="background:var(--fucsia); color:white; padding: 5px 15px; border-radius: 20px; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing:1px;">${badge}</span>` : '';
@@ -3268,14 +3412,14 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
             }
 
             // Configuriamo il tasto "Aggiungi al Carrello" gigante
-            const btnAcquista = document.getElementById('dettaglio-btn-acquista');
-            btnAcquista.onclick = function() {
-                aggiungiProdotto(titolo, prezzo, galleria[0]);
-            };
+          // Apriamo la sezione e aggiorniamo il bottone
+    showSection('dettaglio-prodotto');
+    setTimeout(sincronizzaBottoniCard, 50); 
+};
 
             // Apriamo la sezione!
             showSection('dettaglio-prodotto');
-        };
+        
     </script>
 <div id="edit-modal">
         <div class="componi-box">
