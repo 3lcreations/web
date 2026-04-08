@@ -32,38 +32,38 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener('notificationclick', function(event) {
     event.notification.close();
 
-    // 1. Definiamo la base sicura
-    const base = 'https://3lcreations.github.io/web/';
-    let targetUrl = base;
-
-    // 2. Cerchiamo se c'è un link specifico nei dati inviati
-    const dataUrl = event.notification.data?.url || event.notification.data;
+    // 1. Definiamo l'unico posto dove deve andare l'app
+    const BASE_URL = 'https://3lcreations.github.io/web/';
     
-    if (dataUrl && typeof dataUrl === 'string' && dataUrl.includes('github.io')) {
-        targetUrl = dataUrl;
+    // 2. Cerchiamo di capire dove voleva mandarci Firebase
+    let linkDaAprire = event.notification.data?.url || 
+                       event.notification.data?.FCM_MSG?.notification?.click_action || 
+                       BASE_URL;
+
+    // 3. IL FILTRO DI SICUREZZA:
+    // Se il link non contiene "/web/", lo forziamo noi aggiungendolo.
+    // Trasformiamo "https://3lcreations.github.io/" in "https://3lcreations.github.io/web/"
+    if (typeof linkDaAprire === 'string' && !linkDaAprire.includes('/web/')) {
+        // Rimuoviamo la parte finale se c'è solo la slash e aggiungiamo /web/
+        let pulito = linkDaAprire.endsWith('/') ? linkDaAprire.slice(0, -1) : linkDaAprire;
+        linkDaAprire = pulito + '/web/';
     }
 
-    // 3. CORREZIONE FORZATA: Se il link non ha /web/, lo aggiungiamo
-    if (!targetUrl.includes('/web/')) {
-        targetUrl = targetUrl.replace('3lcreations.github.io/', '3lcreations.github.io/web/');
-    }
-
-    // 4. Assicuriamoci che finisca con / o con l'hash
-    if (!targetUrl.endsWith('/') && !targetUrl.includes('#')) {
-        targetUrl += '/';
-    }
+    console.log("Forzo l'apertura su:", linkDaAprire);
 
     event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
-            // Se c'è già una finestra aperta, navighiamo quella
-            for (var i = 0; i < windowClients.length; i++) {
-                var client = windowClients[i];
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
+            // Se c'è una finestra già aperta del sito, usiamo quella
+            for (let i = 0; i < clientList.length; i++) {
+                let client = clientList[i];
                 if ('focus' in client) {
-                    return client.navigate(targetUrl).then(c => c.focus());
+                    return client.navigate(linkDaAprire).then(c => c.focus());
                 }
             }
-            // Altrimenti ne apriamo una nuova
-            if (clients.openWindow) return clients.openWindow(targetUrl);
+            // Altrimenti ne apriamo una nuova di zecca con il link corretto
+            if (clients.openWindow) {
+                return clients.openWindow(linkDaAprire);
+            }
         })
     );
 });
