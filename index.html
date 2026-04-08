@@ -1590,6 +1590,14 @@ window.messaging = getMessaging(app);
     </footer>
 
     <script>
+        // FORZA L'AGGIORNAMENTO DEL SERVICE WORKER
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                for (let registration of registrations) {
+                    registration.update(); // Chiede al browser di cercare nuove versioni sul server
+                }
+            });
+        }
         window.attivaNotifiche = async function() {
     // Chiediamo il permesso al browser
     const permission = await Notification.requestPermission();
