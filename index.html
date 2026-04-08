@@ -1094,13 +1094,25 @@ window.storage = storage;
                 </p>
             </div>
 
-           <div id="user-dashboard" class="componi-box reveal" style="display:none; max-width: 400px; margin: 0 auto; text-align: center;">
+          <div id="user-dashboard" class="componi-box reveal" style="display:none; max-width: 400px; margin: 0 auto; text-align: center;">
                 <h3 style="color: var(--fucsia);">Ciao <span id="user-nome-display"></span>! ✨</h3>
-                <p style="font-size: 13px; color: var(--testo-chiaro); margin-bottom: 20px;">Il tuo carrello e i tuoi preferiti sono sincronizzati.</p>
+                <p style="font-size: 13px; color: var(--testo-chiaro); margin-bottom: 20px;">La tua area personale sincronizzata su tutti i dispositivi.</p>
                 
-                <button onclick="showSection('miei-ordini'); caricaOrdiniPersonali();" class="checkout-btn" style="width: 100%; margin-bottom: 15px;">I Miei Ordini 📦</button>
+                <button onclick="openCart()" class="checkout-btn" style="width: 100%; margin-bottom: 15px;">
+                    Il Mio Carrello 🛒
+                </button>
+
+                <button onclick="openWishlist()" class="checkout-btn" style="width: 100%; margin-bottom: 15px; background-color: #ffffff; color: var(--fucsia); border: 2px solid var(--fucsia); box-shadow: 0 4px 15px rgba(216, 27, 96, 0.1);">
+                    I Miei Preferiti ❤️
+                </button>
                 
-                <button onclick="logoutCliente()" class="checkout-btn" style="background-color: #777; width: auto; padding: 10px 30px;">Esci dall'account</button>
+                <button onclick="showSection('miei-ordini'); caricaOrdiniPersonali();" class="checkout-btn" style="width: 100%; margin-bottom: 15px;">
+                    I Miei Ordini 📦
+                </button>
+                
+                <button onclick="logoutCliente()" class="checkout-btn" style="background-color: #777; width: auto; padding: 10px 30px; box-shadow: none;">
+                    Esci dall'account
+                </button>
             </div>
         </div>
 <div id="miei-ordini" class="content-section">
