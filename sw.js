@@ -14,28 +14,28 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// === GESTIONE NOTIFICHE (Anti-Duplicato) ===
+// === GESTIONE NOTIFICHE (Versione Anti-Duplicato) ===
 messaging.onBackgroundMessage(function(payload) {
-  console.log('Notifica ricevuta in background:', payload);
+    console.log('Notifica ricevuta:', payload);
 
-  // Se Firebase ha già mostrato la notifica (perché il payload conteneva "notification"), ci fermiamo qui
-  if (payload.notification && !payload.data) {
-      return; 
-  }
+    // Se Firebase ha già i dati della notifica nel payload, 
+    // il browser spesso la mostra da solo. Se noi chiamiamo showNotification, ne escono due.
+    // Usiamo il TAG nel codice (non serve metterlo nella console) per schiacciarle in una sola.
+    
+    const notificationTitle = payload.notification?.title || "3L Creations";
+    const notificationOptions = {
+        body: payload.notification?.body || "C'è una novità per te! ✨",
+        icon: 'favicon.png',
+        badge: 'favicon.png',
+        tag: '3l-creations-unique-tag', // <--- Questo "tag" nel codice forza il telefono a mostrare UNA sola notifica alla volta
+        renotify: true,
+        data: {
+            url: payload.data?.url || 'https://3lcreations.github.io/web/'
+        }
+    };
 
-  const notificationTitle = payload.notification?.title || "3L Creations";
-  const notificationOptions = {
-    body: payload.notification?.body || "C'è una novità per te! ✨",
-    icon: 'favicon.png',
-    badge: 'favicon.png',
-    tag: '3l-news', // <--- FONDAMENTALE: Impedisce i duplicati "sovrapponendo" le notifiche uguali
-    renotify: true, // Se arriva una nuova, vibra di nuovo ma non crea un fumetto extra
-    data: {
-      url: payload.data?.url || 'https://3lcreations.github.io/web/'
-    }
-  };
-
-  return self.registration.showNotification(notificationTitle, notificationOptions);
+    // Verifichiamo se dobbiamo mostrarla noi o se è già apparsa
+    return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 // === COSA SUCCEDE AL CLICK SULLA NOTIFICA ===
