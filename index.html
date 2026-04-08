@@ -94,6 +94,50 @@ window.storage = storage;
 
 
     <style>
+        /* === TASTO INSTALLA APP (ALTO A DESTRA) === */
+        .install-app-btn-top {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 95; /* Sta sopra al resto ma sotto ai menu a tendina */
+            background: linear-gradient(45deg, var(--fucsia), var(--rosa-chiaro));
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(216, 27, 96, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+        }
+        
+        .install-app-btn-top:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(216, 27, 96, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            /* Su telefono lo facciamo leggermente più compatto */
+            .install-app-btn-top {
+                padding: 8px 15px;
+                font-size: 12px;
+                top: 15px;
+                right: 15px;
+            }
+        }
+        /* Animazione per il fumetto iOS */
+        #ios-install-prompt {
+            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes slideUp {
+            from { bottom: -100px; opacity: 0; }
+            to { bottom: 20px; opacity: 1; }
+        }
         /* === SELETTORE QUANTITÀ (CARDS E CARRELLO) === */
         .buy-button-container {
             width: 100%;
@@ -653,7 +697,7 @@ window.storage = storage;
         .order-timeline::before {
             content: '';
             position: absolute;
-            top: 21px; /* (Altezza icona 42px / 2) */
+            top: 17px; /* CENTRO PERFETTO: 36px/2 = 18px. Meno 1px (metà linea) = 17px */
             left: 12.5%; /* Parte dal centro del primo step (100% / 4 / 2) */
             right: 12.5%; /* Finisce al centro dell'ultimo step */
             height: 2px;
@@ -664,7 +708,7 @@ window.storage = storage;
         /* Linea fucsia che avanza centrata matematicamente */
         .timeline-progress {
             position: absolute;
-            top: 21px;
+            top: 17px; /* CENTRO PERFETTO */
             left: 12.5%;
             height: 2px;
             background-color: var(--fucsia);
@@ -800,12 +844,13 @@ window.storage = storage;
         <a href="#crea-pelosetto" onclick="showSection('crea-pelosetto'); return false;">🐾 Crea maglia pelosetto</a>
         <a href="#crea-pochette" onclick="showSection('crea-pochette'); return false;">👝 Crea Pochette</a>
         <a href="#crea-borsa" onclick="showSection('crea-borsa'); return false;">👜 Crea Borsa</a>
-        
+
         <div class="menu-title">Supporto e Info</div>
         <a href="#contatti" onclick="showSection('contatti'); return false;">✉️ Contatti</a>
         <a href="#faq" onclick="showSection('faq'); return false;">❓ Domande Frequenti</a>
         <a href="#legale" onclick="showSection('legale'); return false;">📄 Note Legali</a>
 
+        
     </div>
 
     <div id="myCartSidebar" class="cart-sidebar">
@@ -908,7 +953,9 @@ window.storage = storage;
 
     <div id="main">
         <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i></button>
-
+<button id="btn-installa-app-top" class="install-app-btn-top" style="display: none;">
+            <i class="fas fa-download"></i> Installa App
+        </button>
         <div id="home" class="content-section active">
             <header class="reveal">
                 <video src="logoanm.mp4" autoplay loop muted playsinline class="header-video"></video>
@@ -3221,6 +3268,49 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
             calcolaDataConsegna();
             observeElements(); 
             checkCookies();
+           // === LOGICA TASTO INSTALLA APP (ALTO A DESTRA) ===
+            const installBtn = document.getElementById('btn-installa-app-top');
+            const iosPrompt = document.getElementById('ios-install-prompt');
+            let deferredPrompt;
+
+            // Rileva se è un dispositivo Apple (iPhone/iPad)
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            // Rileva se l'utente sta GIÀ usando l'App installata
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+            if (!isStandalone && installBtn) {
+                // SE È UN IPHONE
+                if (isIOS) {
+                    installBtn.style.display = 'flex';
+                    
+                    installBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        iosPrompt.style.display = 'block'; 
+                        setTimeout(() => { iosPrompt.style.display = 'none'; }, 10000);
+                    });
+                } 
+                
+                // SE È ANDROID / CHROME
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    deferredPrompt = e; 
+                    
+                    installBtn.style.display = 'flex';
+
+                    installBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        deferredPrompt.prompt(); 
+                        
+                        deferredPrompt.userChoice.then((choiceResult) => {
+                            if (choiceResult.outcome === 'accepted') {
+                                showToast("Grazie per aver installato l'App! 🎉");
+                                installBtn.style.display = 'none';
+                            }
+                            deferredPrompt = null;
+                        });
+                    });
+                });
+            }
             // === NOTIFICA CARRELLO ABBANDONATO ===
             // Aspettiamo 2 secondi per far sparire lo splash screen e dare il tempo all'utente di guardare la home
             setTimeout(() => {
@@ -3608,6 +3698,12 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
             
             <button onclick="salvaModificaSuFirebase()" class="checkout-btn" style="width: 100%; padding: 12px; font-size: 15px;">Salva Modifiche <i class="fas fa-save"></i></button>
         </div>
+    </div>
+    <div id="ios-install-prompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 15px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.2); border: 2px solid var(--rosa-chiaro); z-index: 999999; width: 90%; max-width: 350px; text-align: center; font-size: 14px; color: var(--testo-scuro);">
+        <span onclick="document.getElementById('ios-install-prompt').style.display='none'" style="position: absolute; top: 5px; right: 10px; font-size: 20px; color: var(--testo-chiaro); cursor: pointer;">&times;</span>
+        <strong style="color: var(--fucsia);">Installa l'App su iPhone 🍏</strong><br><br>
+        1. Tocca l'icona <strong>Condividi</strong> <i class="fas fa-external-link-square-alt" style="color: #007aff;"></i> in basso nel tuo browser.<br>
+        2. Scorri e seleziona <strong>"Aggiungi alla schermata Home"</strong> <i class="fas fa-plus-square" style="color: var(--testo-scuro);"></i>.
     </div>
 </body>
 </html>
