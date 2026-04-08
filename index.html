@@ -991,11 +991,14 @@ window.storage = storage;
         <i class="fas fa-chevron-up"></i>
     </div>
 
-    <div id="main">
-        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i></button>
-<button id="btn-installa-app-top" class="install-app-btn-top" style="display: none;">
-            <i class="fas fa-download"></i> Installa App
-        </button>
+   <div id="main">
+            <div style="display: flex; justify-content: space-between; align-items: center; position: sticky; top: 15px; z-index: 95; margin-bottom: 20px;">
+                <button class="openbtn" onclick="openNav()" style="margin-bottom: 0; position: relative; top: 0;"><i class="fas fa-bars"></i></button>
+                
+                <button id="btn-installa-app-top" class="install-app-btn-top" style="display: none; position: relative; top: 0; right: 0;">
+                    <i class="fas fa-download"></i> Installa App
+                </button>
+            </div>
         <div id="home" class="content-section active">
             <header class="reveal">
                 <video src="logoanm.mp4" autoplay loop muted playsinline class="header-video"></video>
@@ -2344,20 +2347,21 @@ window.storage = storage;
             if (navigator.vibrate) { navigator.vibrate(40); }
         };
 
-        // === 2. MOTORE CONDIVISIONE NATIVA (WEB SHARE API) ===
+       // === 2. MOTORE CONDIVISIONE NATIVA (WEB SHARE API) ===
         window.condividiProdotto = function() {
             const titolo = document.getElementById('dettaglio-titolo').innerText;
             
-            // Se il dispositivo supporta la condivisione nativa (WhatsApp, Instagram, ecc)
+            // CREA IL LINK MAGICO (es. www.tuosito.it/#prodotto=NomeProdotto)
+            const linkPersonale = window.location.origin + window.location.pathname + '#prodotto=' + encodeURIComponent(titolo);
+            
             if (navigator.share) {
                 navigator.share({
                     title: 'Guarda su 3L Creations',
                     text: `Ho trovato questo prodotto stupendo fatto a mano: ${titolo}! 😍 Guarda qui:`,
-                    url: window.location.href
+                    url: linkPersonale
                 }).catch((error) => console.log('Condivisione annullata', error));
             } else {
-                // Se è da un PC vecchio che non ha la condivisione, copia il link
-                navigator.clipboard.writeText(window.location.href);
+                navigator.clipboard.writeText(linkPersonale);
                 showToast("Link copiato! Pronta per condividerlo. 🔗");
             }
         };
@@ -3328,9 +3332,40 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 aggiornaWishlistUI();
             }
         };
+       // === FUNZIONE PER APRIRE PRODOTTI CONDIVISI DA LINK ===
+        window.apriProdottoCondiviso = async function(nomeProdotto) {
+            showToast("Cerco il prodotto... ⏳");
+            try {
+                const querySnapshot = await window.fbGetDocs(window.fbCollection(window.db, "prodotti"));
+                let trovato = false;
+                
+                querySnapshot.forEach((doc) => {
+                    const riga = doc.data();
+                    if (riga.titolo === nomeProdotto) {
+                        trovato = true;
+                        const immagine = riga.immagine || 'logo.png';
+                        const prezzoNum = parseFloat(riga.prezzo) || 0;
+                        const badgeTesto = riga.badge ? riga.badge.replace(/'/g, "\\'") : '';
+                        const descrizioneText = riga.descrizione ? riga.descrizione.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n') : '';
+                        const galleriaStringa = riga.galleria ? riga.galleria.join(',') : '';
+
+                        // Trovato! Apre la pagina del dettaglio
+                        window.apriDettaglioProdotto(riga.titolo, prezzoNum, badgeTesto, descrizioneText, immagine, galleriaStringa);
+                    }
+                });
+
+                if (!trovato) {
+                    showToast("Prodotto non trovato o esaurito. 😔");
+                    showSection('acquista');
+                }
+            } catch(e) {
+                console.error(e);
+                showSection('acquista');
+            }
+        };
+
         // === INIZIALIZZAZIONE AL CARICAMENTO ===
         window.addEventListener('load', function() {
-          
             setTimeout(function() {
                 const splash = document.getElementById('splash-screen');
                 if (splash) {
@@ -3339,8 +3374,21 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 }
             }, 800);
 
-            var hash = window.location.hash.substring(1); 
-            if (hash) showSection(hash, false); else showSection('home', false); 
+            // --- GESTIONE DEI LINK MAGICI E DELLE PAGINE ---
+            var hash = window.location.hash; 
+            
+            if (hash.startsWith('#prodotto=')) {
+                // È entrata un'amica tramite link condiviso!
+                let nomeCodificato = hash.replace('#prodotto=', '');
+                let nomeProdotto = decodeURIComponent(nomeCodificato);
+                window.apriProdottoCondiviso(nomeProdotto);
+            } else if (hash && hash !== '#dettaglio-prodotto') {
+                // Navigazione normale
+                showSection(hash.substring(1), false); 
+            } else {
+                // Nessun link specifico, apri la Home
+                showSection('home', false); 
+            }
             
             caricaDatiSpedizioneSalvata(); 
             caricaCarrello(); 
@@ -3349,21 +3397,18 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
             calcolaDataConsegna();
             observeElements(); 
             checkCookies();
-           // === LOGICA TASTO INSTALLA APP (ALTO A DESTRA) ===
+
+            // === LOGICA TASTO INSTALLA APP (ALTO A DESTRA) ===
             const installBtn = document.getElementById('btn-installa-app-top');
             const iosPrompt = document.getElementById('ios-install-prompt');
             let deferredPrompt;
 
-            // Rileva se è un dispositivo Apple (iPhone/iPad)
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            // Rileva se l'utente sta GIÀ usando l'App installata
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
             if (!isStandalone && installBtn) {
-                // SE È UN IPHONE
                 if (isIOS) {
                     installBtn.style.display = 'flex';
-                    
                     installBtn.addEventListener('click', (e) => {
                         e.preventDefault();
                         iosPrompt.style.display = 'block'; 
@@ -3371,11 +3416,9 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                     });
                 } 
                 
-                // SE È ANDROID / CHROME
                 window.addEventListener('beforeinstallprompt', (e) => {
                     e.preventDefault();
                     deferredPrompt = e; 
-                    
                     installBtn.style.display = 'flex';
 
                     installBtn.addEventListener('click', (e) => {
@@ -3392,31 +3435,24 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                     });
                 });
             }
+
             // === NOTIFICA CARRELLO ABBANDONATO ===
-            // Aspettiamo 2 secondi per far sparire lo splash screen e dare il tempo all'utente di guardare la home
             setTimeout(() => {
-                // Controlla se il carrello ha roba e se NON abbiamo già mostrato il messaggio in questa sessione
                 if (carrello && carrello.length > 0 && !sessionStorage.getItem('avvisoCarrelloMostrato')) {
-                    
                     let testoArticoli = carrello.length === 1 ? "un articolo che ti aspetta" : carrello.length + " articoli che ti aspettano";
-                    
-                    // Mostra il toast magico
                     showToast(`Bentornato! Hai ancora ${testoArticoli} nel carrello. ✨`);
                     
-                    // Fa rimbalzare l'icona del carrello per attirare l'attenzione
                     const cartBtn = document.querySelector('.floating-cart');
                     if(cartBtn) {
                         cartBtn.classList.remove('bounce');
                         void cartBtn.offsetWidth; 
                         cartBtn.classList.add('bounce');
                     }
-
-                    // Registra che l'abbiamo mostrato, così non lo stressiamo più per questa visita
                     sessionStorage.setItem('avvisoCarrelloMostrato', 'true');
                 }
             }, 2500);
 
-            // Carichiamo tutte le categorie da Firebase
+            // Caricamenti Firebase
             window.caricaEvidenza();
             window.caricaImpostazioniSito();
             window.caricaProdottiFirebase('collane', 'lista-prodotti');
@@ -3425,11 +3461,17 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
             window.caricaProdottiFirebase('perline', 'lista-perline');
         });
 
+        // Gestione quando l'utente usa i tasti "Avanti" e "Indietro" del telefono
         window.addEventListener('popstate', function() {
-            var hash = window.location.hash.substring(1);
-            showSection(hash || 'home', false);
+            var hash = window.location.hash;
+            
+            if (hash.startsWith('#prodotto=')) {
+                let nomeProdotto = decodeURIComponent(hash.replace('#prodotto=', ''));
+                window.apriProdottoCondiviso(nomeProdotto);
+            } else {
+                showSection((hash ? hash.substring(1) : 'home'), false);
+            }
         });
-
         // === FUNZIONI PER PRODOTTI PERSONALIZZATI ===
        window.aggiornaAnteprima = function(idImg, chiaveImmagine) {
             const imgElement = document.getElementById(idImg);
