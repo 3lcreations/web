@@ -45,7 +45,8 @@
       const storage = getStorage(app);
       window.db = getFirestore(app);
       window.auth = getAuth(app);
-      
+      window.messaging = getMessaging(app);
+      window.fbGetToken = getToken; // Questa riga rende getToken disponibile ovunque!
       // Esportiamo le funzioni per usarle nel JS normale
       window.fbResetPwd = sendPasswordResetEmail;
       window.fbCollection = collection;
@@ -3841,8 +3842,9 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                     // 2. Recuperiamo il Service Worker che abbiamo creato prima
                     const registration = await navigator.serviceWorker.getRegistration();
                     
-                    // 3. GENERIAMO IL TOKEN (INCOLLA QUI LA TUA CHIAVE VAPID!)
-                    const currentToken = await getToken(window.messaging, { 
+            
+                    // 3. GENERIAMO IL TOKEN (Usando il nuovo nome fbGetToken)
+                    const currentToken = await window.fbGetToken(window.messaging, { 
                         vapidKey: 'BBn1hAiAWWsnQSrjQOio_87NSezuzX1H4AM340qMqO5NizmKfSLmR7auQPjwV-dtDly-XH1EjFh0d2Tw_WRGj38', 
                         serviceWorkerRegistration: registration 
                     });
@@ -3904,38 +3906,6 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 </label>
             </div>
 
-           <label class="label-admin">Aggiorna Foto (Sostituisce le attuali)</label>
-<div class="file-upload-wrapper" style="margin-top: 5px;">
-    <input type="file" id="edit-immagine-file" class="file-upload-input" accept="image/*" multiple onchange="aggiornaNomeFile(this, 'nome-edit-foto')">
-    <label for="edit-immagine-file" class="file-upload-btn" style="background-color: var(--rosa-chiaro); color: var(--testo-scuro);">
-        <i class="fas fa-sync-alt"></i> Scegli nuove foto
-    </label>
-    <span id="nome-edit-foto" class="file-upload-name">Lascia vuoto per non cambiare</span>
-</div>
-            
-            <button onclick="salvaModificaSuFirebase()" class="checkout-btn" style="width: 100%; padding: 12px; font-size: 15px;">Salva Modifiche <i class="fas fa-save"></i></button>
-        </div>
-    </div>
-    <div id="ios-install-prompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 15px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.2); border: 2px solid var(--rosa-chiaro); z-index: 999999; width: 90%; max-width: 350px; text-align: center; font-size: 14px; color: var(--testo-scuro);">
-        <span onclick="document.getElementById('ios-install-prompt').style.display='none'" style="position: absolute; top: 5px; right: 10px; font-size: 20px; color: var(--testo-chiaro); cursor: pointer;">&times;</span>
-        <strong style="color: var(--fucsia);">Installa l'App su iPhone 🍏</strong><br><br>
-        1. Tocca l'icona <strong>Condividi</strong> <i class="fas fa-external-link-square-alt" style="color: #007aff;"></i> in basso nel tuo browser.<br>
-        2. Scorri e seleziona <strong>"Aggiungi alla schermata Home"</strong> <i class="fas fa-plus-square" style="color: var(--testo-scuro);"></i>.
-    </div>
-    <div class="bottom-nav-bar">
-        <div class="bottom-nav-item active" onclick="showSection('home'); vibra();"><i class="fas fa-home"></i><span>Home</span></div>
-        <div class="bottom-nav-item" onclick="showSection('acquista'); vibra();"><i class="fas fa-search"></i><span>Esplora</span></div>
-        <div class="bottom-nav-item" onclick="openWishlist(); vibra();"><i class="fas fa-heart"></i><span>Preferiti</span><div class="nav-badge" id="nav-wish-badge">0</div></div>
-        <div class="bottom-nav-item" onclick="showSection('profilo'); vibra();"><i class="fas fa-user"></i><span>Profilo</span></div>
-    </div>
-
-    <div id="offline-screen">
-        <i class="fas fa-paw offline-icon"></i>
-        <h2 style="color: var(--fucsia); border: none; margin-bottom: 10px;">Ops! Sei Offline 🐾</h2>
-        <p style="color: var(--testo-chiaro); font-size: 15px;">Sembra che il tuo cagnolino abbia morso il cavo del Wi-Fi.<br>Controlla la tua connessione internet per continuare lo shopping su 3L Creations!</p>
-    </div>
-</body>
-</html>
            <label class="label-admin">Aggiorna Foto (Sostituisce le attuali)</label>
 <div class="file-upload-wrapper" style="margin-top: 5px;">
     <input type="file" id="edit-immagine-file" class="file-upload-input" accept="image/*" multiple onchange="aggiornaNomeFile(this, 'nome-edit-foto')">
