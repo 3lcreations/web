@@ -1086,6 +1086,12 @@ window.messaging = getMessaging(app);
                     <label for="telefono">Numero di Cellulare *</label>
                     <input type="tel" id="telefono" required placeholder="Es. 333 1234567">
                 </div>
+                
+                <div style="background: #fff9fb; padding: 15px; border-radius: 12px; border: 2px dashed var(--rosa-chiaro); text-align: center; margin-bottom: 15px; margin-top: 15px;">
+                    <span style="font-size: 12px; color: var(--testo-chiaro); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Totale da Pagare</span>
+                    <div id="checkout-totale-dinamico" style="font-size: 26px; font-weight: bold; color: var(--fucsia); margin-top: 5px;">€0.00</div>
+                </div>
+
                 <button type="submit" class="checkout-btn" style="margin-top: 10px;">
                     Paga in Sicurezza <i class="fas fa-lock"></i>
                 </button>
@@ -2630,7 +2636,7 @@ window.messaging = getMessaging(app);
                 rigaSpedizione.style.display = "flex";
             }
 
-            // --- CALCOLO TOTALE E BARRA OMAGGIO ---
+           // --- CALCOLO TOTALE E BARRA OMAGGIO ---
             let totaleScontrino = subtotale + costoSpedizione; 
             
             // LA MAGIA: Ora passiamo alla barra omaggio il subtotale PIÙ la spedizione!
@@ -2641,6 +2647,12 @@ window.messaging = getMessaging(app);
             subtotalLabel.innerText = `€${subtotale.toFixed(2)}`;
             totalLabel.innerText = `€${totaleScontrino.toFixed(2)}`;
             subtotalContainer.style.display = "flex";
+
+            // AGGIORNAMENTO DEL NUMERONE NEL CHECKOUT
+            const checkoutTotaleDinamico = document.getElementById('checkout-totale-dinamico');
+            if (checkoutTotaleDinamico) {
+                checkoutTotaleDinamico.innerText = `€${totaleScontrino.toFixed(2)}`;
+            }
         }
 
         window.mostraFormSpedizione = function() {
