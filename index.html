@@ -4119,22 +4119,28 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 }
             }
         });
-        // === 1. RADAR CARRELLO ABBANDONATO (App in background) ===
+    // === 1. RADAR CARRELLO ABBANDONATO (Versione con Timer di 4 Ore) ===
         document.addEventListener("visibilitychange", function() {
-            // Se l'utente minimizza l'app o cambia scheda
-            if (document.visibilityState === 'hidden' && carrello.length > 0) {
+            // Se l'utente minimizza l'app o cambia scheda e ha roba nel carrello
+            if (document.visibilityState === 'hidden' && carrello && carrello.length > 0) {
                 
-                // Segniamo l'orario esatto in cui se ne è andata
+                // Segniamo l'orario di uscita per il popup del rientro
                 localStorage.setItem('orarioAbbandono', Date.now());
 
-                // Controlliamo di non averle già inviato la notifica oggi (per evitare di essere pesanti)
-                let oggi = new Date().toDateString();
-                if (localStorage.getItem('ultimoAvvisoPush') !== oggi && window.Notification && Notification.permission === 'granted') {
+                // Timer Anti-Spam: controlliamo quando è stata inviata l'ultima notifica
+                let oraAttuale = Date.now();
+                let ultimoAvviso = localStorage.getItem('ultimoAvvisoPushTimer') || 0;
+                
+                // Quanti millisecondi devono passare?
+                // 4 ore = 14400000 ms. 
+                // PER FARE I TEST ORA, cambia 14400000 con 10000 (così aspetta solo 10 secondi!)
+                let tempoDiAttesa = 14400000; 
+
+                if ((oraAttuale - ultimoAvviso) > tempoDiAttesa && window.Notification && Notification.permission === 'granted') {
                     
-                    // Spara la notifica push in tempo reale!
                     navigator.serviceWorker.ready.then(function(registration) {
                         registration.showNotification("Hai dimenticato qualcosa? 🎀", {
-                            body: "Il tuo carrello con " + carrello.length + " articoli ti aspetta su 3L Creations.",
+                            body: "Il tuo carrello con " + carrello.length + " articoli ti aspetta al sicuro su 3L Creations.",
                             icon: "favicon.png",
                             badge: "favicon.png",
                             tag: "carrello-abbandonato",
@@ -4142,8 +4148,8 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                         });
                     });
                     
-                    // Registriamo che per oggi l'abbiamo avvisata
-                    localStorage.setItem('ultimoAvvisoPush', oggi);
+                    // Resettiamo il timer segnando che l'abbiamo appena avvisata
+                    localStorage.setItem('ultimoAvvisoPushTimer', Date.now());
                 }
             }
         });
