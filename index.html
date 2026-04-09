@@ -9,6 +9,8 @@
       gtag('config', 'G-N8W4K0XD7M');
     </script>
    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+   <script src="https://geowidget.easypack24.net/js/sdk-for-javascript.js"></script>
+    <link rel="stylesheet" href="https://geowidget.easypack24.net/css/easypack.css"/>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -830,6 +832,37 @@ window.messaging = getMessaging(app);
             justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box;
         }
         .offline-icon { font-size: 70px; color: #ccc; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
+        /* === STILI PERSONALIZZATI PER MAPPA INPOST === */
+        /* Vestiamo la mappa esterna con il tema 3L Creations */
+        #easypack-widget {
+            border-radius: 20px !important;
+            overflow: hidden !important;
+            border: 3px solid var(--fucsia) !important;
+            box-shadow: 0 15px 40px rgba(216, 27, 96, 0.4) !important;
+        }
+        /* Aggiungiamo l'effetto sfocatura (blur) allo sfondo scuro dietro la mappa */
+        .easypack-widget-modal-bg {
+            background-color: rgba(0,0,0,0.6) !important;
+            backdrop-filter: blur(5px) !important;
+        }
+        /* === FORZA IL TEMA FUCSIA DENTRO LA MAPPA INPOST === */
+        #inpost-map-container .easypack-widget .btn,
+        #inpost-map-container .easypack-widget button,
+        #inpost-map-container .easypack-widget .search-block .btn-search,
+        .easypack-widget-app .btn-primary,
+        .easypack-widget-app .point-select-button {
+            background-color: var(--fucsia) !important;
+            border-color: var(--fucsia) !important;
+            color: white !important;
+            box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3) !important;
+            border-radius: 30px !important;
+        }
+
+        #inpost-map-container .easypack-widget .btn:hover,
+        .easypack-widget-app .btn-primary:hover {
+            background-color: #ad144d !important; /* Fucsia scuro al passaggio del mouse */
+            border-color: #ad144d !important;
+        }
     </style>
 </head>
 <body>
@@ -865,7 +898,16 @@ window.messaging = getMessaging(app);
             </button>
         </div>
     </div>
-
+<div id="custom-locker-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999999; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="background: #fff; padding: 15px; border-radius: 25px; width: 90%; max-width: 500px; height: 80vh; max-height: 600px; box-shadow: 0 15px 40px rgba(216, 27, 96, 0.4); border: 3px solid var(--fucsia); display: flex; flex-direction: column; position: relative;">
+            
+            <span onclick="chiudiMappaLocker()" style="position: absolute; top: -15px; right: -15px; background: var(--fucsia); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 22px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 10;">&times;</span>
+            
+            <h3 style="color: var(--fucsia); margin-top: 5px; margin-bottom: 10px; text-align: center; font-size: 18px;">Scegli il tuo Locker 📍</h3>
+            
+            <div id="inpost-map-container" style="flex-grow: 1; width: 100%; border-radius: 15px; overflow: hidden; border: 1px solid #eee;"></div>
+        </div>
+    </div>
     <div id="cookie-banner">
         <div class="cookie-text">Utilizziamo i cookie tecnici per far funzionare correttamente il carrello e garantirti la migliore esperienza sul nostro sito.</div>
         <button class="cookie-btn" onclick="acceptCookies()">Ho capito</button>
@@ -974,8 +1016,8 @@ window.messaging = getMessaging(app);
                     <span id="cart-subtotal-price">€0.00</span>
                 </div>
                 <div class="cart-shipping-line" id="cart-shipping-container" style="display: none;">
-                    <span>Spedizione Fissa:</span>
-                    <span>€8.00</span>
+                    <span>Spedizione:</span>
+<span id="label-prezzo-spedizione-carrello">€8.00</span>
                 </div>
                 <div class="cart-total-line">
                     <span>Totale (Sped. inc.):</span>
@@ -988,10 +1030,11 @@ window.messaging = getMessaging(app);
             </div>
         </div>
 
-        <div id="checkout-form-view" class="checkout-form-container">
+      <div id="checkout-form-view" class="checkout-form-container">
             <button class="back-to-cart-btn" onclick="nascondiFormSpedizione()"><i class="fas fa-chevron-left"></i> Torna al carrello</button>
             <h3 style="color: var(--fucsia); margin-top: 0; margin-bottom: 20px;">Dati di Spedizione</h3>
             <form id="shipping-form" onsubmit="inviaOrdineAPayPal(event)">
+                
                 <div class="form-row">
                     <div class="form-group" style="flex: 1;">
                         <label for="nome">Nome *</label>
@@ -1002,10 +1045,33 @@ window.messaging = getMessaging(app);
                         <input type="text" id="cognome" required placeholder="Es. Rossi">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="indirizzo">Indirizzo e Civico *</label>
+
+                <div class="form-group" style="margin-bottom: 20px; background: #fff5f8; padding: 15px; border-radius: 12px; border: 1px solid var(--rosa-chiaro);">
+                    <label style="font-weight: 600; color: var(--fucsia); margin-bottom: 10px; font-size: 14px;">Dove vuoi ricevere il pacco? 📦</label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                       <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; color: var(--testo-scuro);">
+    <input type="radio" name="tipo_spedizione" value="Domicilio" checked onchange="cambiaTipoSpedizione()" style="width: auto; accent-color: var(--fucsia); transform: scale(1.2);"> 
+    A casa mia (<strong>€8.00</strong>)
+</label>
+<label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; color: var(--testo-scuro);">
+    <input type="radio" name="tipo_spedizione" value="Locker" onchange="cambiaTipoSpedizione()" style="width: auto; accent-color: var(--fucsia); transform: scale(1.2);"> 
+    In un Locker / Punto di ritiro (<strong>€5.00</strong>)
+</label>
+                    </div>
+                </div>
+
+               <div class="form-group">
+                    <label id="label-indirizzo" for="indirizzo">Indirizzo e Civico *</label>
+                    
+                    <div id="locker-map-container" style="display: none; margin-bottom: 10px;">
+                        <button type="button" onclick="apriMappaLocker()" class="checkout-btn" style="background-color: var(--fucsia); color: white; padding: 12px; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3);">
+                            <i class="fas fa-map-marker-alt"></i> Scegli Locker sulla Mappa
+                        </button>
+                    </div>
+
                     <input type="text" id="indirizzo" required placeholder="Es. Via Roma, 12">
                 </div>
+
                 <div class="form-row">
                     <div class="form-group" style="flex: 2;">
                         <label for="citta">Città *</label>
@@ -2543,13 +2609,38 @@ window.messaging = getMessaging(app);
                     </div>
                 `;
             });
-            window.aggiornaBarreProgressoOmaggio(subtotale);
+         // --- CALCOLO SPEDIZIONE E GESTIONE VISIBILITÀ ---
+            let isCheckoutVisible = document.getElementById('checkout-form-view').style.display === 'block';
+            let costoSpedizione = 0;
+            
+            const labelSped = document.getElementById('label-prezzo-spedizione-carrello');
+            const rigaSpedizione = document.getElementById('cart-shipping-container');
+            
+            // 1. Se siamo nel carrello base: nascondiamo i costi di spedizione!
+            if (!isCheckoutVisible) {
+                if(labelSped) labelSped.innerHTML = "<span style='font-size:11px; color:#888; font-style:italic;'>Calcolata al checkout</span>";
+                rigaSpedizione.style.display = "flex";
+                costoSpedizione = 0; // Non la sommiamo ancora al totale
+            } 
+            // 2. Se siamo nel modulo di pagamento: applichiamo 8€ o 5€
+            else {
+                let radioSpedizione = document.querySelector('input[name="tipo_spedizione"]:checked');
+                costoSpedizione = (radioSpedizione && radioSpedizione.value === 'Locker') ? 5.00 : 8.00;
+                if(labelSped) labelSped.innerText = `€${costoSpedizione.toFixed(2)}`;
+                rigaSpedizione.style.display = "flex";
+            }
 
-            let totaleScontrino = subtotale + 8.00; // 8.00 è costoSpedizioneFisso
+            // --- CALCOLO TOTALE E BARRA OMAGGIO ---
+            let totaleScontrino = subtotale + costoSpedizione; 
+            
+            // LA MAGIA: Ora passiamo alla barra omaggio il subtotale PIÙ la spedizione!
+            if(window.aggiornaBarreProgressoOmaggio) {
+                window.aggiornaBarreProgressoOmaggio(totaleScontrino);
+            }
+
             subtotalLabel.innerText = `€${subtotale.toFixed(2)}`;
             totalLabel.innerText = `€${totaleScontrino.toFixed(2)}`;
             subtotalContainer.style.display = "flex";
-            shippingContainer.style.display = "flex";
         }
 
         window.mostraFormSpedizione = function() {
@@ -2562,7 +2653,7 @@ window.messaging = getMessaging(app);
             document.getElementById('cart-content-view').style.display = 'flex';
         }
 
-        window.inviaOrdineAPayPal = function(event) {
+       window.inviaOrdineAPayPal = function(event) {
             event.preventDefault();
             salvaDatiSpedizione();
 
@@ -2572,22 +2663,29 @@ window.messaging = getMessaging(app);
             let citta = document.getElementById('citta').value;
             let cap = document.getElementById('cap').value;
             let telefono = document.getElementById('telefono').value;
-
-            let totaleOrdine = 8.00; 
+            
+            // AGGIUNGIAMO LA LETTURA DEL TIPO DI SPEDIZIONE E DEL COSTO (Scritto una volta sola!)
+            let tipoSpedizione = document.querySelector('input[name="tipo_spedizione"]:checked').value;
+            let costoSpedizione = (tipoSpedizione === 'Locker') ? 5.00 : 8.00;
+            
+            let totaleOrdine = costoSpedizione; 
             carrello.forEach(item => totaleOrdine += (item.prezzo * item.quantita));
             
             let ordineInSospeso = {
                 carrello: carrello,
                 totale: totaleOrdine,
-                spedizione: { nome, cognome, indirizzo, citta, cap, telefono }
+                // INSERIAMO IL TIPO NEI DATI CHE VANNO A FIREBASE
+                spedizione: { tipo: tipoSpedizione, nome, cognome, indirizzo, citta, cap, telefono }
             };
             localStorage.setItem('ordineInSospeso3L', JSON.stringify(ordineInSospeso));
 
-            let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=luciaxxxo@alice.it&currency_code=EUR&handling_cart=8.00`;
+            let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=luciaxxxo@alice.it&currency_code=EUR&handling_cart=${costoSpedizione.toFixed(2)}`;
             paypalUrl += `&return=${encodeURIComponent('https://3lcreations.github.io/web/#grazie')}`;
             paypalUrl += `&cancel_return=${encodeURIComponent('https://3lcreations.github.io/web/')}`;
             paypalUrl += `&cbt=${encodeURIComponent("Torna al negozio 3L Creations")}`;
             paypalUrl += `&rm=2`;
+
+            // ... IL RESTO DELLA FUNZIONE RIMANE IDENTICO ...
 
             carrello.forEach((item, index) => {
                 let i = index + 1; 
@@ -4169,7 +4267,7 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 }
             }
         });
-      window.aggiornaBarreProgressoOmaggio = function(subtotale) {
+     window.aggiornaBarreProgressoOmaggio = function(subtotale) {
             const soglia = 50; // La tua soglia
             const percentuale = Math.min((subtotale / soglia) * 100, 100);
             const mancano = (soglia - subtotale).toFixed(2);
@@ -4188,10 +4286,10 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 wrapperCart.style.display = 'none';
             }
 
-            // Aggiornamento Testi e Reset Festa
+            // Aggiornamento Testi (con nota sulla spedizione) e Reset Festa
             let messaggio = "";
             if (percentuale < 100) {
-                messaggio = `Aggiungi €${mancano} per sbloccare un OMAGGIO gratuito! 🎁`;
+                messaggio = `Aggiungi €${mancano} per sbloccare un OMAGGIO! 🎁 (Sped. inclusa)`;
                 // SE SCENDE SOTTO I 50€: Dimentichiamo la festa, così se risale festeggiamo di nuovo!
                 sessionStorage.removeItem('omaggioVibrato');
             } else {
@@ -4206,9 +4304,95 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
             document.getElementById('testo-omaggio-header').innerText = messaggio;
             document.getElementById('testo-omaggio-cart').innerText = messaggio;
 
-            // Aggiornamento Grafico (Le barre si allungano o si accorciano magicamente)
+            // Aggiornamento Grafico
             document.getElementById('progresso-omaggio-header').style.width = percentuale + "%";
             document.getElementById('progresso-omaggio-cart').style.width = percentuale + "%";
+        };
+        // === GESTIONE CAMBIO SPEDIZIONE (DOMICILIO / LOCKER) ===
+       window.cambiaTipoSpedizione = function() {
+            const tipo = document.querySelector('input[name="tipo_spedizione"]:checked').value;
+            const labelIndirizzo = document.getElementById('label-indirizzo');
+            const hint = document.getElementById('locker-hint');
+            const input = document.getElementById('indirizzo');
+            
+            // 1. Cambiamo i testi del modulo
+            if (tipo === 'Locker') {
+                labelIndirizzo.innerText = "Nome e Indirizzo del Locker *";
+                input.placeholder = "Es. Locker InPost IT12345 - Via Napoli, 40";
+                hint.style.display = 'block';
+            } else {
+                labelIndirizzo.innerText = "Indirizzo e Civico *";
+                input.placeholder = "Es. Via Roma, 12";
+                hint.style.display = 'none';
+            }
+
+            // 2. Chiamiamo l'aggiornamento UI del carrello per ricalcolare il totale con la nuova spedizione
+            aggiornaCarrelloUI();
+        };
+        // Ricalcola il carrello quando apriamo/chiudiamo il checkout per far apparire i costi
+        window.mostraFormSpedizione = function() {
+            if (carrello.length === 0) { showToast("Il carrello è vuoto! 🛒"); return; }
+            document.getElementById('cart-content-view').style.display = 'none';
+            document.getElementById('checkout-form-view').style.display = 'block';
+            aggiornaCarrelloUI(); // Ricalcola aggiungendo la spedizione!
+        }
+        window.nascondiFormSpedizione = function() {
+            document.getElementById('checkout-form-view').style.display = 'none';
+            document.getElementById('cart-content-view').style.display = 'flex';
+            aggiornaCarrelloUI(); // Ricalcola nascondendo la spedizione
+        }
+
+        // === GESTIONE CAMBIO SPEDIZIONE E MAPPA LOCKER ===
+        window.cambiaTipoSpedizione = function() {
+            const tipo = document.querySelector('input[name="tipo_spedizione"]:checked').value;
+            const labelIndirizzo = document.getElementById('label-indirizzo');
+            const mapContainer = document.getElementById('locker-map-container');
+            const inputIndirizzo = document.getElementById('indirizzo');
+            
+            if (tipo === 'Locker') {
+                labelIndirizzo.innerText = "Punto di Ritiro *";
+                inputIndirizzo.placeholder = "Usa il tasto giallo per cercare il Locker...";
+                inputIndirizzo.readOnly = true; // Impedisce di scrivere a mano e sbagliare
+                inputIndirizzo.style.backgroundColor = "#fff9fb";
+                mapContainer.style.display = 'block';
+            } else {
+                labelIndirizzo.innerText = "Indirizzo e Civico *";
+                inputIndirizzo.placeholder = "Es. Via Roma, 12";
+                inputIndirizzo.readOnly = false;
+                inputIndirizzo.style.backgroundColor = "#fafafa";
+                mapContainer.style.display = 'none';
+            }
+
+            aggiornaCarrelloUI(); // Aggiorna il prezzo istantaneamente (da 8 a 5)
+        };
+
+        // === IL MOTORE DELLA MAPPA INPOST (DENTRO IL NOSTRO POPUP) ===
+        window.apriMappaLocker = function() {
+            showToast("Apertura mappa in corso... 🗺️");
+            
+            // 1. Mostriamo la nostra cornice personalizzata
+            document.getElementById('custom-locker-modal').style.display = 'flex';
+            
+            // 2. Inizializziamo InPost
+            easyPack.init({ defaultLocale: 'it', mapType: 'osm', searchType: 'osm', country: 'IT' });
+            
+            // 3. Diciamo a InPost di caricarsi DENTRO il nostro div (inpost-map-container) anziché creare il suo popup brutto
+            easyPack.mapWidget('inpost-map-container', function(point) {
+                // Quando la cliente clicca "Seleziona", compiliamo automaticamente il form
+                document.getElementById('indirizzo').value = `${point.name} - ${point.address.line1}, ${point.address.line2}`;
+                document.getElementById('citta').value = point.address.line2 || point.address.city || "Città";
+                document.getElementById('cap').value = point.address.postCode || "00000";
+                
+                // Chiudiamo il popup e festeggiamo
+                chiudiMappaLocker();
+                showToast("Locker selezionato con successo! 📦");
+                vibra();
+            });
+        };
+
+        // Funzione per chiudere il nostro popup personalizzato
+        window.chiudiMappaLocker = function() {
+            document.getElementById('custom-locker-modal').style.display = 'none';
         };
     </script>
 <div id="edit-modal">
