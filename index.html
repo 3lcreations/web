@@ -2501,7 +2501,7 @@ window.messaging = getMessaging(app);
             let totalePezzi = carrello.reduce((sum, item) => sum + item.quantita, 0);
             badge.innerText = totalePezzi;
             
-            if (carrello.length === 0) {
+           if (carrello.length === 0) {
                 contenitore.innerHTML = `
                     <div style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">
                         <i class="fas fa-shopping-basket" style="font-size: 40px; color: #eee; margin-bottom: 15px; display:block;"></i>
@@ -2511,6 +2511,10 @@ window.messaging = getMessaging(app);
                 totalLabel.innerText = "€0.00";
                 subtotalContainer.style.display = "none";
                 shippingContainer.style.display = "none";
+                
+                // === AGGIUNTA: Azzera e nascondi la barra omaggio se il carrello è vuoto! ===
+                if(window.aggiornaBarreProgressoOmaggio) window.aggiornaBarreProgressoOmaggio(0);
+                
                 return;
             }
 
@@ -4165,44 +4169,47 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 }
             }
         });
-        window.aggiornaBarreProgressoOmaggio = function(subtotale) {
-    const soglia = 50; // La tua soglia di 50 euro
-    const percentuale = Math.min((subtotale / soglia) * 100, 100);
-    const mancano = (soglia - subtotale).toFixed(2);
+      window.aggiornaBarreProgressoOmaggio = function(subtotale) {
+            const soglia = 50; // La tua soglia
+            const percentuale = Math.min((subtotale / soglia) * 100, 100);
+            const mancano = (soglia - subtotale).toFixed(2);
 
-    // Selezioniamo gli elementi
-    const wrapperHeader = document.getElementById('wrapper-barra-omaggio-header');
-    const wrapperCart = document.getElementById('wrapper-barra-omaggio-cart');
-    
-    // Mostriamo le barre solo se c'è almeno un prodotto
-    if (subtotale > 0) {
-        wrapperHeader.style.display = 'block';
-        wrapperCart.style.display = 'block';
-    } else {
-        wrapperHeader.style.display = 'none';
-        wrapperCart.style.display = 'none';
-    }
+            const wrapperHeader = document.getElementById('wrapper-barra-omaggio-header');
+            const wrapperCart = document.getElementById('wrapper-barra-omaggio-cart');
+            
+            if (!wrapperHeader || !wrapperCart) return;
 
-    // Aggiornamento Testi
-    let messaggio = "";
-    if (percentuale < 100) {
-        messaggio = `Aggiungi €${mancano} per sbloccare un OMAGGIO gratuito! 🎁`;
-    } else {
-        messaggio = "CONGRATULAZIONI! Hai sbloccato l'omaggio gratuito! 🥳🎀";
-        // Facciamo vibrare il telefono per festeggiare
-        if (subtotale >= 50 && !sessionStorage.getItem('omaggioVibrato')) {
-            vibra();
-            sessionStorage.setItem('omaggioVibrato', 'true');
-        }
-    }
+            // Mostriamo le barre solo se c'è almeno un prodotto
+            if (subtotale > 0) {
+                wrapperHeader.style.display = 'block';
+                wrapperCart.style.display = 'block';
+            } else {
+                wrapperHeader.style.display = 'none';
+                wrapperCart.style.display = 'none';
+            }
 
-    document.getElementById('testo-omaggio-header').innerText = messaggio;
-    document.getElementById('testo-omaggio-cart').innerText = messaggio;
+            // Aggiornamento Testi e Reset Festa
+            let messaggio = "";
+            if (percentuale < 100) {
+                messaggio = `Aggiungi €${mancano} per sbloccare un OMAGGIO gratuito! 🎁`;
+                // SE SCENDE SOTTO I 50€: Dimentichiamo la festa, così se risale festeggiamo di nuovo!
+                sessionStorage.removeItem('omaggioVibrato');
+            } else {
+                messaggio = "CONGRATULAZIONI! Hai sbloccato l'omaggio gratuito! 🥳🎀";
+                // Festeggiamo con la vibrazione solo la prima volta che tocca i 50€
+                if (!sessionStorage.getItem('omaggioVibrato')) {
+                    if (typeof vibra === 'function') vibra();
+                    sessionStorage.setItem('omaggioVibrato', 'true');
+                }
+            }
 
-    // Aggiornamento Grafico (Barre)
-    document.getElementById('progresso-omaggio-header').style.width = percentuale + "%";
-    document.getElementById('progresso-omaggio-cart').style.width = percentuale + "%";
-};
+            document.getElementById('testo-omaggio-header').innerText = messaggio;
+            document.getElementById('testo-omaggio-cart').innerText = messaggio;
+
+            // Aggiornamento Grafico (Le barre si allungano o si accorciano magicamente)
+            document.getElementById('progresso-omaggio-header').style.width = percentuale + "%";
+            document.getElementById('progresso-omaggio-cart').style.width = percentuale + "%";
+        };
     </script>
 <div id="edit-modal">
         <div class="componi-box">
