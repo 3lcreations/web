@@ -8,6 +8,7 @@
       gtag('js', new Date());
       gtag('config', 'G-N8W4K0XD7M');
     </script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1506,6 +1507,23 @@ window.messaging = getMessaging(app);
                 <p style="text-align:center; font-size: 13px; color: var(--testo-chiaro);">Benvenuta, <strong id="admin-user-email"></strong>!</p>
                 
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                <h4 style="text-align: center; margin-bottom: 15px; color: var(--testo-scuro);">Le tue Vendite 📈</h4>
+                
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <div style="flex: 1; background: #fff9fb; border: 1px solid var(--rosa-chiaro); padding: 15px 10px; border-radius: 15px; text-align: center;">
+                        <div style="font-size: 11px; color: var(--testo-chiaro); text-transform: uppercase;">Incasso Totale</div>
+                        <div id="admin-kpi-incasso" style="font-size: 22px; font-weight: bold; color: var(--fucsia); margin-top: 5px;">€0.00</div>
+                    </div>
+                    <div style="flex: 1; background: #fff9fb; border: 1px solid var(--rosa-chiaro); padding: 15px 10px; border-radius: 15px; text-align: center;">
+                        <div style="font-size: 11px; color: var(--testo-chiaro); text-transform: uppercase;">Ordini Ricevuti</div>
+                        <div id="admin-kpi-ordini" style="font-size: 22px; font-weight: bold; color: var(--testo-scuro); margin-top: 5px;">0</div>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 15px; border-radius: 15px; border: 1px solid var(--rosa-chiaro); box-shadow: 0 4px 15px rgba(216,27,96,0.05); margin-bottom: 25px; height: 250px; width: 100%; position: relative;">
+                    <canvas id="graficoVendite"></canvas>
+                </div>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
                 
                 <h4 style="text-align: center; margin-bottom: 10px; color: var(--testo-scuro);">Aggiungi Nuovo Prodotto</h4>
                 <input type="text" id="new-titolo" placeholder="Nome Prodotto (es. Collana Cuore)" class="custom-textarea" style="height:40px;">
@@ -2595,6 +2613,7 @@ window.messaging = getMessaging(app);
                     });
                     // 1. IMPOSTAZIONI AREA SEGRETA (Admin Panel)
                     window.caricaOrdiniAdmin();
+                    window.generaDashboardAnalitica();
                     if(loginBoxAdmin) loginBoxAdmin.style.display = 'none';
                     if(adminPanel) {
                         adminPanel.style.display = 'block';
@@ -2971,6 +2990,136 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 alert("Errore tecnico: " + e.message); // Questo ci aiuta a capire se ci sono altri intoppi
             }
         };
+
+      // === MOTORE DASHBOARD ANALITICA (CHART.JS) - DEFINITIVO ===
+        let istanzaGrafico = null; 
+
+        window.generaDashboardAnalitica = async function() {
+            try {
+                // Recuperiamo gli ordini
+                const querySnapshot = await window.fbGetDocs(window.fbCollection(window.db, "ordini_generali"));
+                
+                let incassoTotale = 0;
+                let conteggioOrdini = 0;
+                let venditePerGiorno = {}; 
+
+                querySnapshot.forEach(doc => {
+                    const ordine = doc.data();
+                    
+                    // Contiamo l'ordine (anche se fosse un test da 0€)
+                    let totaleOrdine = parseFloat(ordine.totale) || 0;
+                    conteggioOrdini++;
+                    incassoTotale += totaleOrdine;
+
+                    // 1. Data Sicura (formato YYYY-MM-DD per evitare problemi)
+                    let dataObj = new Date();
+                    if (ordine.data && typeof ordine.data.toDate === 'function') {
+                        dataObj = ordine.data.toDate();
+                    } else if (ordine.data) {
+                        dataObj = new Date(ordine.data);
+                    }
+
+                    let g = String(dataObj.getDate()).padStart(2, '0');
+                    let m = String(dataObj.getMonth() + 1).padStart(2, '0');
+                    let a = dataObj.getFullYear();
+                    
+                    let chiaveDataISO = `${a}-${m}-${g}`; 
+
+                    if (!venditePerGiorno[chiaveDataISO]) {
+                        venditePerGiorno[chiaveDataISO] = 0;
+                    }
+                    venditePerGiorno[chiaveDataISO] += totaleOrdine;
+                });
+
+                // Aggiorniamo i contatori testuali
+                document.getElementById('admin-kpi-incasso').innerText = `€${incassoTotale.toFixed(2)}`;
+                document.getElementById('admin-kpi-ordini').innerText = conteggioOrdini;
+
+                if (Object.keys(venditePerGiorno).length === 0) return;
+
+                // 2. IL TRUCCO DELLA PRIMA VENDITA
+                let dateTrovate = Object.keys(venditePerGiorno);
+                if (dateTrovate.length === 1) {
+                    let [aaaa, mm, gg] = dateTrovate[0].split('-');
+                    let dataIeri = new Date(aaaa, mm - 1, gg);
+                    dataIeri.setDate(dataIeri.getDate() - 1); 
+                    
+                    let gIeri = String(dataIeri.getDate()).padStart(2, '0');
+                    let mIeri = String(dataIeri.getMonth() + 1).padStart(2, '0');
+                    let aIeri = dataIeri.getFullYear();
+                    
+                    let chiaveIeriISO = `${aIeri}-${mIeri}-${gIeri}`;
+                    venditePerGiorno[chiaveIeriISO] = 0; 
+                }
+
+                // 3. ORDINAMENTO MATEMATICO
+                let dateOrdinateISO = Object.keys(venditePerGiorno).sort();
+                
+                // 4. TRASFORMAZIONE PER LA GRAFICA
+                let etichetteGrafico = dateOrdinateISO.map(dataISO => {
+                    let [a, m, g] = dataISO.split('-');
+                    return `${g}/${m}/${a}`;
+                });
+                
+                const valoriOrdinati = dateOrdinateISO.map(dataISO => venditePerGiorno[dataISO]);
+
+                // 5. IL RITARDO DI SICUREZZA (150ms)
+                setTimeout(() => {
+                    const canvasElement = document.getElementById('graficoVendite');
+                    if(!canvasElement) return;
+
+                    const ctx = canvasElement.getContext('2d');
+                    
+                    if (istanzaGrafico) {
+                        istanzaGrafico.destroy();
+                    }
+
+                    istanzaGrafico = new Chart(ctx, {
+                        type: 'line', 
+                        data: {
+                            labels: etichetteGrafico, 
+                            datasets: [{
+                                label: 'Incasso Giornaliero',
+                                data: valoriOrdinati, 
+                                borderColor: '#d81b60', 
+                                backgroundColor: 'rgba(216, 27, 96, 0.2)', 
+                                borderWidth: 3,
+                                pointBackgroundColor: '#fff',
+                                pointBorderColor: '#d81b60',
+                                pointRadius: 6, 
+                                pointHoverRadius: 8,
+                                fill: true, 
+                                tension: 0.4 
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false, 
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: { 
+                                    callbacks: {
+                                        label: function(context) { return ' €' + context.parsed.y.toFixed(2); }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: { 
+                                    beginAtZero: true, 
+                                    ticks: {
+                                        callback: function(value) { return '€' + value; }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }, 150);
+
+            } catch (error) {
+                console.error("Errore generazione dashboard:", error);
+            }
+        };
+
         // === GESTIONE MODIFICA PRODOTTO COMPLETA (ADMIN) ===
        window.apriModaleModifica = function(id, titolo, prezzo, badge, immagine, inEvidenza, descrizione) {
             // Popoliamo i campi base
