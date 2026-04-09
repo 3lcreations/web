@@ -892,7 +892,12 @@ window.messaging = getMessaging(app);
     <div class="promo-bar">
         ✨ L'arte del ricamo incontra la tradizione partenopea • Scopri la nuova collezione 🌶️✨
     </div>
-
+<div id="wrapper-barra-omaggio-header" style="background: #fff; padding: 10px 20px; border-bottom: 1px solid #eee; display: none;">
+    <div id="testo-omaggio-header" style="font-size: 12px; text-align: center; margin-bottom: 5px; font-weight: 600; color: var(--testo-scuro);"></div>
+    <div style="width: 100%; background: #eee; height: 8px; border-radius: 10px; overflow: hidden;">
+        <div id="progresso-omaggio-header" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--rosa-chiaro), var(--fucsia)); transition: width 0.5s ease;"></div>
+    </div>
+</div>
     <div class="floating-bg">
         <i class="fas fa-shirt floating-icon fi-1"></i>
         <i class="fas fa-heart floating-icon fi-2"></i>
@@ -954,6 +959,12 @@ window.messaging = getMessaging(app);
         </div>
         
         <div id="cart-content-view" style="display: flex; flex-direction: column; flex-grow: 1;">
+            <div id="wrapper-barra-omaggio-cart" style="padding: 15px 20px; background: #fff9fb; border-bottom: 1px solid #eee; display: none;">
+    <div id="testo-omaggio-cart" style="font-size: 13px; font-weight: 600; color: var(--fucsia); margin-bottom: 8px; text-align: center;"></div>
+    <div style="width: 100%; background: #ddd; height: 10px; border-radius: 10px; overflow: hidden;">
+        <div id="progresso-omaggio-cart" style="width: 0%; height: 100%; background: var(--fucsia); transition: width 0.5s ease;"></div>
+    </div>
+</div>
             <div class="cart-items" id="cart-items-container">
                 <p style="text-align:center; color: var(--testo-chiaro); margin-top: 50px;">Il carrello è vuoto.</p>
             </div>
@@ -2528,6 +2539,7 @@ window.messaging = getMessaging(app);
                     </div>
                 `;
             });
+            window.aggiornaBarreProgressoOmaggio(subtotale);
 
             let totaleScontrino = subtotale + 8.00; // 8.00 è costoSpedizioneFisso
             subtotalLabel.innerText = `€${subtotale.toFixed(2)}`;
@@ -4153,6 +4165,44 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 }
             }
         });
+        window.aggiornaBarreProgressoOmaggio = function(subtotale) {
+    const soglia = 50; // La tua soglia di 50 euro
+    const percentuale = Math.min((subtotale / soglia) * 100, 100);
+    const mancano = (soglia - subtotale).toFixed(2);
+
+    // Selezioniamo gli elementi
+    const wrapperHeader = document.getElementById('wrapper-barra-omaggio-header');
+    const wrapperCart = document.getElementById('wrapper-barra-omaggio-cart');
+    
+    // Mostriamo le barre solo se c'è almeno un prodotto
+    if (subtotale > 0) {
+        wrapperHeader.style.display = 'block';
+        wrapperCart.style.display = 'block';
+    } else {
+        wrapperHeader.style.display = 'none';
+        wrapperCart.style.display = 'none';
+    }
+
+    // Aggiornamento Testi
+    let messaggio = "";
+    if (percentuale < 100) {
+        messaggio = `Aggiungi €${mancano} per sbloccare un OMAGGIO gratuito! 🎁`;
+    } else {
+        messaggio = "CONGRATULAZIONI! Hai sbloccato l'omaggio gratuito! 🥳🎀";
+        // Facciamo vibrare il telefono per festeggiare
+        if (subtotale >= 50 && !sessionStorage.getItem('omaggioVibrato')) {
+            vibra();
+            sessionStorage.setItem('omaggioVibrato', 'true');
+        }
+    }
+
+    document.getElementById('testo-omaggio-header').innerText = messaggio;
+    document.getElementById('testo-omaggio-cart').innerText = messaggio;
+
+    // Aggiornamento Grafico (Barre)
+    document.getElementById('progresso-omaggio-header').style.width = percentuale + "%";
+    document.getElementById('progresso-omaggio-cart').style.width = percentuale + "%";
+};
     </script>
 <div id="edit-modal">
         <div class="componi-box">
