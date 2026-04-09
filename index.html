@@ -854,6 +854,17 @@ window.messaging = getMessaging(app);
     </div>
 
     <div id="toast-container"></div>
+    <div id="popup-recupero-carrello" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(3px);">
+        <div style="background: #fff9fb; padding: 25px; border-radius: 20px; text-align: center; max-width: 320px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 2px solid var(--rosa-chiaro); position: relative;">
+            <span onclick="document.getElementById('popup-recupero-carrello').style.display='none'" style="position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: var(--testo-chiaro);">&times;</span>
+            <i class="fas fa-shopping-bag" style="font-size: 40px; color: var(--fucsia); margin-bottom: 15px;"></i>
+            <h3 style="color: var(--fucsia); margin-top: 0; font-size: 20px;">Le tue creazioni ti aspettano! 🎀</h3>
+            <p style="color: var(--testo-scuro); font-size: 14px; margin-bottom: 20px; line-height: 1.4;">Abbiamo tenuto il tuo carrello al sicuro. Completa l'ordine ora!</p>
+            <button onclick="document.getElementById('popup-recupero-carrello').style.display='none'; openCart();" class="checkout-btn" style="width: 100%;">
+                Vai al Carrello <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
 
     <div id="cookie-banner">
         <div class="cookie-text">Utilizziamo i cookie tecnici per far funzionare correttamente il carrello e garantirti la migliore esperienza sul nostro sito.</div>
@@ -3663,19 +3674,32 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 });
             }
 
-            // === NOTIFICA CARRELLO ABBANDONATO ===
+            // === 2. POPUP DI RECUPERO AL RIENTRO ===
             setTimeout(() => {
-                if (carrello && carrello.length > 0 && !sessionStorage.getItem('avvisoCarrelloMostrato')) {
-                    let testoArticoli = carrello.length === 1 ? "un articolo che ti aspetta" : carrello.length + " articoli che ti aspettano";
-                    showToast(`Bentornato! Hai ancora ${testoArticoli} nel carrello. ✨`);
+                if (carrello && carrello.length > 0) {
+                    let oraAttuale = Date.now();
+                    let oraAbbandono = localStorage.getItem('orarioAbbandono') || oraAttuale;
+                    let tempoTrascorso = oraAttuale - oraAbbandono;
                     
-                    const cartBtn = document.querySelector('.floating-cart');
-                    if(cartBtn) {
-                        cartBtn.classList.remove('bounce');
-                        void cartBtn.offsetWidth; 
-                        cartBtn.classList.add('bounce');
+                    // Se sono passate più di 2 ore (7.200.000 millisecondi)
+                    if (tempoTrascorso > 7200000) {
+                        document.getElementById('popup-recupero-carrello').style.display = 'flex';
+                        // Resettiamo l'orologio per non riaprire il popup in continuazione
+                        localStorage.setItem('orarioAbbandono', Date.now()); 
+                    } 
+                    // Se è passato poco tempo o ha appena aperto l'app, facciamo solo il toast gentile
+                    else if (!sessionStorage.getItem('avvisoCarrelloMostrato')) {
+                        let testoArticoli = carrello.length === 1 ? "un articolo che ti aspetta" : carrello.length + " articoli che ti aspettano";
+                        showToast(`Bentornata! Hai ancora ${testoArticoli} nel carrello. ✨`);
+                        
+                        const cartBtn = document.querySelector('.floating-cart');
+                        if(cartBtn) {
+                            cartBtn.classList.remove('bounce');
+                            void cartBtn.offsetWidth; 
+                            cartBtn.classList.add('bounce');
+                        }
+                        sessionStorage.setItem('avvisoCarrelloMostrato', 'true');
                     }
-                    sessionStorage.setItem('avvisoCarrelloMostrato', 'true');
                 }
             }, 2500);
 
@@ -4092,6 +4116,34 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
                 const btnNotifiche = document.getElementById('btn-notifiche');
                 if (btnNotifiche) {
                     btnNotifiche.style.display = 'none';
+                }
+            }
+        });
+        // === 1. RADAR CARRELLO ABBANDONATO (App in background) ===
+        document.addEventListener("visibilitychange", function() {
+            // Se l'utente minimizza l'app o cambia scheda
+            if (document.visibilityState === 'hidden' && carrello.length > 0) {
+                
+                // Segniamo l'orario esatto in cui se ne è andata
+                localStorage.setItem('orarioAbbandono', Date.now());
+
+                // Controlliamo di non averle già inviato la notifica oggi (per evitare di essere pesanti)
+                let oggi = new Date().toDateString();
+                if (localStorage.getItem('ultimoAvvisoPush') !== oggi && window.Notification && Notification.permission === 'granted') {
+                    
+                    // Spara la notifica push in tempo reale!
+                    navigator.serviceWorker.ready.then(function(registration) {
+                        registration.showNotification("Hai dimenticato qualcosa? 🎀", {
+                            body: "Il tuo carrello con " + carrello.length + " articoli ti aspetta su 3L Creations.",
+                            icon: "favicon.png",
+                            badge: "favicon.png",
+                            tag: "carrello-abbandonato",
+                            data: { url: "https://3lcreations.github.io/web/" }
+                        });
+                    });
+                    
+                    // Registriamo che per oggi l'abbiamo avvisata
+                    localStorage.setItem('ultimoAvvisoPush', oggi);
                 }
             }
         });
