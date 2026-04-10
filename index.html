@@ -824,6 +824,17 @@ window.messaging = getMessaging(app);
             .back-to-top { bottom: 155px; }
             footer { padding-bottom: 100px; } /* Più spazio in fondo al sito */
         }
+        /* --- FIX PROPORZIONI CARRELLO E WISHLIST --- */
+/* Solleva i bottoni per non farli coprire dal menu in basso */
+.cart-footer {
+padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
+}
+.checkout-form-container {
+padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
+}
+#myWishlistSidebar .cart-items {
+padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
+}
 
         /* === 2. SCHERMATA OFFLINE === */
         #offline-screen {
