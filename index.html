@@ -793,47 +793,42 @@ window.messaging = getMessaging(app);
             color: var(--fucsia);
         }
         /* === 1. BARRA DI NAVIGAZIONE IN BASSO (APP MOBILE) === */
-        .bottom-nav-bar { display: none; }
-        
-        @media (max-width: 768px) {
-            .bottom-nav-bar {
-                display: flex; justify-content: space-around; align-items: center;
-                position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
-                background: rgba(255,255,255,0.95); backdrop-filter: blur(15px);
-                border-top: 1px solid #eee; z-index: 9999; 
-                padding-bottom: env(safe-area-inset-bottom); /* Supporto per iPhone moderni */
-                box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
-            }
-            .bottom-nav-item {
-                display: flex; flex-direction: column; align-items: center; justify-content: center;
-                color: #aaaaaa; font-size: 10px; width: 25%; position: relative; cursor: pointer; transition: 0.3s;
-            }
-            .bottom-nav-item i { font-size: 22px; margin-bottom: 4px; transition: 0.3s; }
-            .bottom-nav-item:active, .bottom-nav-item.active { color: var(--fucsia); }
-            .bottom-nav-item:active i { transform: scale(0.9); } /* Effetto pressione */
-            
-            .nav-badge {
-                position: absolute; top: 0px; right: 15px; background: var(--fucsia); color: white;
-                font-size: 9px; font-weight: bold; width: 16px; height: 16px; border-radius: 50%;
-                display: flex; align-items: center; justify-content: center; border: 2px solid white;
-            }
-            
-            /* Riorganizziamo i pulsanti fluttuanti per far spazio alla barra */
-            .floating-cart { bottom: 85px; } /* Alziamo il carrello */
-            .floating-wishlist { display: none; } /* Nascondiamo il cuore, ora è nella barra in basso! */
-            .back-to-top { bottom: 155px; }
-            footer { padding-bottom: 100px; } /* Più spazio in fondo al sito */
-        }
-        /* --- FIX PROPORZIONI CARRELLO E WISHLIST --- */
-/* Solleva i bottoni per non farli coprire dal menu in basso */
-.cart-footer {
-padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
+.bottom-nav-bar { display: none; }
+
+@media (max-width: 768px) {
+.bottom-nav-bar {
+display: flex; justify-content: space-around; align-items: center;
+position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
+background: rgba(255,255,255,0.95); backdrop-filter: blur(15px);
+border-top: 1px solid #eee; z-index: 9999;
+padding-bottom: env(safe-area-inset-bottom); /* Supporto per iPhone moderni */
+box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
 }
-.checkout-form-container {
-padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
+.bottom-nav-item {
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+color: #aaaaaa; font-size: 10px; width: 25%; position: relative; cursor: pointer; transition: 0.3s;
 }
-#myWishlistSidebar .cart-items {
-padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
+.bottom-nav-item i { font-size: 22px; margin-bottom: 4px; transition: 0.3s; }
+.bottom-nav-item:active, .bottom-nav-item.active { color: var(--fucsia); }
+.bottom-nav-item:active i { transform: scale(0.9); } /* Effetto pressione */
+
+.nav-badge {
+position: absolute; top: 0px; right: 15px; background: var(--fucsia); color: white;
+font-size: 9px; font-weight: bold; width: 16px; height: 16px; border-radius: 50%;
+display: flex; align-items: center; justify-content: center; border: 2px solid white;
+}
+
+/* Riorganizziamo i pulsanti fluttuanti per far spazio alla barra */
+.floating-cart { bottom: 85px; } /* Alziamo il carrello */
+.floating-wishlist { display: none; } /* Nascondiamo il cuore, ora è nella barra in basso! */
+.back-to-top { bottom: 155px; }
+footer { padding-bottom: 100px; } /* Più spazio in fondo al sito */
+
+/* --- FIX PROPORZIONI CARRELLO E WISHLIST --- */
+/* Solleva i bottoni per non farli coprire dal menu in basso SOLO SU TELEFONO */
+.cart-footer { padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important; }
+.checkout-form-container { padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important; }
+#myWishlistSidebar .cart-items { padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important; }
 }
 
         /* === 2. SCHERMATA OFFLINE === */
