@@ -4312,7 +4312,7 @@ window.aggiornaStatoOrdine = async function(orderId, userId) {
             // Aggiornamento Testi (con nota sulla spedizione) e Reset Festa
             let messaggio = "";
             if (percentuale < 100) {
-                messaggio = `Aggiungi €${mancano} per sbloccare un OMAGGIO! 🎁 (Sped. inclusa)`;
+                messaggio = `Aggiungi €${mancano} per sbloccare un OMAGGIO! 🎁 (Il prezzo della sped. verrà incluso nel calcolo)`;
                 // SE SCENDE SOTTO I 50€: Dimentichiamo la festa, così se risale festeggiamo di nuovo!
                 sessionStorage.removeItem('omaggioVibrato');
             } else {
