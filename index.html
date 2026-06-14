@@ -449,9 +449,22 @@
         /* OFFLINE */
         #offline-screen { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--sfondo); z-index: 9999999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; }
         .offline-icon { font-size: 70px; color: #ccc; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
-    /* === NEWS SLIDER === */
-        .news-slider-container { background: linear-gradient(135deg, var(--fucsia), #ff758c); border-radius: 20px; padding: 30px 40px; color: white; position: relative; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.3); text-align: center; overflow: hidden; min-height: 120px; display: flex; align-items: center; justify-content: center;}
-        .news-item { display: none; width: 100%; animation: fadeNews 0.5s ease-in-out; }
+   /* === NEWS SLIDER === */
+        .news-slider-container { 
+            background: linear-gradient(135deg, rgba(216, 27, 96, 0.80), rgba(255, 117, 140, 0.80)); 
+            backdrop-filter: blur(10px); /* Effetto vetro elegante */
+            border-radius: 20px; 
+            padding: 40px 50px; /* Più spazio interno */
+            color: white; 
+            position: relative; 
+            box-shadow: 0 10px 30px rgba(216, 27, 96, 0.25); 
+            text-align: center; 
+            overflow: hidden; 
+            min-height: 250px; /* Altezza minima aumentata */
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }        .news-item { display: none; width: 100%; animation: fadeNews 0.5s ease-in-out; }
         .news-item h3 { margin: 0 0 10px 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); border: none; }
         .news-item p { font-size: 15px; line-height: 1.6; margin: 0; }
         @keyframes fadeNews { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
@@ -1987,9 +2000,8 @@
                 }
 
                 notizie.forEach((news, i) => {
-                    // SE LA NOTIZIA HA UNA FOTO, LA METTIAMO DENTRO IL BOX
-                    let imgHtml = news.immagine ? `<img src="${news.immagine}" style="width:100%; max-height:220px; object-fit:cover; border-radius:15px; margin-bottom:15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">` : '';
-                    
+                    // SE LA NOTIZIA HA UNA FOTO, LA MOSTRA ADATTANDOLA SENZA TAGLIARLA
+                    let imgHtml = news.immagine ? `<img src="${news.immagine}" style="max-width:100%; height:auto; max-height:450px; object-fit:contain; border-radius:15px; margin-bottom:20px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">` : '';
                     track.innerHTML += `
                         <div class="news-item">
                             ${imgHtml}
