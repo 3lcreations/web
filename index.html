@@ -176,9 +176,7 @@
         @keyframes pulseLogo { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
         @keyframes fadeInOut { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
-        /* PROMO BAR */
-        .promo-bar { background: linear-gradient(90deg, var(--fucsia), var(--rosa-chiaro)); color: white; text-align: center; padding: 10px 15px; font-size: 13px; font-weight: 600; letter-spacing: 1px; position: relative; z-index: 90; box-shadow: 0 2px 10px rgba(216, 27, 96, 0.2); text-transform: uppercase; }
-
+   
         /* PATTERN ICONE FLUTTUANTI */
         .floating-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -3; overflow: hidden; }
         .floating-icon { position: absolute; color: rgba(244, 143, 177, 0.25); animation: floatPattern linear infinite alternate; }
@@ -516,10 +514,9 @@
     </div>
 
     <!-- PROMO BAR -->
-    <div class="promo-bar">
-        ✨ L'arte del ricamo incontra la tradizione partenopea • Scopri la nuova collezione 🌶️✨
+    <div class="promo-bar" style="background: linear-gradient(90deg, var(--fucsia), var(--rosa-chiaro)); color: white; text-align: center; padding: 10px 15px; font-size: 13px; font-weight: 600; letter-spacing: 1px; position: relative; z-index: 90; box-shadow: 0 2px 10px rgba(216, 27, 96, 0.2); text-transform: uppercase;">
+        <span id="promo-bar-text">✨ L'arte del ricamo incontra la tradizione partenopea • Scopri la nuova collezione 🌶️✨</span>
     </div>
-
     <!-- ICONE FLUTTUANTI SFONDO -->
     <div class="floating-bg">
         <i class="fas fa-shirt floating-icon fi-1"></i>
@@ -1061,7 +1058,10 @@
                 </select>
                 <input type="number" id="admin-base-price-val" class="custom-textarea" style="height: 40px; margin-bottom: 15px;" step="0.01" placeholder="Nuovo prezzo (es. 22.50)">
                 <button onclick="salvaPrezzoBase()" class="checkout-btn" style="margin-bottom: 25px; background-color: #ff9800;">Aggiorna Prezzo <i class="fas fa-euro-sign"></i></button>
-
+<hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
+                <h4 style="text-align: center; margin-bottom: 10px; color: var(--testo-scuro);">Modifica Banner in Alto</h4>
+                <input type="text" id="admin-banner-text" class="custom-textarea" style="height: 40px; margin-bottom: 15px;" placeholder="Es: ✨ Spedizione gratuita oggi! ✨">
+                <button onclick="salvaTestoBanner()" class="checkout-btn" style="margin-bottom: 25px; background-color: #ff9800;">Aggiorna Banner <i class="fas fa-edit"></i></button>
                 <button onclick="logoutAdmin()" class="checkout-btn" style="background-color: #777; box-shadow: none;">Esci in sicurezza <i class="fas fa-sign-out-alt"></i></button>
             </div>
         </div>
@@ -1568,17 +1568,28 @@
             }
         };
 
-        // === IMPOSTAZIONI SITO ===
+       // === IMPOSTAZIONI SITO ===
         window.caricaImpostazioniSito = async function() {
             try {
+                // Carica immagini
                 const docRefImg = window.fbDoc(window.db, "impostazioni", "immagini_sito");
                 const docSnapImg = await window.fbGetDoc(docRefImg);
                 if (docSnapImg.exists()) Object.assign(window.immaginiSitoDinamiche, docSnapImg.data());
 
+                // Carica prezzi
                 const docRefPrezzi = window.fbDoc(window.db, "impostazioni", "prezzi_base");
                 const docSnapPrezzi = await window.fbGetDoc(docRefPrezzi);
                 if (docSnapPrezzi.exists()) window.prezziBase = { ...window.prezziBase, ...docSnapPrezzi.data() };
 
+                // Carica testi (COME IL BANNER)
+                const docRefTesti = window.fbDoc(window.db, "impostazioni", "testi_sito");
+                const docSnapTesti = await window.fbGetDoc(docRefTesti);
+                if (docSnapTesti.exists() && docSnapTesti.data().promo_banner) {
+                    const bannerEl = document.getElementById('promo-bar-text');
+                    if(bannerEl) bannerEl.innerText = docSnapTesti.data().promo_banner;
+                }
+
+                // Applica immagini alla grafica
                 for (let i = 1; i <= 7; i++) {
                     const img = document.getElementById('home-img-' + i);
                     if (img) img.src = window.immaginiSitoDinamiche['home_' + i];
@@ -1588,6 +1599,7 @@
                 const pochette = document.getElementById('img-pochette'); if (pochette) pochette.src = window.immaginiSitoDinamiche['pochette_azzurra'];
                 const borsa = document.getElementById('img-borsa'); if (borsa) borsa.src = window.immaginiSitoDinamiche['borsa_bianca'];
 
+                // Applica prezzi
                 const lCat = document.getElementById('label-prezzo-catenina'); if (lCat) lCat.innerText = window.prezziBase.catenina.toFixed(2);
                 const lMag = document.getElementById('label-prezzo-maglietta'); if (lMag) lMag.innerText = window.prezziBase.maglietta.toFixed(2);
                 const lPel = document.getElementById('label-prezzo-pelosetto'); if (lPel) lPel.innerText = window.prezziBase.pelosetto.toFixed(2);
@@ -1915,7 +1927,28 @@
                 caricaImpostazioniSito();
             } catch (e) { console.error(e); showToast("Errore aggiornamento. ❌"); }
         };
-
+// === SALVA TESTO BANNER (ADMIN) ===
+        window.salvaTestoBanner = async function() {
+            const nuovoTesto = document.getElementById('admin-banner-text').value;
+            if (!nuovoTesto) { window.showToast("Inserisci un testo per il banner!"); return; }
+            window.showToast("Aggiornamento banner... ⏳");
+            try {
+                const docRef = window.fbDoc(window.db, "impostazioni", "testi_sito");
+                await window.fbSetDoc(docRef, { promo_banner: nuovoTesto }, { merge: true });
+                window.showToast("Banner aggiornato! 🎉");
+                
+                // Aggiorna istantaneamente la pagina senza ricaricare, centrando il testo
+                const bannerSpan = document.getElementById('promo-bar-text');
+                if (bannerSpan) {
+                    bannerSpan.innerText = nuovoTesto;
+                }
+                
+                document.getElementById('admin-banner-text').value = '';
+            } catch (e) { 
+                console.error(e); 
+                window.showToast("Errore aggiornamento. ❌"); 
+            }
+        };
         // === SALVA PREZZO BASE (ADMIN) ===
         window.salvaPrezzoBase = async function() {
             const chiave = document.getElementById('admin-base-price-key').value;
