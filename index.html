@@ -545,16 +545,20 @@
 
         <a href="#home" onclick="showSection('home'); return false;">🏠 Home</a>
 <a href="#preferiti" onclick="showSection('preferiti'); return false;">❤️ I Miei Preferiti</a>
-        <div class="menu-title">Prodotti</div>
+        <div class="menu-title">Prodotti Pronti</div>
         <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('collane'); return false;">📿 Collane</a>
         <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('fiocchi'); return false;">🎀 Fiocchi</a>
+        <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('bracciali'); return false;">📿 Bracciali</a>
+        <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('orecchini'); return false;">💎 Orecchini</a>
+        <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('borse'); return false;">👜 Borse</a>
+        <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('pochette'); return false;">👝 Pochette</a>
 
-        <div class="menu-title">Personalizza</div>
+        <div class="menu-title">Prodotti Personalizzati</div>
         <a href="#componi" onclick="showSection('componi'); return false;">✨ Componi Collana</a>
-        <a href="#crea-maglietta" onclick="showSection('crea-maglietta'); return false;">👕 Maglietta</a>
-        <a href="#crea-pelosetto" onclick="showSection('crea-pelosetto'); return false;">🐾 Maglia Pelosetto</a>
-        <a href="#crea-pochette" onclick="showSection('crea-pochette'); return false;">👝 Pochette</a>
-        <a href="#crea-borsa" onclick="showSection('crea-borsa'); return false;">👜 Borsa</a>
+        <a href="#crea-maglietta" onclick="showSection('crea-maglietta'); return false;">👕 Crea Maglietta</a>
+        <a href="#crea-pelosetto" onclick="showSection('crea-pelosetto'); return false;">🐾 Crea Maglia Pelosetto</a>
+        <a href="#crea-pochette" onclick="showSection('crea-pochette'); return false;">👝 Crea Pochette</a>
+        <a href="#crea-borsa" onclick="showSection('crea-borsa'); return false;">👜 Crea Borsa</a>
 
         <div class="menu-title">Info</div>
         <a href="#contatti" onclick="showSection('contatti'); return false;">✉️ Contatti</a>
@@ -664,25 +668,23 @@
                 </select>
             </div>
 
-            <div class="category-tabs reveal">
+            <div class="category-tabs reveal" style="flex-wrap: wrap;">
                 <button class="cat-btn active" onclick="cambiaCategoria('collane', this)">📿 Collane</button>
                 <button class="cat-btn" onclick="cambiaCategoria('fiocchi', this)">🎀 Fiocchi</button>
+                <button class="cat-btn" onclick="cambiaCategoria('bracciali', this)">📿 Bracciali</button>
+                <button class="cat-btn" onclick="cambiaCategoria('orecchini', this)">💎 Orecchini</button>
+                <button class="cat-btn" onclick="cambiaCategoria('borse', this)">👜 Borse</button>
+                <button class="cat-btn" onclick="cambiaCategoria('pochette', this)">👝 Pochette</button>
+                <button class="cat-btn" onclick="cambiaCategoria('ciondoli_pronti', this)">✨ Ciondoli</button>
             </div>
 
-            <div id="cat-collane" class="cat-content active">
-                <div class="product-container" id="lista-prodotti">
-                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
-                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
-                </div>
-            </div>
-
-            <div id="cat-fiocchi" class="cat-content">
-                <div class="product-container" id="lista-fiocchi">
-                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
-                    <div class="product-card skeleton-card"><div class="skeleton-anim skeleton-img"></div><div class="skeleton-anim skeleton-title"></div><div class="skeleton-anim skeleton-price"></div><div class="skeleton-anim skeleton-btn-mock"></div></div>
-                </div>
-            </div>
-        </div>
+            <div id="cat-collane" class="cat-content active"><div class="product-container" id="lista-collane"></div></div>
+            <div id="cat-fiocchi" class="cat-content"><div class="product-container" id="lista-fiocchi"></div></div>
+            <div id="cat-bracciali" class="cat-content"><div class="product-container" id="lista-bracciali"></div></div>
+            <div id="cat-orecchini" class="cat-content"><div class="product-container" id="lista-orecchini"></div></div>
+            <div id="cat-borse" class="cat-content"><div class="product-container" id="lista-borse"></div></div>
+            <div id="cat-pochette" class="cat-content"><div class="product-container" id="lista-pochette"></div></div>
+            <div id="cat-ciondoli_pronti" class="cat-content"><div class="product-container" id="lista-ciondoli_pronti"></div></div>
 
         <!-- DETTAGLIO PRODOTTO -->
         <div id="dettaglio-prodotto" class="content-section">
@@ -999,11 +1001,20 @@
                 <h4 style="text-align: center; margin-bottom: 10px; color: var(--testo-scuro);">Aggiungi Nuovo Prodotto</h4>
                 <input type="text" id="new-titolo" placeholder="Nome Prodotto" class="custom-textarea" style="height:40px;">
                 <input type="number" id="new-prezzo" placeholder="Prezzo (es. 15.50)" class="custom-textarea" style="height:40px;">
-                <select id="new-categoria" class="custom-textarea" style="height: auto; min-height: 48px; padding: 10px 15px; margin-bottom: 15px;">
-                    <option value="collane">Collane</option>
-                    <option value="fiocchi">Fiocchi</option>
-                    <option value="ciondoli">Ciondoli (Per collana)</option>
-                    <option value="perline">Perline (Per collana)</option>
+               <select id="new-categoria" class="custom-textarea" style="height: auto; min-height: 48px; padding: 10px 15px; margin-bottom: 15px;">
+                    <optgroup label="Già Fatti">
+                        <option value="collane">📿 Collane</option>
+                        <option value="fiocchi">🎀 Fiocchi</option>
+                        <option value="bracciali">📿 Bracciali</option>
+                        <option value="orecchini">💎 Orecchini</option>
+                        <option value="borse">👜 Borse</option>
+                        <option value="pochette">👝 Pochette</option>
+                        <option value="ciondoli_pronti">✨ Ciondoli (Già fatti)</option>
+                    </optgroup>
+                    <optgroup label="Componenti (Componi Collana)">
+                        <option value="ciondoli">✨ Ciondoli</option>
+                        <option value="perline">🟡 Perline</option>
+                    </optgroup>
                 </select>
                 <textarea id="new-descrizione" class="custom-textarea" placeholder="Descrizione prodotto..." style="height: 80px; margin-bottom: 15px;"></textarea>
                 <label class="label-admin">Foto Prodotto</label>
@@ -1090,14 +1101,29 @@
         <p style="margin-top: 15px;"><span onclick="showSection('sezione-admin')" style="cursor: default;">©</span> 2026 3L Creations. Tutti i diritti riservati.</p>
     </footer>
 
-    <!-- MODALE MODIFICA PRODOTTO (ADMIN) -->
+   <!-- MODALE MODIFICA PRODOTTO (ADMIN) -->
     <div id="edit-modal">
         <div class="componi-box">
             <span class="close-guide" onclick="chiudiModaleModifica()" style="top: 15px; right: 20px;">&times;</span>
             <h3 style="color: var(--fucsia); text-align: center; margin-top: 0; margin-bottom: 20px; font-size: 20px;">Modifica Prodotto</h3>
             <input type="hidden" id="edit-id">
+            
             <label class="label-admin">Nome Prodotto</label>
             <input type="text" id="edit-titolo" class="custom-textarea" style="height: 40px;">
+            
+            <label class="label-admin">Categoria</label>
+            <select id="edit-categoria" class="custom-textarea" style="height: 40px; margin-bottom: 12px;">
+                <option value="collane">📿 Collane</option>
+                <option value="fiocchi">🎀 Fiocchi</option>
+                <option value="bracciali">📿 Bracciali</option>
+                <option value="orecchini">💎 Orecchini</option>
+                <option value="borse">👜 Borse</option>
+                <option value="pochette">👝 Pochette</option>
+                <option value="ciondoli_pronti">✨ Ciondoli (Già fatti)</option>
+                <option value="ciondoli">✨ Ciondoli (Componi Collana)</option>
+                <option value="perline">🟡 Perline (Componi Collana)</option>
+            </select>
+
             <div style="display:flex; gap:10px;">
                 <div style="flex:1;">
                     <label class="label-admin">Prezzo (€)</label>
@@ -1108,14 +1134,17 @@
                     <input type="text" id="edit-badge" class="custom-textarea" style="height: 40px;" placeholder="Novità...">
                 </div>
             </div>
+            
             <label class="label-admin">Descrizione</label>
             <textarea id="edit-descrizione" class="custom-textarea" style="height: 70px;"></textarea>
+            
             <div style="background: #fff5f8; padding: 10px; border-radius: 15px; margin-bottom: 15px; border: 1px solid var(--rosa-chiaro);">
                 <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 12px; color: var(--testo-scuro);">
                     <input type="checkbox" id="edit-evidenza" style="accent-color: var(--fucsia); width: 18px; height: 18px;">
                     Metti in evidenza nella Home
                 </label>
             </div>
+            
             <label class="label-admin">Aggiorna Foto</label>
             <div class="file-upload-wrapper" style="margin-top: 5px;">
                 <input type="file" id="edit-immagine-file" class="file-upload-input" accept="image/*" multiple onchange="aggiornaNomeFile(this, 'nome-edit-foto')">
@@ -1295,10 +1324,12 @@
         window.applicaOrdinamento = function() {
             let criterio = document.getElementById('sortProdotti').value;
             if (!criterio) return;
-            if (document.getElementById('cat-collane').classList.contains('active'))
-                ordinaElementi('lista-prodotti', 'product-card', 'h3', '.price', criterio);
-            else if (document.getElementById('cat-fiocchi').classList.contains('active'))
-                ordinaElementi('lista-fiocchi', 'product-card', 'h3', '.price', criterio);
+            // Ordina la categoria che stai guardando in questo momento!
+            let activeCat = document.querySelector('.cat-content.active');
+            if (activeCat) {
+                let containerId = activeCat.querySelector('.product-container').id;
+                ordinaElementi(containerId, 'product-card', 'h3', '.price', criterio);
+            }
         };
         window.applicaOrdinamentoComponenti = function() {
             let criterio = document.getElementById('sortComponenti').value;
@@ -1610,8 +1641,7 @@
             } catch (e) { console.error("Errore caricamento impostazioni:", e); }
         };
 
-        // === CARICA PRODOTTI ===
-        window.caricaProdottiFirebase = async function(categoria, idContenitore) {
+       window.caricaProdottiFirebase = async function(categoria, idContenitore) {
             const contenitore = document.getElementById(idContenitore);
             if (!contenitore) return;
             try {
@@ -1624,6 +1654,9 @@
                 let count = 0;
                 const isAdmin = window.auth?.currentUser && (window.auth.currentUser.email === "mauro7leo10@gmail.com" || window.auth.currentUser.email === "3lcreationsfordogs1@gmail.com");
 
+                // Lista delle categorie "Già Fatti"
+                const categorieShop = ['collane', 'fiocchi', 'bracciali', 'orecchini', 'borse', 'pochette', 'ciondoli_pronti'];
+
                 querySnapshot.forEach((doc) => {
                     const riga = doc.data();
                     if (riga.categoria !== categoria) return;
@@ -1634,19 +1667,20 @@
                     const titolo = riga.titolo.replace(/'/g, "\\'");
                     const inEv = riga.in_evidenza === true;
                     
-                    // --- MODIFICA TARGHETTA: Se è in evidenza e non ha badge, scrive "In Evidenza" ---
                     const badgeTesto = riga.badge ? riga.badge.replace(/'/g, "\\'") : (inEv ? 'In Evidenza' : '');
                     let htmlBadge = badgeTesto ? `<div class="product-badge">${badgeTesto}</div>` : '';
-
                     const descrizioneText = riga.descrizione ? riga.descrizione.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n') : '';
                     const galleriaStringa = riga.galleria ? riga.galleria.join(',') : '';
 
                     let btnElimina = isAdmin ? `<div class="delete-admin-btn" onclick="eliminaProdotto('${idProdotto}', '${titolo}')"><i class="fas fa-trash-alt"></i> Elimina</div>` : '';
-                    let btnModifica = isAdmin ? `<div class="edit-admin-btn" onclick="apriModaleModifica('${idProdotto}', '${titolo}', ${prezzoNum}, '${(riga.badge || '').replace(/'/g, "\\'")}', '${immagine}', ${inEv}, '${descrizioneText}')"><i class="fas fa-edit"></i> Modifica</div>` : '';
+                    // Passiamo la categoria al modale!
+                    let btnModifica = isAdmin ? `<div class="edit-admin-btn" onclick="apriModaleModifica('${idProdotto}', '${titolo}', ${prezzoNum}, '${(riga.badge || '').replace(/'/g, "\\'")}', '${immagine}', ${inEv}, '${descrizioneText}', '${riga.categoria}')"><i class="fas fa-edit"></i> Modifica</div>` : '';
+                    
                     let isFav = (JSON.parse(localStorage.getItem('wishlist')) || []).some(w => w.id === idProdotto);
                     let btnWishlist = `<div class="wishlist-btn ${isFav ? 'active' : ''}" onclick="toggleWishlist(event, '${idProdotto}', '${titolo}', ${prezzoNum}, '${immagine}')"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>`;
 
-                    if (categoria === 'collane' || categoria === 'fiocchi') {
+                    // Se è un "Già Fatto", mostra la scheda intera. Se è un "Componente", mostra la scheda piccola
+                    if (categorieShop.includes(categoria)) {
                         const onClickDettaglio = `apriDettaglioProdotto('${titolo}', ${prezzoNum}, '${badgeTesto}', '${descrizioneText}', '${immagine}', '${galleriaStringa}')`;
                         contenitore.insertAdjacentHTML('beforeend', `
                             <div class="product-card reveal visible" style="position:relative;">
@@ -1654,9 +1688,7 @@
                                 <img src="${immagine}" alt="${titolo}" class="product-image" onerror="this.src='logo.png'" style="cursor:pointer;" onclick="${onClickDettaglio}">
                                 <h3 style="cursor:pointer;" onclick="${onClickDettaglio}">${riga.titolo}</h3>
                                 <div class="price">€${prezzoNum.toFixed(2)}</div>
-                                <a onclick="${onClickDettaglio}; return false;" href="#" class="contact-order-btn" style="text-decoration:none;">
-                                    Scopri di più <i class="fas fa-arrow-right"></i>
-                                </a>
+                                <a onclick="${onClickDettaglio}; return false;" href="#" class="contact-order-btn" style="text-decoration:none;">Scopri di più <i class="fas fa-arrow-right"></i></a>
                             </div>`);
                     } else {
                         let chkClass = categoria === 'ciondoli' ? 'charm-checkbox' : 'perlina-checkbox';
@@ -1670,7 +1702,7 @@
                             </div>`);
                     }
                 });
-                if (count === 0) contenitore.innerHTML = "<p class='loading-text'>Nessun prodotto trovato.</p>";
+                if (count === 0) contenitore.innerHTML = "<p class='loading-text'>Nessun prodotto trovato in questa categoria.</p>";
                 observeElements();
             } catch (e) { console.error("Errore caricamento:", e); }
         };
@@ -1761,19 +1793,21 @@
             } catch (e) { console.error(e); showSection('acquista'); }
         };
 
-        // === ADMIN AUTH ===
+     // === ADMIN AUTH ===
         window.aggiornaUIAdmin = function(user) {
             const loginBoxAdmin = document.getElementById('admin-login-box');
             const adminPanel = document.getElementById('admin-panel');
+            
             if (user && (user.email === "mauro7leo10@gmail.com" || user.email === "3lcreationsfordogs1@gmail.com")) {
                 let nomeAdmin = user.email === "mauro7leo10@gmail.com" ? "Mauro" : "Lucia";
                 if (loginBoxAdmin) loginBoxAdmin.style.display = 'none';
-                if (adminPanel) { adminPanel.style.display = 'block'; document.getElementById('admin-user-email').innerText = nomeAdmin; }
+                if (adminPanel) { 
+                    adminPanel.style.display = 'block'; 
+                    document.getElementById('admin-user-email').innerText = nomeAdmin; 
+                }
+                // Carichiamo tutto subito dopo il login
                 window.caricaNotizieAdmin();
-                window.caricaProdottiFirebase('collane', 'lista-prodotti');
-                window.caricaProdottiFirebase('fiocchi', 'lista-fiocchi');
-                window.caricaProdottiFirebase('ciondoli', 'lista-ciondoli');
-                window.caricaProdottiFirebase('perline', 'lista-perline');
+                window.caricaTuttiIProdotti();
             } else {
                 if (loginBoxAdmin) loginBoxAdmin.style.display = 'block';
                 if (adminPanel) adminPanel.style.display = 'none';
@@ -1837,7 +1871,7 @@
                 document.getElementById('new-prezzo').value = '';
                 document.getElementById('new-descrizione').value = '';
                 fileInput.value = '';
-                window.caricaProdottiFirebase(categoria, 'lista-' + categoria);
+                window.caricaTuttiIProdotti();
             } catch (e) { console.error(e); showToast("Errore nel caricamento ❌"); }
         };
 
@@ -1847,19 +1881,20 @@
                 try {
                     await window.fbDeleteDoc(window.fbDoc(window.db, "prodotti", idProdotto));
                     showToast("Prodotto rimosso! 🗑️");
-                    ['collane','fiocchi','ciondoli','perline'].forEach(cat => window.caricaProdottiFirebase(cat, 'lista-' + (cat === 'collane' ? 'prodotti' : cat)));
+                    window.caricaTuttiIProdotti();
                 } catch (e) { showToast("Errore durante l'eliminazione."); }
             }
         };
 
         // === MODIFICA PRODOTTO ===
-        window.apriModaleModifica = function(id, titolo, prezzo, badge, immagine, inEvidenza, descrizione) {
+       window.apriModaleModifica = function(id, titolo, prezzo, badge, immagine, inEvidenza, descrizione, categoria) {
             document.getElementById('edit-id').value = id;
             document.getElementById('edit-titolo').value = titolo;
             document.getElementById('edit-prezzo').value = prezzo;
             document.getElementById('edit-badge').value = badge === 'undefined' || !badge ? '' : badge;
             document.getElementById('edit-evidenza').checked = inEvidenza;
             document.getElementById('edit-descrizione').value = descrizione && descrizione !== 'undefined' ? descrizione.replace(/\\n/g, '\n') : '';
+            if(document.getElementById('edit-categoria')) document.getElementById('edit-categoria').value = categoria || 'collane';
             document.getElementById('edit-immagine-file').value = '';
             document.getElementById('edit-modal').style.display = "flex";
         };
@@ -1874,15 +1909,19 @@
             const badge = document.getElementById('edit-badge').value;
             const descrizione = document.getElementById('edit-descrizione').value;
             const inEvidenza = document.getElementById('edit-evidenza').checked;
+            const categoriaSel = document.getElementById('edit-categoria') ? document.getElementById('edit-categoria').value : 'collane';
+            
             const fileInput = document.getElementById('edit-immagine-file');
             const files = fileInput.files;
-            if (!titolo || !prezzo) { showToast("Titolo e Prezzo obbligatori!"); return; }
-            showToast("Aggiornamento in corso... ⏳");
+            
+            if (!titolo || !prezzo) { window.showToast("Titolo e Prezzo obbligatori!"); return; }
+            window.showToast("Aggiornamento in corso... ⏳");
             document.querySelector('#edit-modal .checkout-btn').disabled = true;
+            
             try {
-                let datiAggiornati = { titolo, prezzo: parseFloat(prezzo), badge: badge || "", descrizione: descrizione || "Nessuna descrizione.", in_evidenza: inEvidenza, data_modifica: new Date() };
+                let datiAggiornati = { titolo, prezzo: parseFloat(prezzo), badge: badge || "", descrizione: descrizione || "Nessuna descrizione.", in_evidenza: inEvidenza, categoria: categoriaSel, data_modifica: new Date() };
+                
                 if (files.length > 0) {
-                    showToast(`Caricamento ${files.length} nuove foto...`);
                     const apiKey = "083194e5388c019411d6fc6f0ea35b20";
                     let galleriaUrls = [];
                     for (let i = 0; i < files.length; i++) {
@@ -1890,19 +1929,24 @@
                         formData.append("image", files[i]);
                         const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, { method: "POST", body: formData });
                         const data = await response.json();
-                        if (!data.success) throw new Error("Errore ImgBB");
                         galleriaUrls.push(data.data.url);
                     }
                     datiAggiornati.immagine = galleriaUrls[0];
                     datiAggiornati.galleria = galleriaUrls;
                 }
+                
                 await window.fbUpdateDoc(window.fbDoc(window.db, "prodotti", id), datiAggiornati);
-                showToast("Prodotto aggiornato! ✨");
-                chiudiModaleModifica();
+                window.showToast("Prodotto aggiornato! ✨");
+                window.chiudiModaleModifica();
                 window.caricaEvidenza();
-                ['collane','fiocchi','ciondoli','perline'].forEach(cat => window.caricaProdottiFirebase(cat, 'lista-' + (cat === 'collane' ? 'prodotti' : cat)));
-            } catch (e) { console.error(e); showToast("Errore aggiornamento ❌"); }
+                window.caricaTuttiIProdotti(); // RICARICA TUTTO!
+            } catch (e) { console.error(e); window.showToast("Errore aggiornamento ❌"); }
             finally { document.querySelector('#edit-modal .checkout-btn').disabled = false; }
+        };
+        // NUOVO CARICATORE UNIVERSALE
+        window.caricaTuttiIProdotti = function() {
+            const categorie = ['collane', 'fiocchi', 'bracciali', 'orecchini', 'borse', 'pochette', 'ciondoli_pronti', 'ciondoli', 'perline'];
+            categorie.forEach(cat => window.caricaProdottiFirebase(cat, 'lista-' + cat));
         };
 
         // === SALVA IMMAGINE SITO (ADMIN) ===
@@ -2218,10 +2262,7 @@
             checkCookies();
             window.caricaEvidenza();
             window.caricaImpostazioniSito();
-            window.caricaProdottiFirebase('collane', 'lista-prodotti');
-            window.caricaProdottiFirebase('fiocchi', 'lista-fiocchi');
-            window.caricaProdottiFirebase('ciondoli', 'lista-ciondoli');
-            window.caricaProdottiFirebase('perline', 'lista-perline');
+          window.caricaTuttiIProdotti();
             window.caricaPreferitiHTML();
             window.caricaNotiziePubbliche();
             if (window.auth?.currentUser) window.caricaNotizieAdmin(); // Se sei loggato
