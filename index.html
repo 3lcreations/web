@@ -684,9 +684,10 @@
             <div id="cat-orecchini" class="cat-content"><div class="product-container" id="lista-orecchini"></div></div>
             <div id="cat-borse" class="cat-content"><div class="product-container" id="lista-borse"></div></div>
             <div id="cat-pochette" class="cat-content"><div class="product-container" id="lista-pochette"></div></div>
-            <div id="cat-ciondoli_pronti" class="cat-content"><div class="product-container" id="lista-ciondoli_pronti"></div></div>
-
+                      <div id="cat-ciondoli_pronti" class="cat-content"><div class="product-container" id="lista-ciondoli_pronti"></div></div>
+        </div><!-- fine #acquista -->
         <!-- DETTAGLIO PRODOTTO -->
+
         <div id="dettaglio-prodotto" class="content-section">
             <div class="componi-box reveal" style="max-width: 950px; margin: 0 auto; padding: 25px; display: flex; flex-direction: column;">
                 <div class="back-to-cat-btn" onclick="history.back()">
@@ -1272,12 +1273,15 @@
                 activateNewSection(targetSection, sectionId, updateUrl);
             }
         }
-        function activateNewSection(targetSection, sectionId, updateUrl) {
-            targetSection.classList.add('active');
-            window.scrollTo(0, 0);
-            if (updateUrl) history.pushState(null, null, '#' + sectionId);
-            setTimeout(observeElements, 100);
-        }
+       function activateNewSection(targetSection, sectionId, updateUrl) {
+    targetSection.classList.add('active');
+    window.scrollTo(0, 0);
+    if (updateUrl) history.pushState(null, null, '#' + sectionId);
+    // FIX: rendi subito visibili i .reveal della sezione appena aperta
+    targetSection.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    setTimeout(observeElements, 100);
+}
+
 
         function cambiaCategoria(catId, btnElement) {
             document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
