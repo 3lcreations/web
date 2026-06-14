@@ -104,8 +104,23 @@
             background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
             box-shadow: 0 4px 15px rgba(220, 39, 67, 0.3);
         }
-        .contact-order-btn.instagram:hover { opacity: 0.9; transform: translateY(-2px); }
+      .contact-order-btn.instagram:hover { opacity: 0.9; transform: translateY(-2px); }
+        
+        /* Nuovi pulsanti Facebook e TikTok */
+        .contact-order-btn.facebook {
+            background-color: #1877F2;
+            box-shadow: 0 4px 15px rgba(24, 119, 242, 0.3);
+        }
+        .contact-order-btn.facebook:hover { background-color: #166fe5; transform: translateY(-2px); }
+
+        .contact-order-btn.tiktok {
+            background-color: #000000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .contact-order-btn.tiktok:hover { background-color: #333333; transform: translateY(-2px); }
+
         .contact-order-btn.secondary {
+
             background: transparent; color: var(--fucsia);
             border: 2px solid var(--fucsia); box-shadow: none; margin-top: 10px;
         }
@@ -566,9 +581,22 @@
                     Crediamo che l'artigianato debba celebrare l'unicità di ciascuno, compresa quella dei nostri fedeli amici a quattro zampe. Sfoglia il catalogo o divertiti a configurare la tua creazione personalizzata, poi scrivici su Instagram per ordinare!
                 </p>
                 <br>
-                <a href="https://www.instagram.com/_3l_creations" target="_blank" class="contact-order-btn instagram" style="max-width: 280px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none;">
-                    <i class="fab fa-instagram" style="font-size: 20px;"></i> Seguici su Instagram
-                </a>
+                <!-- Contenitore orizzontale -->
+                <div style="display: flex; justify-content: center; gap: 10px; width: 100%; max-width: 600px; margin: 0 auto; flex-wrap: wrap;">
+                    
+                    <a href="https://www.instagram.com/_3l_creations" target="_blank" class="contact-order-btn instagram" style="flex: 1; min-width: 110px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; font-size: 14px; padding: 12px 5px;">
+                        <i class="fab fa-instagram" style="font-size: 18px;"></i> Instagram
+                    </a>
+                    
+                    <a href="https://www.facebook.com/groups/974242766065881" target="_blank" class="contact-order-btn facebook" style="flex: 1; min-width: 110px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; font-size: 14px; padding: 12px 5px;">
+                        <i class="fab fa-facebook-f" style="font-size: 18px;"></i> Facebook
+                    </a>
+                    
+                    <a href="https://www.tiktok.com/@3lcreations" target="_blank" class="contact-order-btn tiktok" style="flex: 1; min-width: 110px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; font-size: 14px; padding: 12px 5px;">
+                        <i class="fab fa-tiktok" style="font-size: 18px;"></i> TikTok
+                    </a>
+                    
+                </div>
             </div>
 
             <div class="home-text reveal" style="text-align: center; margin-top: 40px; background: transparent; box-shadow: none; border: none; padding: 0;">
@@ -1357,14 +1385,21 @@
         });
         function scrollToTop() { window.scrollTo({top: 0, behavior: 'smooth'}); }
 
-        // === COOKIE ===
+      // === COOKIE ===
         function checkCookies() {
-            if (!localStorage.getItem('cookiesAccepted'))
+            if (!localStorage.getItem('cookiesAccepted')) {
                 setTimeout(() => document.getElementById('cookie-banner').classList.add('show'), 2000);
+            } else {
+                // Se sono già accettati, lo nascondiamo del tutto all'avvio
+                document.getElementById('cookie-banner').style.display = 'none';
+            }
         }
         function acceptCookies() {
             localStorage.setItem('cookiesAccepted', 'true');
-            document.getElementById('cookie-banner').classList.remove('show');
+            const banner = document.getElementById('cookie-banner');
+            banner.classList.remove('show');
+            // Aspetta che finisca l'animazione (0.5s) e poi spegne fisicamente l'elemento
+            setTimeout(() => { banner.style.display = 'none'; }, 500);
         }
 
         // === TOAST ===
