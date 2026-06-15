@@ -850,6 +850,122 @@ html { scroll-behavior: smooth; }
     }
 }
 /* --- FINE NASCONDI FOTO --- */
+/* --- NUOVA TOOLBAR CATALOGO (RICERCA E ORDINAMENTO) --- */
+.catalogo-toolbar { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 15px; 
+    margin-bottom: 40px; 
+    flex-wrap: wrap; 
+    background: rgba(255, 255, 255, 0.65);
+    padding: 15px 25px;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    max-width: 850px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.4s ease;
+}
+
+.catalogo-toolbar:hover {
+    box-shadow: 0 15px 35px rgba(216, 27, 96, 0.1);
+}
+
+.catalogo-toolbar .search-container { 
+    margin: 0; 
+    flex: 1; 
+    min-width: 250px; 
+    position: relative;
+}
+
+.catalogo-toolbar .sort-container { 
+    margin: 0; 
+    flex: 0 1 auto;
+}
+
+/* Stile Input Ricerca */
+.search-input { 
+    width: 100%; 
+    padding: 14px 20px 14px 50px; 
+    border: 2px solid transparent; 
+    border-radius: 30px; 
+    font-family: 'Poppins', sans-serif; 
+    font-size: 14px; 
+    outline: none; 
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+    box-sizing: border-box; 
+    background-color: #ffffff; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    color: var(--testo-scuro);
+}
+
+.search-container i { 
+    position: absolute; 
+    left: 20px; 
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--fucsia); 
+    font-size: 16px; 
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Animazione Ricerca al Focus */
+.search-input:focus { 
+    border-color: var(--rosa-chiaro); 
+    box-shadow: 0 8px 25px rgba(216, 27, 96, 0.18); 
+    transform: translateY(-2px);
+}
+.search-input:focus + i, .search-container:focus-within i {
+    transform: translateY(-50%) scale(1.15);
+}
+
+/* Stile Select Ordinamento Animato */
+.sort-select-custom {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #ffffff;
+    border: 2px solid transparent;
+    padding: 14px 45px 14px 20px;
+    border-radius: 30px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fucsia);
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    /* Freccina personalizzata fucsia in SVG */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23d81b60%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 18px top 50%;
+    background-size: 12px auto;
+}
+
+/* Animazione Select all'Hover e Focus */
+.sort-select-custom:hover, .sort-select-custom:focus {
+    border-color: var(--rosa-chiaro);
+    box-shadow: 0 8px 25px rgba(216, 27, 96, 0.18);
+    transform: translateY(-2px);
+}
+
+/* Comportamento perfetto su Mobile */
+@media (max-width: 768px) {
+    .catalogo-toolbar { 
+        padding: 10px; 
+        background: transparent; 
+        border: none; 
+        box-shadow: none; 
+        gap: 10px;
+    }
+    .catalogo-toolbar .sort-container { width: 100%; }
+    .sort-select-custom { width: 100%; }
+}
+/* --- FINE TOOLBAR --- */
     </style>
 </head>
 <body>
@@ -1043,14 +1159,14 @@ html { scroll-behavior: smooth; }
                 <p style="color: var(--testo-chiaro); font-size: 15px;">Sfoglia i pezzi disponibili. Ogni creazione è realizzata interamente a mano.</p>
             </div>
 
-            <div class="catalogo-toolbar reveal">
+           <div class="catalogo-toolbar reveal">
                 <div class="search-container">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="searchBar" class="search-input" placeholder="Cerca (es. Cuore, Azzurro...)" onkeyup="filtraProdotti()">
+                    <input type="text" id="searchBar" class="search-input" placeholder="Cerca le tue creazioni..." onkeyup="filtraProdotti()">
                 </div>
                 <div class="sort-container">
-                    <select id="sortProdotti" class="custom-textarea" style="width: auto; padding: 12px 20px; border-radius: 30px; height: auto; cursor: pointer; border: 1px solid #eee; font-weight: 600;" onchange="applicaOrdinamento()">
-                        <option value="">Ordina per...</option>
+                    <select id="sortProdotti" class="sort-select-custom" onchange="applicaOrdinamento()">
+                        <option value="">✨ Ordina per...</option>
                         <option value="prezzo-asc">Prezzo: dal più basso</option>
                         <option value="prezzo-desc">Prezzo: dal più alto</option>
                         <option value="nome-asc">Alfabetico: A - Z</option>
