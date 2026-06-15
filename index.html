@@ -1050,6 +1050,21 @@ html { scroll-behavior: smooth; }
     padding: 8px 12px !important;
 }
 /* --- FINE FIX --- */
+/* --- FIX BOTTONI CATEGORIA --- */
+.category-tabs {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important; /* Forza l'allineamento centrale */
+    gap: 10px !important;
+}
+
+.cat-btn {
+    flex-shrink: 0 !important; /* Impedisce ai bottoni di rimpicciolirsi troppo */
+    min-width: 100px !important; /* Garantisce una larghezza minima leggibile */
+    height: auto !important; /* Si adatta al testo */
+}
+/* --- FINE FIX --- */
     </style>
 </head>
 <body>
@@ -1259,17 +1274,15 @@ html { scroll-behavior: smooth; }
                 </div>
             </div>
 
-            <div class="category-tabs reveal" style="flex-wrap: wrap;">
-
-            <div class="category-tabs reveal" style="flex-wrap: wrap;">
-                <button class="cat-btn active" onclick="cambiaCategoria('collane', this)">📿 Collane</button>
-                <button class="cat-btn" onclick="cambiaCategoria('fiocchi', this)">🎀 Fiocchi</button>
-                <button class="cat-btn" onclick="cambiaCategoria('bracciali', this)">📿 Bracciali e Spille</button>
-                <button class="cat-btn" onclick="cambiaCategoria('orecchini', this)">💎 Orecchini</button>
-                <button class="cat-btn" onclick="cambiaCategoria('borse', this)">👜 Borse</button>
-                <button class="cat-btn" onclick="cambiaCategoria('pochette', this)">👝 Pochette</button>
-                <button class="cat-btn" onclick="cambiaCategoria('ciondoli_pronti', this)">✨ Ciondoli</button>
-            </div>
+          <div class="category-tabs reveal" style="flex-wrap: wrap;">
+    <button class="cat-btn active" onclick="cambiaCategoria('collane', this)">📿 Collane</button>
+    <button class="cat-btn" onclick="cambiaCategoria('fiocchi', this)">🎀 Fiocchi</button>
+    <button class="cat-btn" onclick="cambiaCategoria('bracciali', this)">📿 Bracciali e Spille</button>
+    <button class="cat-btn" onclick="cambiaCategoria('orecchini', this)">💎 Orecchini</button>
+    <button class="cat-btn" onclick="cambiaCategoria('borse', this)">👜 Borse</button>
+    <button class="cat-btn" onclick="cambiaCategoria('pochette', this)">👝 Pochette</button>
+    <button class="cat-btn" onclick="cambiaCategoria('ciondoli_pronti', this)">✨ Ciondoli</button>
+</div>
 
             <div id="cat-collane" class="cat-content active"><div class="product-container" id="lista-collane"></div></div>
             <div id="cat-fiocchi" class="cat-content"><div class="product-container" id="lista-fiocchi"></div></div>
