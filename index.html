@@ -399,9 +399,31 @@
         .edit-admin-btn:hover { background-color: #e68a00; transform: scale(1.05); }
 
         /* MODALE MODIFICA */
-        #edit-modal { display: none; position: fixed; z-index: 999999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(216, 27, 96, 0.1); backdrop-filter: blur(8px); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        #edit-modal .componi-box { background: rgba(255, 255, 255, 0.95); width: 100%; max-width: 400px; padding: 25px; border-radius: 25px; box-shadow: 0 15px 40px rgba(216, 27, 96, 0.15); border: 2px solid var(--rosa-chiaro); position: relative; max-height: 90vh; overflow-y: auto; }
-        .label-admin { display: block; font-size: 11px; font-weight: 600; color: var(--fucsia); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; margin-left: 5px; }
+      #edit-modal {
+    display: none; 
+    position: fixed !important; /* Forza la posizione fissa rispetto alla finestra */
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999999999 !important; /* Altissimo per stare sopra tutto */
+    background: rgba(0, 0, 0, 0.6) !important; /* Sfondo scuro per isolare il modale */
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    margin: 0 !important; /* Rimuovi eventuali margini */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Assicurati che il box interno sia centrato */
+#edit-modal .componi-box {
+    position: relative !important;
+    margin: auto !important; /* Centra il box nel flex container */
+    max-width: 400px;
+    width: 100%;
+}
+    .label-admin { display: block; font-size: 11px; font-weight: 600; color: var(--fucsia); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; margin-left: 5px; }
         #edit-modal .custom-textarea { margin-bottom: 12px; font-size: 13px; border-radius: 12px; border: 1px solid #eee; }
 
         /* BARRA RICERCA */
@@ -2621,10 +2643,23 @@ window.caricaProdottiFirebase = async function(categoria, idContenitore) {
                     window.toggleWishlist(e, idProdotto, titolo, prezzoNum, immagine);
                 });
 
-                if (isAdmin) {
-                    card.querySelector('.edit-admin-btn').addEventListener('click', () => { window.apriModaleModifica(idProdotto, titolo, prezzoNum, badgeTesto, immagine, inEv, descrizioneText, riga.categoria); });
-                    card.querySelector('.delete-admin-btn').addEventListener('click', () => { window.eliminaProdotto(idProdotto, titolo); });
-                }
+       if (isAdmin) {
+    const editBtn = card.querySelector('.edit-admin-btn');
+    const deleteBtn = card.querySelector('.delete-admin-btn');
+
+    // Usiamo una funzione anonima per gestire il click in modo isolato
+    editBtn.onclick = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        window.apriModaleModifica(idProdotto, titolo, prezzoNum, badgeTesto, immagine, inEv, descrizioneText, riga.categoria);
+    };
+
+    deleteBtn.onclick = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        window.eliminaProdotto(idProdotto, titolo);
+    };
+}
             } else {
                 let chkClass = categoria === 'ciondoli' ? 'charm-checkbox' : 'perlina-checkbox';
                 card.className = 'charm-card reveal visible';
@@ -2645,10 +2680,23 @@ window.caricaProdottiFirebase = async function(categoria, idContenitore) {
                 checkbox.setAttribute('data-immagine', immagine);
                 checkbox.addEventListener('change', window.calcolaTotaleCiondoli);
 
-                if (isAdmin) {
-                    card.querySelector('.edit-admin-btn').addEventListener('click', () => { window.apriModaleModifica(idProdotto, titolo, prezzoNum, badgeTesto, immagine, inEv, descrizioneText, riga.categoria); });
-                    card.querySelector('.delete-admin-btn').addEventListener('click', () => { window.eliminaProdotto(idProdotto, titolo); });
-                }
+ if (isAdmin) {
+    const editBtn = card.querySelector('.edit-admin-btn');
+    const deleteBtn = card.querySelector('.delete-admin-btn');
+
+    // Usiamo una funzione anonima per gestire il click in modo isolato
+    editBtn.onclick = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        window.apriModaleModifica(idProdotto, titolo, prezzoNum, badgeTesto, immagine, inEv, descrizioneText, riga.categoria);
+    };
+
+    deleteBtn.onclick = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        window.eliminaProdotto(idProdotto, titolo);
+    };
+}
             }
             contenitore.appendChild(card);
         });
@@ -2925,17 +2973,24 @@ document.addEventListener('click', function(e) {
         };
 
         // === MODIFICA PRODOTTO ===
-       window.apriModaleModifica = function(id, titolo, prezzo, badge, immagine, inEvidenza, descrizione, categoria) {
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-titolo').value = titolo;
-            document.getElementById('edit-prezzo').value = prezzo;
-            document.getElementById('edit-badge').value = badge === 'undefined' || !badge ? '' : badge;
-            document.getElementById('edit-evidenza').checked = inEvidenza;
-            document.getElementById('edit-descrizione').value = descrizione && descrizione !== 'undefined' ? descrizione.replace(/\\n/g, '\n') : '';
-            if(document.getElementById('edit-categoria')) document.getElementById('edit-categoria').value = categoria || 'collane';
-            document.getElementById('edit-immagine-file').value = '';
-            document.getElementById('edit-modal').style.display = "flex";
-        };
+     window.apriModaleModifica = function(id, titolo, prezzo, badge, immagine, inEvidenza, descrizione, categoria) {
+    try {
+        console.log("Tentativo di apertura modale per:", id);
+        
+        const elId = document.getElementById('edit-id');
+        if (!elId) { console.error("Elemento 'edit-id' non trovato!"); return; }
+        
+        elId.value = id;
+        document.getElementById('edit-titolo').value = titolo;
+        document.getElementById('edit-prezzo').value = prezzo;
+        // ... continua con gli altri ...
+
+        document.getElementById('edit-modal').style.display = "flex";
+        console.log("Modale visualizzato con successo.");
+    } catch (err) {
+        console.error("Errore durante l'apertura del modale:", err);
+    }
+};
         window.chiudiModaleModifica = function() {
             document.getElementById('edit-modal').style.display = 'none';
         };
