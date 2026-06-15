@@ -1688,11 +1688,16 @@ html { scroll-behavior: smooth; }
     } 
     // 3. Logica per le altre sezioni
     else {
-        document.querySelectorAll('.content-section').forEach(s => {
-            s.style.display = 'block';
-            s.style.opacity = '1';
-            s.classList.add('active');
-        });
+       // DOPO — salta il modal dettaglio e nascondilo esplicitamente
+document.querySelectorAll('.content-section').forEach(s => {
+    if (s.id === 'dettaglio-prodotto') return;   // ← riga aggiunta
+    s.style.display = 'block';
+    s.style.opacity = '1';
+    s.classList.add('active');
+});
+// Assicura che il dettaglio sia chiuso
+const detEl = document.getElementById('dettaglio-prodotto');
+if (detEl) { detEl.style.display = 'none'; detEl.classList.remove('active'); }
         const admin = document.getElementById('sezione-admin');
         if(admin) { 
             admin.style.display = 'none'; 
