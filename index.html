@@ -89,7 +89,9 @@
         @media (max-width: 768px) {
             .install-app-btn-top { padding: 8px 15px; font-size: 12px; }
         }
-
+/* === 5. SCHEDE PERSONALIZZA === */
+.pers-content { display: none; opacity: 0; }
+.pers-content.active { display: block; animation: appEnter 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
         /* === PULSANTE CONTATTO/ORDINE === */
         .contact-order-btn {
             background-color: var(--fucsia);
@@ -198,76 +200,70 @@
 
         #menuOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.3); z-index: 96; opacity: 0; transition: opacity 0.4s ease; }
 
-        /* MENU LATERALE */
-        /* MENU LATERALE */
-.sidebar { 
-    height: 100%; 
-    width: 0; 
-    position: fixed; 
-    z-index: 100; 
-    top: 0; 
-    left: 0; 
-    background-color: rgba(255, 255, 255, 0.85); 
-    backdrop-filter: blur(12px); 
-    overflow-y: auto; 
-    overflow-x: hidden; 
-    -webkit-overflow-scrolling: touch; 
-    transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); 
-    padding-top: 60px; 
-    padding-bottom: 60px; 
-    box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); 
-    box-sizing: border-box; /* Aggiungi solo questa riga! */
-} .sidebar::-webkit-scrollbar { width: 5px; }
-        .sidebar::-webkit-scrollbar-track { background: transparent; }
-        .sidebar::-webkit-scrollbar-thumb { background: var(--rosa-chiaro); border-radius: 10px; }
-        .sidebar a { padding: 12px 30px; text-decoration: none; font-size: 16px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
-        .sidebar a:hover { color: var(--fucsia); background-color: rgba(255, 240, 245, 0.8); padding-left: 40px; }
-        .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; background: none; color: var(--testo-scuro); padding: 0; }
-        .sidebar-logo { width: 120px; display: block; margin: 0 auto 10px auto; }
-        .menu-title { font-size: 12px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 5px 30px; }
-/* MENU A TENDINA (ACCORDION) LATERALE */
-        .dropdown-btn {
-            padding: 12px 30px;
-            text-decoration: none;
-            font-size: 16px;
-            color: var(--testo-scuro);
+        
+      /* === NAVBAR FISSA IN ALTO (GLASSMORPHISM) === */
+        body {
+            padding-top: 85px; /* Crea spazio per non far finire i titoli sotto la barra */
+        }
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 75px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px); /* Effetto vetro sfocato sotto la barra */
+            box-shadow: 0 4px 20px rgba(216, 27, 96, 0.08);
+            border-bottom: 1px solid rgba(244, 143, 177, 0.3);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: none;
-            border: none;
-            width: 100%;
-            text-align: left;
+            padding: 0 40px;
+            box-sizing: border-box;
+            z-index: 99999;
+            transition: all 0.3s ease;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
             cursor: pointer;
-            outline: none;
-            transition: all 0.3s;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600; /* Più marcato per le categorie principali */
         }
-        .dropdown-btn:hover, .dropdown-btn.attivo {
-            color: var(--fucsia);
-            background-color: rgba(255, 240, 245, 0.8);
-            padding-left: 40px;
+        .nav-brand img {
+            height: 48px;
+            width: auto;
+            transition: transform 0.3s;
         }
-        .dropdown-container {
-            display: none; /* Nascosto di default */
-            background-color: rgba(0, 0, 0, 0.02);
-            border-left: 3px solid var(--rosa-chiaro);
-            margin-left: 30px;
-            margin-right: 20px;
-            border-radius: 0 0 10px 10px;
-            margin-bottom: 10px;
-            overflow: hidden;
+        .nav-brand:hover img { transform: scale(1.05); }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
         }
-        .dropdown-container a {
-            padding: 10px 20px;
-            font-size: 14px; /* Più piccolo per le sottocategorie */
+        .nav-links a {
+            text-decoration: none;
+            color: var(--testo-scuro);
+            font-weight: 600;
+            font-size: 15px;
+            position: relative;
+            transition: color 0.3s;
         }
-        .dropdown-btn i {
-            transition: transform 0.3s ease;
+        .nav-links a:hover { color: var(--fucsia); }
+        
+        /* Animazione linea fucsia sotto i link */
+        .nav-links a::after {
+            content: ''; position: absolute; left: 0; bottom: -5px; width: 0; height: 2px;
+            background-color: var(--fucsia); transition: width 0.3s ease;
         }
-        .dropdown-btn.attivo i {
-            transform: rotate(180deg); /* Ruota la freccetta quando aperto */
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-actions { display: flex; align-items: center; gap: 15px; }
+
+        /* SU MOBILE: Centra il logo, nasconde i link (usiamo la barra inferiore) */
+        @media (max-width: 768px) {
+            .top-navbar { padding: 0 20px; height: 65px; justify-content: center; }
+            .nav-links { display: none; }
+            body { padding-top: 70px; }
+            .nav-actions { position: absolute; right: 20px; }
         }
         /* TORNA SU */
         .back-to-top { background-color: rgba(255, 255, 255, 0.9); color: var(--fucsia); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); cursor: pointer; transition: 0.3s; border: 1px solid var(--rosa-chiaro); position: fixed; bottom: 100px; right: 37px; z-index: 89; opacity: 0; visibility: hidden; }
@@ -540,6 +536,99 @@
         .news-dot.active { background: var(--fucsia); transform: scale(1.3); }
         .admin-news-card { background: white; border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         @media (max-width: 768px) { .news-slider-container { padding: 25px 20px; } .news-item h3 { font-size: 20px; } .news-prev, .news-next { display: none; /* Su mobile usiamo i puntini */ } }
+        /* === 1. SCORRIMENTO MORBIDO E TRANSIZIONI NATIVE === */
+html { scroll-behavior: smooth; }
+
+::view-transition-old(*),
+::view-transition-new(*) {
+    animation-duration: 0.5s;
+}
+
+/* === 2. FLUSSO CONTINUO DELLE SEZIONI === */
+.content-section { 
+    display: block; /* Tutte le sezioni ora sono visibili e impilate */
+    opacity: 1; 
+    margin-bottom: 100px; /* Crea respiro tra una sezione e l'altra */
+}
+
+/* === 3. IL DETTAGLIO PRODOTTO DIVENTA UN POPUP A TUTTO SCHERMO === */
+#dettaglio-prodotto {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: var(--sfondo); z-index: 99999; /* Abbassiamo di 1 lo z-index rispetto alla navbar */
+    overflow-y: auto; 
+    padding: 20px; 
+    padding-top: 95px; /* Crea lo spazio necessario per non finire sotto la navbar */
+    box-sizing: border-box;
+    display: none; /* Nascosto di default */
+}
+#dettaglio-prodotto.active {
+    display: block;
+    animation: slideUpModal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes slideUpModal {
+    from { transform: translateY(50%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+#sezione-admin { display: none; } /* Nascosta finché non serve */
+#sezione-admin.active { display: block; }
+
+/* === 4. BARRA INFERIORE FLUTTUANTE (GLASSMORPHISM) E A SCOMPARSA === */
+@media (max-width: 768px) {
+    .bottom-nav-bar { 
+        bottom: 20px; left: 5%; width: 90%; border-radius: 30px;
+        background: rgba(255,255,255,0.75); backdrop-filter: blur(20px);
+        box-shadow: 0 10px 30px rgba(216, 27, 96, 0.15); border: 1px solid rgba(255,255,255,0.5);
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease; 
+    }
+    .bottom-nav-bar.hidden {
+        transform: translateY(150px); opacity: 0; /* Si nasconde quando scorri in giù */
+    }
+}
+/* === TASTO PREFERITI FLUTTUANTE === */
+.floating-heart-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: linear-gradient(135deg, var(--fucsia), var(--rosa-chiaro));
+    color: white;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 5px 15px rgba(216, 27, 96, 0.4);
+    cursor: pointer;
+    z-index: 89;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.floating-heart-btn:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 25px rgba(216, 27, 96, 0.5);
+}
+
+/* Regoliamo il vecchio tasto "Torna Su" per non sovrapporsi al cuoricino */
+.back-to-top { bottom: 95px; right: 30px; }
+
+/* Adattamenti per il mobile (tenendo conto della barra di navigazione in basso) */
+@media (max-width: 768px) {
+    .floating-heart-btn { bottom: 95px; right: 20px; width: 50px; height: 50px; font-size: 20px; }
+    .back-to-top { bottom: 160px; right: 25px; width: 40px; height: 40px; font-size: 16px; }
+}
+
+/* TRASFORMIAMO LA SEZIONE PREFERITI IN UN POPUP A TUTTO SCHERMO */
+#preferiti {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: var(--sfondo); z-index: 999999;
+    overflow-y: auto; padding: 20px; box-sizing: border-box;
+    display: none; /* Tolto dal flusso normale della Home */
+}
+#preferiti.active {
+    display: block;
+    animation: slideUpModal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
     </style>
 </head>
 <body>
@@ -569,7 +658,30 @@
         <span class="lightbox-close">&times;</span>
         <img id="lightbox-img" src="">
     </div>
-
+<!-- NAVBAR FISSA IN ALTO -->
+    <nav class="top-navbar">
+        <!-- Logo a sinistra -->
+        <div class="nav-brand" onclick="showSection('home'); window.scrollTo({top: 0, behavior: 'smooth'});">
+            <img src="logo.png" alt="3L Creations" onerror="this.src='logo.png'">
+        </div>
+        
+        <!-- Link centrali (Visibili su Desktop) -->
+        <div class="nav-links">
+            <a href="#home" onclick="showSection('home'); return false;">Home</a>
+            <a href="#acquista" onclick="showSection('acquista'); return false;">Prodotti</a>
+            <a href="#sezione-personalizza" onclick="showSection('sezione-personalizza'); return false;">Personalizza</a>
+            <a href="#contatti" onclick="showSection('contatti'); return false;">Contatti</a>
+            <a href="#faq" onclick="showSection('faq'); return false;">FAQ</a>
+        </div>
+        
+        <!-- Azioni a destra -->
+        <div class="nav-actions">
+            <!-- Il bottone Installa App integrato elegantemente -->
+            <button id="btn-installa-app-top" class="install-app-btn-top" style="display: none; position: static;">
+                <i class="fas fa-download"></i> App
+            </button>
+        </div>
+    </nav>
     <!-- GUIDA TAGLIE -->
     <div id="sizeGuideModal" class="size-guide-modal" onclick="closeSizeGuide(event)">
         <div class="size-guide-content">
@@ -601,49 +713,9 @@
         <div class="trust-badge"><i class="fas fa-shield-alt"></i><span>Qualità Garantita</span></div>
     </div>
 
-    <!-- OVERLAY MENU -->
-    <div id="menuOverlay" onclick="closeNav()"></div>
+    
 
-    <div id="mySidebar" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <img src="logo.png" alt="Logo 3L Creations" class="sidebar-logo">
-
-        <a href="#home" onclick="showSection('home'); return false;">🏠 Home</a>
-        <a href="#preferiti" onclick="showSection('preferiti'); return false;">❤️ I Miei Preferiti</a>
-        
-        <button class="dropdown-btn" onclick="toggleDropdown('menu-catalogo', this)">
-            🛍️ Catalogo <i class="fas fa-chevron-down"></i>
-        </button>
-        <div id="menu-catalogo" class="dropdown-container">
-            <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('collane'); return false;">📿 Collane</a>
-            <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('fiocchi'); return false;">🎀 Fiocchi</a>
-            <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('bracciali'); return false;">📿 Bracciali e Spille</a>
-            <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('orecchini'); return false;">💎 Orecchini</a>
-            <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('borse'); return false;">👜 Borse</a>
-            <a href="#acquista" onclick="showSection('acquista'); cambiaCategoria('pochette'); return false;">👝 Pochette</a>
-        </div>
-
-        <button class="dropdown-btn" onclick="toggleDropdown('menu-personalizza', this)">
-            ✨ Personalizza <i class="fas fa-chevron-down"></i>
-        </button>
-        <div id="menu-personalizza" class="dropdown-container">
-            <a href="#componi" onclick="showSection('componi'); return false;">✨ Componi Collana</a>
-            <a href="#crea-maglietta" onclick="showSection('crea-maglietta'); return false;">👕 Crea Maglietta</a>
-            <a href="#crea-pelosetto" onclick="showSection('crea-pelosetto'); return false;">🐾 Crea Maglia Pelosetto</a>
-            <a href="#crea-pochette" onclick="showSection('crea-pochette'); return false;">👝 Crea Pochette</a>
-            <a href="#crea-borsa" onclick="showSection('crea-borsa'); return false;">👜 Crea Borsa</a>
-        </div>
-
-        <button class="dropdown-btn" onclick="toggleDropdown('menu-info', this)">
-            ℹ️ Informazioni <i class="fas fa-chevron-down"></i>
-        </button>
-        <div id="menu-info" class="dropdown-container">
-            <a href="#contatti" onclick="showSection('contatti'); return false;">✉️ Contatti</a>
-            <a href="#faq" onclick="showSection('faq'); return false;">❓ FAQ</a>
-            <a href="#legale" onclick="showSection('legale'); return false;">📄 Note Legali</a>
-        </div>
-    </div>
-
+       
     <!-- TORNA SU -->
     <div class="back-to-top" id="backToTopBtn" onclick="scrollToTop()">
         <i class="fas fa-chevron-up"></i>
@@ -652,7 +724,7 @@
     <!-- MAIN -->
     <div id="main">
         <div style="display: flex; justify-content: space-between; align-items: center; position: sticky; top: 15px; z-index: 95; margin-bottom: 20px;">
-            <button class="openbtn" onclick="openNav()" style="margin-bottom: 0; position: relative; top: 0;"><i class="fas fa-bars"></i></button>
+            
             <button id="btn-installa-app-top" class="install-app-btn-top" style="display: none; position: relative; top: 0; right: 0;">
                 <i class="fas fa-download"></i> Installa App
             </button>
@@ -720,13 +792,21 @@
                 </div>
             </div>
         </div>
-<!-- PREFERITI -->
-        <div id="preferiti" class="content-section">
-            <h2 class="reveal" style="display:block; text-align:center;">I Miei Preferiti ❤️</h2>
-            <div class="product-container" id="lista-preferiti">
-                <!-- I prodotti preferiti appariranno qui -->
-            </div>
-        </div>
+<!-- TASTO PREFERITI FLUTTUANTE -->
+<div class="floating-heart-btn" onclick="apriPreferiti()">
+    <i class="fas fa-heart"></i>
+</div>
+
+<!-- PREFERITI (MODAL A SCOMPARSA) -->
+<div id="preferiti">
+    <!-- Nuova "X" in alto a destra -->
+    <span onclick="chiudiPreferiti()" style="position: absolute; top: 15px; right: 25px; font-size: 40px; cursor: pointer; color: var(--testo-chiaro); z-index: 100; transition: color 0.3s;" onmouseover="this.style.color='var(--fucsia)'" onmouseout="this.style.color='var(--testo-chiaro)'">&times;</span>
+    
+    <h2 style="display:block; text-align:center; margin-top: 35px;">I Miei Preferiti ❤️</h2>
+    <div class="product-container" id="lista-preferiti">
+        <!-- I prodotti preferiti appariranno qui -->
+    </div>
+</div>
         <!-- ACQUISTA -->
         <div id="acquista" class="content-section">
             <h2 class="reveal" style="display:block; text-align:center;">I Nostri Prodotti</h2>
@@ -768,9 +848,9 @@
 
         <div id="dettaglio-prodotto" class="content-section">
             <div class="componi-box reveal" style="max-width: 950px; margin: 0 auto; padding: 25px; display: flex; flex-direction: column;">
-                <div class="back-to-cat-btn" onclick="history.back()">
-                    <i class="fas fa-chevron-left"></i> Torna ai prodotti
-                </div>
+               <div class="back-to-cat-btn" onclick="chiudiDettaglio()">
+    <i class="fas fa-chevron-down"></i> Chiudi prodotto
+</div>
                 <div style="display: flex; flex-wrap: wrap; gap: 30px;">
                     <div style="flex: 1.2; min-width: 300px;">
                         <div id="zoom-wrapper" style="overflow: hidden; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; cursor: zoom-in;">
@@ -809,198 +889,207 @@
             </div>
         </div>
 
-        <!-- CREA MAGLIETTA -->
-        <div id="crea-maglietta" class="content-section">
-            <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Maglietta 👕</h2>
-            <div class="photo-notice reveal">
-                <i class="fas fa-info-circle" style="color: var(--fucsia);"></i>
-                <strong> Come funziona:</strong> Scegli il colore e la taglia, scrivi cosa vuoi ricamare e contattaci su Instagram inviando anche la tua foto di riferimento. Realizzeremo la tua maglietta su misura! 🎨
-            </div>
-            <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
-                <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
-                <div class="swatch-container">
-                    <label class="swatch-label">
-                        <input type="radio" name="col-maglia" value="Bianco" checked onchange="aggiornaAnteprima('img-maglia', 'tshirt_bianca')">
-                        <div class="swatch-circle swatch-white"></div>Bianco
-                    </label>
-                    <label class="swatch-label">
-                        <input type="radio" name="col-maglia" value="Nero" onchange="aggiornaAnteprima('img-maglia', 'tshirt_nera')">
-                        <div class="swatch-circle swatch-black"></div>Nero
-                    </label>
-                </div>
-                <img id="img-maglia" src="bianco-tshirt.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
-                <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia <span onclick="openSizeGuide('umani')" style="font-size: 12px; color: var(--fucsia); cursor: pointer; text-decoration: underline; margin-left: 10px;"><i class="fas fa-ruler"></i> Guida alle taglie</span></h3>
-                <div class="size-selector">
-                    <label><input type="radio" name="taglia-maglia" value="XS"><div class="size-pill">XS</div></label>
-                    <label><input type="radio" name="taglia-maglia" value="S"><div class="size-pill">S</div></label>
-                    <label><input type="radio" name="taglia-maglia" value="M" checked><div class="size-pill">M</div></label>
-                    <label><input type="radio" name="taglia-maglia" value="L"><div class="size-pill">L</div></label>
-                    <label><input type="radio" name="taglia-maglia" value="XL"><div class="size-pill">XL</div></label>
-                    <label><input type="radio" name="taglia-maglia" value="XXL"><div class="size-pill">XXL</div></label>
-                </div>
-                <h3 style="text-align: center; color: var(--testo-scuro);">3. Cosa vuoi ricamare?</h3>
-                <textarea id="nota-maglietta" class="custom-textarea" placeholder="Descrivi il ricamo o il testo che vuoi..."></textarea>
-                <div style="background: #fff5f8; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro);">
-                    <i class="fas fa-camera" style="color: var(--fucsia);"></i> Ricordati di inviare anche la tua <strong>foto di riferimento</strong> via Instagram o email!
-                </div>
-                <div style="font-size: 14px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 15px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 20px;">€<span id="label-prezzo-maglietta">20.00</span></span></div>
-                <button onclick="inviaRichiestaProdotto('Maglietta', 'nota-maglietta', 'col-maglia', 'taglia-maglia')" class="contact-order-btn instagram">
-                    <i class="fab fa-instagram"></i> Richiedi su Instagram
-                </button>
-            </div>
-        </div>
+       <!-- ============================================================== -->
+        <!-- NUOVA SEZIONE UNICA PERSONALIZZA (Sostituisce le 5 precedenti) -->
+        <!-- ============================================================== -->
+        <div id="sezione-personalizza" class="content-section">
+            <h2 class="reveal" style="display:block; text-align:center;">Crea il tuo Personalizzato ✨</h2>
 
-        <!-- CREA PELOSETTO -->
-        <div id="crea-pelosetto" class="content-section">
-            <h2 class="reveal" style="display:block; text-align:center;">Crea maglia pelosetto 🐾</h2>
-            <div class="photo-notice reveal">
-                <i class="fas fa-info-circle" style="color: var(--fucsia);"></i>
-                <strong> Come funziona:</strong> Scegli colore e taglia per il tuo amico a quattro zampe, scrivi cosa vuoi ricamare e contattaci su Instagram con la foto del tuo pelosetto! 🐶
+            <div class="category-tabs reveal" style="flex-wrap: wrap; margin-bottom: 30px;">
+                <button class="cat-btn cat-btn-pers active" onclick="cambiaPersonalizzato('componi', this)">✨ Collana</button>
+                <button class="cat-btn cat-btn-pers" onclick="cambiaPersonalizzato('crea-maglietta', this)">👕 Maglietta</button>
+                <button class="cat-btn cat-btn-pers" onclick="cambiaPersonalizzato('crea-pelosetto', this)">🐾 Pelosetto</button>
+                <button class="cat-btn cat-btn-pers" onclick="cambiaPersonalizzato('crea-pochette', this)">👝 Pochette</button>
+                <button class="cat-btn cat-btn-pers" onclick="cambiaPersonalizzato('crea-borsa', this)">👜 Borsa</button>
             </div>
-            <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
-                <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
-                <div class="swatch-container">
-                    <label class="swatch-label">
-                        <input type="radio" name="col-pelosetto" value="Bianco" checked onchange="aggiornaAnteprima('img-pelosetto', 'pelosetto_bianco')">
-                        <div class="swatch-circle swatch-white"></div>Bianco
-                    </label>
-                    <label class="swatch-label">
-                        <input type="radio" name="col-pelosetto" value="Nero" onchange="aggiornaAnteprima('img-pelosetto', 'pelosetto_nero')">
-                        <div class="swatch-circle swatch-black"></div>Nero
-                    </label>
-                </div>
-                <img id="img-pelosetto" src="bianco-pelosetto.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
-                <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia <span onclick="openSizeGuide('cani')" style="font-size: 12px; color: var(--fucsia); cursor: pointer; text-decoration: underline; margin-left: 10px;"><i class="fas fa-ruler"></i> Guida alle taglie</span></h3>
-                <div class="size-selector">
-                    <label><input type="radio" name="taglia-pelosetto" value="XS"><div class="size-pill">XS</div></label>
-                    <label><input type="radio" name="taglia-pelosetto" value="S"><div class="size-pill">S</div></label>
-                    <label><input type="radio" name="taglia-pelosetto" value="M" checked><div class="size-pill">M</div></label>
-                    <label><input type="radio" name="taglia-pelosetto" value="L"><div class="size-pill">L</div></label>
-                    <label><input type="radio" name="taglia-pelosetto" value="XL"><div class="size-pill">XL</div></label>
-                </div>
-                <h3 style="text-align: center; color: var(--testo-scuro);">3. Cosa vuoi ricamare?</h3>
-                <textarea id="nota-pelosetto" class="custom-textarea" placeholder="Descrivi il ricamo o testo..."></textarea>
-                <div style="background: #fff5f8; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro);">
-                    <i class="fas fa-camera" style="color: var(--fucsia);"></i> Manda anche una <strong>foto del tuo pelosetto</strong> via Instagram!
-                </div>
-                <div style="font-size: 14px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 15px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 20px;">€<span id="label-prezzo-pelosetto">18.00</span></span></div>
-                <button onclick="inviaRichiestaProdotto('Maglia Pelosetto', 'nota-pelosetto', 'col-pelosetto', 'taglia-pelosetto')" class="contact-order-btn instagram">
-                    <i class="fab fa-instagram"></i> Richiedi su Instagram
-                </button>
-            </div>
-        </div>
 
-        <!-- CREA POCHETTE -->
-        <div id="crea-pochette" class="content-section">
-            <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Pochette 👝</h2>
-            <div class="photo-notice reveal">
-                <i class="fas fa-info-circle" style="color: var(--fucsia);"></i>
-                <strong> Come funziona:</strong> Scegli il colore, descrivi il tuo ricamo e contattaci! Inviaci anche un'immagine di riferimento per il disegno. 🎨
-            </div>
-            <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
-                <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
-                <div class="swatch-container">
-                    <label class="swatch-label">
-                        <input type="radio" name="col-pochette" value="Azzurro" checked onchange="aggiornaAnteprima('img-pochette', 'pochette_azzurra')">
-                        <div class="swatch-circle swatch-blue"></div>Azzurro
-                    </label>
-                    <label class="swatch-label">
-                        <input type="radio" name="col-pochette" value="Rosa" onchange="aggiornaAnteprima('img-pochette', 'pochette_rosa')">
-                        <div class="swatch-circle swatch-pink"></div>Rosa
-                    </label>
-                    <label class="swatch-label">
-                        <input type="radio" name="col-pochette" value="Nero" onchange="aggiornaAnteprima('img-pochette', 'pochette_nera')">
-                        <div class="swatch-circle swatch-black"></div>Nero
-                    </label>
+            <!-- 1. COMPONI COLLANA -->
+            <div id="componi" class="pers-content active">
+                <div class="componi-box reveal">
+                    <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il colore della catenina (Inclusa: €<span id="label-prezzo-catenina">5.00</span>)</h3>
+                    <div class="swatch-container">
+                        <label class="swatch-label">
+                            <input type="radio" name="catenina" value="Oro" checked onchange="calcolaTotaleCiondoli()">
+                            <div class="swatch-circle" style="background: linear-gradient(135deg, #FFD700, #DAA520);"></div>Oro
+                        </label>
+                        <label class="swatch-label">
+                            <input type="radio" name="catenina" value="Argento" onchange="calcolaTotaleCiondoli()">
+                            <div class="swatch-circle" style="background: linear-gradient(135deg, #E0E0E0, #C0C0C0);"></div>Argento
+                        </label>
+                        <label class="swatch-label">
+                            <input type="radio" name="catenina" value="Bronzo" onchange="calcolaTotaleCiondoli()">
+                            <div class="swatch-circle" style="background: linear-gradient(135deg, #CD7F32, #8B4513);"></div>Bronzo
+                        </label>
+                    </div>
                 </div>
-                <img id="img-pochette" src="azzurro-p.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
-                <h3 style="text-align: center; color: var(--testo-scuro);">2. Descrivi la personalizzazione</h3>
-                <textarea id="nota-pochette" class="custom-textarea" placeholder="Descrivi il tuo ricamo qui..."></textarea>
-                <div style="background: #fff5f8; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro);">
-                    <i class="fas fa-camera" style="color: var(--fucsia);"></i> Invia la tua <strong>immagine di riferimento</strong> su Instagram!
+
+                <div class="componi-box reveal">
+                    <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli i ciondoli (Da 1 a 10)</h3>
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <select id="sortComponenti" class="custom-textarea" style="width: auto; padding: 8px 15px; border-radius: 20px; height: auto; font-size: 13px; cursor: pointer;" onchange="applicaOrdinamentoComponenti()">
+                            <option value="">Ordina ciondoli e perline...</option>
+                            <option value="prezzo-asc">Prezzo: dal più basso</option>
+                            <option value="prezzo-desc">Prezzo: dal più alto</option>
+                            <option value="nome-asc">Alfabetico: A - Z</option>
+                            <option value="nome-desc">Alfabetico: Z - A</option>
+                        </select>
+                    </div>
+                    <div class="product-container" id="lista-ciondoli">
+                        <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
+                        <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
+                    </div>
                 </div>
-                <div style="font-size: 14px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 15px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 20px;">€<span id="label-prezzo-pochette">15.00</span></span></div>
-                <button onclick="inviaRichiestaProdotto('Pochette', 'nota-pochette', 'col-pochette', null)" class="contact-order-btn instagram">
-                    <i class="fab fa-instagram"></i> Richiedi su Instagram
-                </button>
-            </div>
-        </div>
 
-        <!-- CREA BORSA -->
-        <div id="crea-borsa" class="content-section">
-            <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Borsa 👜</h2>
-            <div class="photo-notice reveal">
-                <i class="fas fa-info-circle" style="color: var(--fucsia);"></i>
-                <strong> Come funziona:</strong> Descrivi il ricamo che vuoi e contattaci su Instagram inviando anche la tua immagine di riferimento!
-            </div>
-            <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
-                <h3 style="text-align: center; color: var(--testo-scuro);">Colore Unico: Bianco</h3>
-                <img id="img-borsa" src="bianco-borsa.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
-                <h3 style="text-align: center; color: var(--testo-scuro);">Descrivi la personalizzazione</h3>
-                <textarea id="nota-borsa" class="custom-textarea" placeholder="Descrivi il tuo ricamo per la borsa..."></textarea>
-                <div style="background: #fff5f8; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro);">
-                    <i class="fas fa-camera" style="color: var(--fucsia);"></i> Invia la tua <strong>immagine di riferimento</strong> su Instagram!
+                <div class="componi-box reveal">
+                    <h3 style="text-align: center; color: var(--testo-scuro);">3. Scegli le perline (Max 10)</h3>
+                    <div class="product-container" id="lista-perline">
+                        <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
+                        <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
+                    </div>
                 </div>
-                <div style="font-size: 14px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 15px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 20px;">€<span id="label-prezzo-borsa">25.00</span></span></div>
-                <button onclick="inviaRichiestaProdotto('Borsa', 'nota-borsa', null, null)" class="contact-order-btn instagram">
-                    <i class="fab fa-instagram"></i> Richiedi su Instagram
-                </button>
-            </div>
-        </div>
 
-        <!-- COMPONI COLLANA -->
-        <div id="componi" class="content-section">
-            <h2 class="reveal" style="display:block; text-align:center;">Crea la tua Collana Unica ✨</h2>
-
-            <div class="componi-box reveal">
-                <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il colore della catenina (Inclusa: €<span id="label-prezzo-catenina">5.00</span>)</h3>
-                <div class="swatch-container">
-                    <label class="swatch-label">
-                        <input type="radio" name="catenina" value="Oro" checked onchange="calcolaTotaleCiondoli()">
-                        <div class="swatch-circle" style="background: linear-gradient(135deg, #FFD700, #DAA520);"></div>Oro
-                    </label>
-                    <label class="swatch-label">
-                        <input type="radio" name="catenina" value="Argento" onchange="calcolaTotaleCiondoli()">
-                        <div class="swatch-circle" style="background: linear-gradient(135deg, #E0E0E0, #C0C0C0);"></div>Argento
-                    </label>
-                    <label class="swatch-label">
-                        <input type="radio" name="catenina" value="Bronzo" onchange="calcolaTotaleCiondoli()">
-                        <div class="swatch-circle" style="background: linear-gradient(135deg, #CD7F32, #8B4513);"></div>Bronzo
-                    </label>
+                <div class="totale-box reveal">
+                    <h3>Totale Stimato: €<span id="prezzo-totale-ciondoli">5.00</span></h3>
+                    <p>Seleziona i pezzi che ti piacciono, poi contattaci con la tua configurazione!</p>
+                    <button onclick="richiestaCollanaPersonalizzata(event)" class="contact-order-btn instagram" style="max-width: 300px; margin: 0 auto; padding: 15px 40px; font-size: 16px; display: block;">
+                        <i class="fab fa-instagram"></i> Richiedi su Instagram
+                    </button>
                 </div>
             </div>
 
-            <div class="componi-box reveal">
-                <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli i ciondoli (Da 1 a 10)</h3>
-                <div style="text-align: center; margin-bottom: 15px;">
-                    <select id="sortComponenti" class="custom-textarea" style="width: auto; padding: 8px 15px; border-radius: 20px; height: auto; font-size: 13px; cursor: pointer;" onchange="applicaOrdinamentoComponenti()">
-                        <option value="">Ordina ciondoli e perline...</option>
-                        <option value="prezzo-asc">Prezzo: dal più basso</option>
-                        <option value="prezzo-desc">Prezzo: dal più alto</option>
-                        <option value="nome-asc">Alfabetico: A - Z</option>
-                        <option value="nome-desc">Alfabetico: Z - A</option>
-                    </select>
+            <!-- 2. CREA MAGLIETTA -->
+            <div id="crea-maglietta" class="pers-content">
+                <div class="photo-notice reveal">
+                    <i class="fas fa-info-circle" style="color: var(--fucsia);"></i>
+                    <strong> Come funziona:</strong> Scegli il colore e la taglia, scrivi cosa vuoi ricamare e contattaci su Instagram inviando anche la tua foto di riferimento. Realizzeremo la tua maglietta su misura! 🎨
                 </div>
-                <div class="product-container" id="lista-ciondoli">
-                    <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
-                    <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
+                <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
+                    <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
+                    <div class="swatch-container">
+                        <label class="swatch-label">
+                            <input type="radio" name="col-maglia" value="Bianco" checked onchange="aggiornaAnteprima('img-maglia', 'tshirt_bianca')">
+                            <div class="swatch-circle swatch-white"></div>Bianco
+                        </label>
+                        <label class="swatch-label">
+                            <input type="radio" name="col-maglia" value="Nero" onchange="aggiornaAnteprima('img-maglia', 'tshirt_nera')">
+                            <div class="swatch-circle swatch-black"></div>Nero
+                        </label>
+                    </div>
+                    <img id="img-maglia" src="bianco-tshirt.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
+                    <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia <span onclick="openSizeGuide('umani')" style="font-size: 12px; color: var(--fucsia); cursor: pointer; text-decoration: underline; margin-left: 10px;"><i class="fas fa-ruler"></i> Guida alle taglie</span></h3>
+                    <div class="size-selector">
+                        <label><input type="radio" name="taglia-maglia" value="XS"><div class="size-pill">XS</div></label>
+                        <label><input type="radio" name="taglia-maglia" value="S"><div class="size-pill">S</div></label>
+                        <label><input type="radio" name="taglia-maglia" value="M" checked><div class="size-pill">M</div></label>
+                        <label><input type="radio" name="taglia-maglia" value="L"><div class="size-pill">L</div></label>
+                        <label><input type="radio" name="taglia-maglia" value="XL"><div class="size-pill">XL</div></label>
+                        <label><input type="radio" name="taglia-maglia" value="XXL"><div class="size-pill">XXL</div></label>
+                    </div>
+                    <h3 style="text-align: center; color: var(--testo-scuro);">3. Cosa vuoi ricamare?</h3>
+                    <textarea id="nota-maglietta" class="custom-textarea" placeholder="Descrivi il ricamo o il testo che vuoi..."></textarea>
+                    <div style="background: #fff5f8; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro);">
+                        <i class="fas fa-camera" style="color: var(--fucsia);"></i> Ricordati di inviare anche la tua <strong>foto di riferimento</strong> via Instagram o email!
+                    </div>
+                    <div style="font-size: 14px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 15px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 20px;">€<span id="label-prezzo-maglietta">20.00</span></span></div>
+                    <button onclick="inviaRichiestaProdotto('Maglietta', 'nota-maglietta', 'col-maglia', 'taglia-maglia')" class="contact-order-btn instagram">
+                        <i class="fab fa-instagram"></i> Richiedi su Instagram
+                    </button>
                 </div>
             </div>
 
-            <div class="componi-box reveal">
-                <h3 style="text-align: center; color: var(--testo-scuro);">3. Scegli le perline (Max 10)</h3>
-                <div class="product-container" id="lista-perline">
-                    <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
-                    <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
+            <!-- 3. CREA PELOSETTO -->
+            <div id="crea-pelosetto" class="pers-content">
+                <div class="photo-notice reveal">
+                    <i class="fas fa-info-circle" style="color: var(--fucsia);"></i>
+                    <strong> Come funziona:</strong> Scegli colore e taglia per il tuo amico a quattro zampe, scrivi cosa vuoi ricamare e contattaci su Instagram con la foto del tuo pelosetto! 🐶
+                </div>
+                <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
+                    <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
+                    <div class="swatch-container">
+                        <label class="swatch-label">
+                            <input type="radio" name="col-pelosetto" value="Bianco" checked onchange="aggiornaAnteprima('img-pelosetto', 'pelosetto_bianco')">
+                            <div class="swatch-circle swatch-white"></div>Bianco
+                        </label>
+                        <label class="swatch-label">
+                            <input type="radio" name="col-pelosetto" value="Nero" onchange="aggiornaAnteprima('img-pelosetto', 'pelosetto_nero')">
+                            <div class="swatch-circle swatch-black"></div>Nero
+                        </label>
+                    </div>
+                    <img id="img-pelosetto" src="bianco-pelosetto.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
+                    <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia <span onclick="openSizeGuide('cani')" style="font-size: 12px; color: var(--fucsia); cursor: pointer; text-decoration: underline; margin-left: 10px;"><i class="fas fa-ruler"></i> Guida alle taglie</span></h3>
+                    <div class="size-selector">
+                        <label><input type="radio" name="taglia-pelosetto" value="XS"><div class="size-pill">XS</div></label>
+                        <label><input type="radio" name="taglia-pelosetto" value="S"><div class="size-pill">S</div></label>
+                        <label><input type="radio" name="taglia-pelosetto" value="M" checked><div class="size-pill">M</div></label>
+                        <label><input type="radio" name="taglia-pelosetto" value="L"><div class="size-pill">L</div></label>
+                        <label><input type="radio" name="taglia-pelosetto" value="XL"><div class="size-pill">XL</div></label>
+                    </div>
+                    <h3 style="text-align: center; color: var(--testo-scuro);">3. Cosa vuoi ricamare?</h3>
+                    <textarea id="nota-pelosetto" class="custom-textarea" placeholder="Descrivi il ricamo o testo..."></textarea>
+                    <div style="background: #fff5f8; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro);">
+                        <i class="fas fa-camera" style="color: var(--fucsia);"></i> Manda anche una <strong>foto del tuo pelosetto</strong> via Instagram!
+                    </div>
+                    <div style="font-size: 14px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 15px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 20px;">€<span id="label-prezzo-pelosetto">18.00</span></span></div>
+                    <button onclick="inviaRichiestaProdotto('Maglia Pelosetto', 'nota-pelosetto', 'col-pelosetto', 'taglia-pelosetto')" class="contact-order-btn instagram">
+                        <i class="fab fa-instagram"></i> Richiedi su Instagram
+                    </button>
                 </div>
             </div>
 
-            <div class="totale-box reveal">
-                <h3>Totale Stimato: €<span id="prezzo-totale-ciondoli">5.00</span></h3>
-                <p>Seleziona i pezzi che ti piacciono, poi contattaci con la tua configurazione!</p>
-                <button onclick="richiestaCollanaPersonalizzata(event)" class="contact-order-btn instagram" style="max-width: 300px; margin: 0 auto; padding: 15px 40px; font-size: 16px; display: block;">
-                    <i class="fab fa-instagram"></i> Richiedi su Instagram
-                </button>
+            <!-- 4. CREA POCHETTE -->
+            <div id="crea-pochette" class="pers-content">
+                <div class="photo-notice reveal">
+                    <i class="fas fa-info-circle" style="color: var(--fucsia);"></i>
+                    <strong> Come funziona:</strong> Scegli il colore, descrivi il tuo ricamo e contattaci! Inviaci anche un'immagine di riferimento per il disegno. 🎨
+                </div>
+                <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
+                    <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
+                    <div class="swatch-container">
+                        <label class="swatch-label">
+                            <input type="radio" name="col-pochette" value="Azzurro" checked onchange="aggiornaAnteprima('img-pochette', 'pochette_azzurra')">
+                            <div class="swatch-circle swatch-blue"></div>Azzurro
+                        </label>
+                        <label class="swatch-label">
+                            <input type="radio" name="col-pochette" value="Rosa" onchange="aggiornaAnteprima('img-pochette', 'pochette_rosa')">
+                            <div class="swatch-circle swatch-pink"></div>Rosa
+                        </label>
+                        <label class="swatch-label">
+                            <input type="radio" name="col-pochette" value="Nero" onchange="aggiornaAnteprima('img-pochette', 'pochette_nera')">
+                            <div class="swatch-circle swatch-black"></div>Nero
+                        </label>
+                    </div>
+                    <img id="img-pochette" src="azzurro-p.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
+                    <h3 style="text-align: center; color: var(--testo-scuro);">2. Descrivi la personalizzazione</h3>
+                    <textarea id="nota-pochette" class="custom-textarea" placeholder="Descrivi il tuo ricamo qui..."></textarea>
+                    <div style="background: #fff5f8; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro);">
+                        <i class="fas fa-camera" style="color: var(--fucsia);"></i> Invia la tua <strong>immagine di riferimento</strong> su Instagram!
+                    </div>
+                    <div style="font-size: 14px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 15px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 20px;">€<span id="label-prezzo-pochette">15.00</span></span></div>
+                    <button onclick="inviaRichiestaProdotto('Pochette', 'nota-pochette', 'col-pochette', null)" class="contact-order-btn instagram">
+                        <i class="fab fa-instagram"></i> Richiedi su Instagram
+                    </button>
+                </div>
+            </div>
+
+            <!-- 5. CREA BORSA -->
+            <div id="crea-borsa" class="pers-content">
+                <div class="photo-notice reveal">
+                    <i class="fas fa-info-circle" style="color: var(--fucsia);"></i>
+                    <strong> Come funziona:</strong> Descrivi il ricamo che vuoi e contattaci su Instagram inviando anche la tua immagine di riferimento!
+                </div>
+                <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
+                    <h3 style="text-align: center; color: var(--testo-scuro);">Colore Unico: Bianco</h3>
+                    <img id="img-borsa" src="bianco-borsa.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
+                    <h3 style="text-align: center; color: var(--testo-scuro);">Descrivi la personalizzazione</h3>
+                    <textarea id="nota-borsa" class="custom-textarea" placeholder="Descrivi il tuo ricamo per la borsa..."></textarea>
+                    <div style="background: #fff5f8; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro);">
+                        <i class="fas fa-camera" style="color: var(--fucsia);"></i> Invia la tua <strong>immagine di riferimento</strong> su Instagram!
+                    </div>
+                    <div style="font-size: 14px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 15px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 20px;">€<span id="label-prezzo-borsa">25.00</span></span></div>
+                    <button onclick="inviaRichiestaProdotto('Borsa', 'nota-borsa', null, null)" class="contact-order-btn instagram">
+                        <i class="fab fa-instagram"></i> Richiedi su Instagram
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1251,10 +1340,10 @@
         <div class="bottom-nav-item" onclick="showSection('acquista'); vibra();">
             <i class="fas fa-search"></i><span>Prodotti</span>
         </div>
-        <div class="bottom-nav-item" onclick="showSection('componi'); vibra();">
+        <div class="bottom-nav-item" onclick="showSection('sezione-personalizza'); cambiaPersonalizzato('componi'); vibra();">
             <i class="fas fa-gem"></i><span>Personalizza</span>
         </div>
-        <div class="bottom-nav-item" onclick="showSection('preferiti'); vibra();">
+        <div class="bottom-nav-item" onclick="apriPreferiti(); vibra();">
             <i class="fas fa-heart"></i><span>Preferiti</span>
         </div>
         <div class="bottom-nav-item" onclick="showSection('contatti'); vibra();">
@@ -1276,7 +1365,29 @@
                 for (let r of regs) r.update();
             });
         }
-
+// === TABS PERSONALIZZATI ===
+        window.cambiaPersonalizzato = function(tabId, btnElement) {
+            // Deseleziona tutti i bottoni
+            document.querySelectorAll('.cat-btn-pers').forEach(btn => btn.classList.remove('active'));
+            // Nascondi tutte le sezioni
+            document.querySelectorAll('.pers-content').forEach(content => content.classList.remove('active'));
+            
+            // Attiva il bottone corretto
+            if (btnElement) {
+                btnElement.classList.add('active');
+            } else { 
+                const b = document.querySelector(`.cat-btn-pers[onclick*="${tabId}"]`); 
+                if(b) b.classList.add('active'); 
+            }
+            
+            // Mostra la sezione
+            const targetTab = document.getElementById(tabId);
+            if(targetTab) {
+                targetTab.classList.add('active');
+                // Forza l'apparizione delle animazioni interne
+                targetTab.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+            }
+        };
         // === CURSORE MAGICO ===
         if (window.matchMedia("(pointer: fine)").matches) {
             const cursor = document.createElement('div');
@@ -1330,41 +1441,56 @@
             document.getElementById("menuOverlay").style.opacity = "0";
             setTimeout(() => { document.getElementById("menuOverlay").style.display = "none"; }, 400);
         }
-// === SOTTOMENU A TENDINA LATERALE ===
-        function toggleDropdown(idContenitore, bottone) {
-            const contenitore = document.getElementById(idContenitore);
-            
-            // Se è già aperto, chiudilo
-            if (contenitore.style.display === "block") {
-                contenitore.style.display = "none";
-                bottone.classList.remove("attivo");
-            } else {
-                // Altrimenti aprilo
-                contenitore.style.display = "block";
-                bottone.classList.add("attivo");
-            }
-        }
+
+      // === LA NUOVA NAVIGAZIONE A SCORRIMENTO (ONE-PAGE) ===
         function showSection(sectionId, updateUrl = true) {
-            closeNav();
-            if (sectionId === 'dettaglio-prodotto') {
-                const titoloProdotto = document.getElementById('dettaglio-titolo').innerText;
-                if (titoloProdotto === 'Nome Prodotto' || titoloProdotto.trim() === '') {
-                    sectionId = 'acquista';
-                    if (updateUrl) history.replaceState(null, null, '#acquista');
+            
+            // Ignora le sezioni popup
+            if (sectionId === 'dettaglio-prodotto' || sectionId === 'preferiti') return;
+
+            const target = document.getElementById(sectionId);
+            if (target) {
+                if (sectionId === 'sezione-admin') {
+                    // L'admin rimane una pagina isolata per sicurezza
+                    document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+                    target.style.display = 'block';
+                    window.scrollTo(0,0);
+                } else {
+                    // Ripristina tutte le sezioni se eri nell'admin
+                    document.querySelectorAll('.content-section:not(#dettaglio-prodotto):not(#sezione-admin)').forEach(s => s.style.display = 'block');
+                    document.getElementById('sezione-admin').style.display = 'none';
+                    
+                    // --- CORREZIONE SCROLL ---
+                    if (sectionId === 'home') {
+                        // Se è la Home, forza lo scorrimento all'inizio assoluto della pagina!
+                        window.scrollTo({top: 0, behavior: 'smooth'});
+                    } else {
+                        // Altrimenti vai alla sezione, lasciando 90px di spazio per non farla finire sotto la barra in alto
+                        const y = target.getBoundingClientRect().top + window.scrollY - 90;
+                        window.scrollTo({top: y, behavior: 'smooth'});
+                    }
                 }
-            }
-            let currentActive = document.querySelector('.content-section.active');
-            let targetSection = document.getElementById(sectionId) || document.getElementById('home');
-            if (currentActive && currentActive !== targetSection) {
-                currentActive.classList.add('fade-out');
-                setTimeout(() => {
-                    currentActive.classList.remove('active', 'fade-out');
-                    activateNewSection(targetSection, sectionId, updateUrl);
-                }, 300);
-            } else if (!currentActive) {
-                activateNewSection(targetSection, sectionId, updateUrl);
+                if (updateUrl) history.pushState(null, null, '#' + sectionId);
             }
         }
+        // === POPUP PREFERITI ===
+        window.apriPreferiti = function() {
+            const eseguiApertura = () => {
+                document.getElementById('preferiti').classList.add('active');
+                document.body.style.overflow = 'hidden'; // Blocca lo scorrimento del sito dietro
+            };
+            if (document.startViewTransition) { document.startViewTransition(eseguiApertura); } 
+            else { eseguiApertura(); }
+        };
+
+        window.chiudiPreferiti = function() {
+            const eseguiChiusura = () => {
+                document.getElementById('preferiti').classList.remove('active');
+                document.body.style.overflow = ''; // Sblocca lo scorrimento
+            };
+            if (document.startViewTransition) { document.startViewTransition(eseguiChiusura); } 
+            else { eseguiChiusura(); }
+        };
        function activateNewSection(targetSection, sectionId, updateUrl) {
     targetSection.classList.add('active');
     window.scrollTo(0, 0);
@@ -1700,18 +1826,52 @@
             window.addEventListener('resize', () => { if (!isTransitioning) centerSlide(1, false); });
         }
 
-        // === REVEAL ===
+        // === RIVELAZIONE A CASCATA (STAGGERED REVEALS) E AUTO-HIDE NAVBAR ===
+        let delay = 0;
+        let revealTimer;
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+                    setTimeout(() => { entry.target.classList.add('visible'); }, delay);
+                    delay += 150; // Ogni prodotto appare 150ms dopo il precedente (Effetto Cascata)
                     scrollObserver.unobserve(entry.target);
+                    
+                    clearTimeout(revealTimer);
+                    revealTimer = setTimeout(() => { delay = 0; }, 100);
                 }
             });
         }, { threshold: 0.1 });
+
         function observeElements() {
             document.querySelectorAll('.reveal:not(.visible)').forEach(el => scrollObserver.observe(el));
         }
+
+        // === EFFETTO PARALLASSE E NAVBAR SMART ===
+        let lastScrollY = window.scrollY;
+        window.addEventListener('scroll', function() {
+            // 1. Tasto Torna Su
+            const btnTop = document.getElementById('backToTopBtn');
+            if (window.scrollY > 300) btnTop.classList.add('show');
+            else btnTop.classList.remove('show');
+            
+            // 2. Barra Navigazione Inferiore (scompare scorrendo giù, riappare scorrendo su)
+            const bottomNav = document.querySelector('.bottom-nav-bar');
+            if (bottomNav) {
+                if (window.scrollY > lastScrollY && window.scrollY > 150) {
+                    bottomNav.classList.add('hidden');
+                } else {
+                    bottomNav.classList.remove('hidden');
+                }
+                lastScrollY = window.scrollY;
+            }
+
+            // 3. Barra di avanzamento in alto
+            let scrolled = ((document.body.scrollTop || document.documentElement.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight)) * 100;
+            const scrollBar = document.getElementById("scroll-progress-bar");
+            if (scrollBar) scrollBar.style.width = scrolled + "%";
+
+           
+        });
 
         // === OFFLINE ===
         window.addEventListener('offline', () => {
@@ -1910,24 +2070,42 @@
             } catch (e) { console.error("Errore evidenza:", e); }
         };
 
-        // === PAGINA DETTAGLIO ===
+       // === VIEW TRANSITIONS API: APRI E CHIUDI PRODOTTI IN STILE APP NATIVA ===
         window.apriDettaglioProdotto = function(titolo, prezzoNum, badge, descrizione, immagineCopertina, galleriaStringa) {
-            const prezzo = parseFloat(prezzoNum);
-            const galleria = galleriaStringa ? galleriaStringa.split(',') : [immagineCopertina];
-            document.getElementById('dettaglio-titolo').innerText = titolo;
-            document.getElementById('dettaglio-prezzo').innerText = `€${prezzo.toFixed(2)}`;
-            document.getElementById('dettaglio-descrizione').innerText = descrizione || "Un prodotto unico, realizzato a mano con amore.";
-            const badgeContainer = document.getElementById('dettaglio-badge');
-            badgeContainer.innerHTML = badge && badge !== 'undefined' ? `<span style="background:var(--fucsia);color:white;padding:5px 15px;border-radius:20px;font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">${badge}</span>` : '';
-            document.getElementById('dettaglio-img-principale').src = galleria[0];
-            const galleriaContainer = document.getElementById('dettaglio-galleria');
-            galleriaContainer.innerHTML = '';
-            if (galleria.length > 1) {
-                galleria.forEach(urlImg => {
-                    galleriaContainer.innerHTML += `<img src="${urlImg}" style="width:80px;height:auto;object-fit:cover;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:0.3s;" onclick="document.getElementById('dettaglio-img-principale').src=this.src" onmouseover="this.style.borderColor='var(--fucsia)'" onmouseout="this.style.borderColor='transparent'">`;
-                });
-            }
-            showSection('dettaglio-prodotto');
+            const eseguiApertura = () => {
+                const prezzo = parseFloat(prezzoNum);
+                const galleria = galleriaStringa ? galleriaStringa.split(',') : [immagineCopertina];
+                document.getElementById('dettaglio-titolo').innerText = titolo;
+                document.getElementById('dettaglio-prezzo').innerText = `€${prezzo.toFixed(2)}`;
+                document.getElementById('dettaglio-descrizione').innerText = descrizione || "Un prodotto unico, realizzato a mano con amore.";
+                const badgeContainer = document.getElementById('dettaglio-badge');
+                badgeContainer.innerHTML = badge && badge !== 'undefined' ? `<span style="background:var(--fucsia);color:white;padding:5px 15px;border-radius:20px;font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">${badge}</span>` : '';
+                document.getElementById('dettaglio-img-principale').src = galleria[0];
+                const galleriaContainer = document.getElementById('dettaglio-galleria');
+                galleriaContainer.innerHTML = '';
+                if (galleria.length > 1) {
+                    galleria.forEach(urlImg => {
+                        galleriaContainer.innerHTML += `<img src="${urlImg}" style="width:80px;height:auto;object-fit:cover;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:0.3s;" onclick="document.getElementById('dettaglio-img-principale').src=this.src" onmouseover="this.style.borderColor='var(--fucsia)'" onmouseout="this.style.borderColor='transparent'">`;
+                    });
+                }
+                
+                // Mostra il popup e blocca lo scorrimento del sito in background
+                document.getElementById('dettaglio-prodotto').classList.add('active');
+                document.body.style.overflow = 'hidden'; 
+            };
+
+            // Se il browser supporta le transizioni fluide (View Transitions), usale!
+            if (document.startViewTransition) { document.startViewTransition(eseguiApertura); } 
+            else { eseguiApertura(); }
+        };
+
+        window.chiudiDettaglio = function() {
+            const eseguiChiusura = () => {
+                document.getElementById('dettaglio-prodotto').classList.remove('active');
+                document.body.style.overflow = ''; // Sblocca lo scorrimento
+            };
+            if (document.startViewTransition) { document.startViewTransition(eseguiChiusura); } 
+            else { eseguiChiusura(); }
         };
 
         // === APRI PRODOTTO DA LINK CONDIVISO ===
@@ -2381,7 +2559,10 @@
             } else {
                 showSection('home', false);
             }
-
+// Forza lo scroll in alto se siamo sulla home per evitare che la barra copra il logo al ricaricamento
+            if (!hash || hash === '#home') {
+                setTimeout(() => window.scrollTo(0, 0), 10);
+            }
             // Installa App
             const installBtn = document.getElementById('btn-installa-app-top');
             const iosPrompt = document.getElementById('ios-install-prompt');
