@@ -424,8 +424,26 @@
     width: 100%;
 }
     .label-admin { display: block; font-size: 11px; font-weight: 600; color: var(--fucsia); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; margin-left: 5px; }
-        #edit-modal .custom-textarea { margin-bottom: 12px; font-size: 13px; border-radius: 12px; border: 1px solid #eee; }
+        #edit-modal .custom-textarea { 
+    margin-bottom: 12px; 
+    font-size: 14px; 
+    border-radius: 12px; 
+    border: 1px solid #ccc !important;
+    color: #2c2c2c !important; /* Forza il testo scuro */
+    background-color: #f9f9f9 !important; /* Sfondo visibile */
+}
 
+#edit-modal select.custom-textarea {
+    appearance: auto !important;
+    -webkit-appearance: auto !important;
+    cursor: pointer !important;
+    padding: 8px 12px !important; /* Spazio interno ridotto per non schiacciare il testo */
+    height: auto !important; /* Rimuove il limite fisso di altezza */
+    min-height: 45px !important; /* Dà il giusto respiro */
+    font-size: 13px !important; /* Rimpicciolisce leggermente il carattere */
+    width: 100% !important;
+    white-space: normal !important; /* Permette al testo di adattarsi meglio */
+}
         /* BARRA RICERCA */
         .search-container { max-width: 400px; margin: 0 auto 30px auto; position: relative; display: flex; align-items: center; }
         .search-container i { position: absolute; left: 15px; color: var(--testo-chiaro); font-size: 16px; z-index: 5; pointer-events: none; }
@@ -456,7 +474,7 @@
         #magic-cursor { display: none; }
         @media (pointer: fine) {
             body, a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label, .wishlist-btn { cursor: none !important; }
-            #magic-cursor { display: block; position: fixed; width: 12px; height: 12px; background-color: var(--fucsia); border-radius: 50%; pointer-events: none !important; mix-blend-mode: multiply; z-index: 9999999; transform: translate(-50%, -50%); transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; }
+            #magic-cursor { display: block; position: fixed; width: 12px; height: 12px; background-color: var(--fucsia); border-radius: 50%; pointer-events: none !important; mix-blend-mode: multiply; z-index: 2147483647 !important; transform: translate(-50%, -50%); transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out; }
             #magic-cursor.hover { width: 45px; height: 45px; background-color: rgba(216, 27, 96, 0.2); border: 2px solid var(--fucsia); }
         }
 
@@ -1857,6 +1875,7 @@ html { scroll-behavior: smooth; }
     <span onclick="apriAdminDiretto(); return false;" style="cursor: pointer; text-decoration: underline; color: var(--fucsia);"> 2026 3L Creations</span> 
     Tutti i diritti riservati.
 </p>
+</footer>
    <!-- MODALE MODIFICA PRODOTTO (ADMIN) -->
     <div id="edit-modal">
         <div class="componi-box">
