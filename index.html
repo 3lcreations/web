@@ -966,6 +966,63 @@ html { scroll-behavior: smooth; }
     .sort-select-custom { width: 100%; }
 }
 /* --- FINE TOOLBAR --- */
+/* --- TOOLBAR E TABS PERFETTI --- */
+
+/* 1. Pulsanti Tab Personalizza */
+.tabs-personalizza {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 8px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.cat-btn-pers {
+    background: transparent;
+    border: 2px solid transparent;
+    color: var(--testo-chiaro);
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cat-btn-pers.active {
+    background: white;
+    color: var(--fucsia);
+    box-shadow: 0 4px 15px rgba(216, 27, 96, 0.15);
+    transform: translateY(-2px);
+    border: 2px solid var(--rosa-chiaro);
+}
+
+/* 2. Menu a tendina "Ordina per" (Fix sovrapposizione freccia) */
+.sort-select-custom {
+    appearance: none;
+    background-color: #ffffff;
+    border: 2px solid transparent;
+    padding: 14px 60px 14px 20px !important;; /* Aumentato il padding a destra per la freccia */
+    border-radius: 30px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fucsia);
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    transition: all 0.4s ease;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23d81b60%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 25px top 50% !important;;
+    background-size: 10px auto;
+}
+/* --- FINE CORREZIONI --- */
+/* --- FINE STILE TABS --- */
     </style>
 </head>
 <body>
@@ -1246,13 +1303,14 @@ html { scroll-behavior: smooth; }
        <div id="sezione-personalizza" class="content-section">
             <h2 class="reveal" style="display:block; text-align:center;">Crea il tuo Personalizzato ✨</h2>
 
-            <div class="category-tabs reveal" style="flex-wrap: wrap; margin-bottom: 30px;">
-                <button class="cat-btn cat-btn-pers active" onclick="cambiaPersonalizzato('componi', this)">✨ Collana</button>
-                <button class="cat-btn cat-btn-pers" onclick="cambiaPersonalizzato('crea-maglietta', this)">👕 Maglietta</button>
-                <button class="cat-btn cat-btn-pers" onclick="cambiaPersonalizzato('crea-pelosetto', this)">🐾 Pelosetto</button>
-                <button class="cat-btn cat-btn-pers" onclick="cambiaPersonalizzato('crea-pochette', this)">👝 Pochette</button>
-                <button class="cat-btn cat-btn-pers" onclick="cambiaPersonalizzato('crea-borsa', this)">👜 Borsa</button>
-            </div>
+            <!-- NUOVA BARRA TAB PERSONALIZZATA -->
+           <div class="tabs-personalizza reveal">
+    <button class="cat-btn-pers active" onclick="cambiaPersonalizzato('componi', this)">✨ Collana</button>
+    <button class="cat-btn-pers" onclick="cambiaPersonalizzato('crea-maglietta', this)">👕 Maglietta</button>
+    <button class="cat-btn-pers" onclick="cambiaPersonalizzato('crea-pelosetto', this)">🐾 Pelosetto</button>
+    <button class="cat-btn-pers" onclick="cambiaPersonalizzato('crea-pochette', this)">👝 Pochette</button>
+    <button class="cat-btn-pers" onclick="cambiaPersonalizzato('crea-borsa', this)">👜 Borsa</button>
+</div>
 
             <div id="componi" class="pers-content active">
                 <div class="componi-box-new reveal" style="max-width: 600px; margin: 0 auto;">
@@ -1276,8 +1334,8 @@ html { scroll-behavior: smooth; }
 
                     <h3>2. Scegli i ciondoli (Da 1 a 10)</h3>
                     <div style="text-align: center; margin-bottom: 15px;">
-                        <select id="sortComponenti" class="custom-textarea" style="width: auto; padding: 8px 15px; border-radius: 20px; height: auto; font-size: 13px; cursor: pointer;" onchange="applicaOrdinamentoComponenti()">
-                            <option value="">Ordina ciondoli e perline...</option>
+                        <select id="sortComponenti" class="sort-select-custom" style="width: auto; padding: 8px 15px; border-radius: 20px; height: auto; font-size: 13px; cursor: pointer;" onchange="applicaOrdinamentoComponenti()">
+                            <option value="">Ordina ciondoli e perline...       </option>
                             <option value="prezzo-asc">Prezzo: dal più basso</option>
                             <option value="prezzo-desc">Prezzo: dal più alto</option>
                         </select>
@@ -1802,24 +1860,24 @@ html { scroll-behavior: smooth; }
         }
 
         // === TABS PERSONALIZZATI ===
-        window.cambiaPersonalizzato = function(tabId, btnElement) {
+     window.cambiaPersonalizzato = function(tabId, btnElement) {
+            // Rimuove 'active' da TUTTI i bottoni della sezione personalizza
             document.querySelectorAll('.cat-btn-pers').forEach(btn => btn.classList.remove('active'));
+            // Nasconde TUTTI i contenuti
             document.querySelectorAll('.pers-content').forEach(content => content.classList.remove('active'));
             
+            // Aggiunge 'active' solo al bottone cliccato
             if (btnElement) {
                 btnElement.classList.add('active');
-            } else { 
-                const b = document.querySelector(`.cat-btn-pers[onclick*="${tabId}"]`); 
-                if(b) b.classList.add('active'); 
             }
             
+            // Mostra il contenuto corretto
             const targetTab = document.getElementById(tabId);
             if(targetTab) {
                 targetTab.classList.add('active');
                 targetTab.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
             }
         };
-
         // === CURSORE MAGICO ===
         if (window.matchMedia("(pointer: fine)").matches) {
             const cursor = document.createElement('div');
