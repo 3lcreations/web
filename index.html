@@ -797,7 +797,7 @@ html { scroll-behavior: smooth; }
         <!-- Link centrali (Visibili su Desktop) -->
         <div class="nav-links">
             <a href="#home" onclick="showSection('home'); return false;">Home</a>
-            <a href="#acquista" onclick="showSection('acquista'); return false;">Prodotti</a>
+            <a href="#acquista" onclick="showSection('acquista'); return false;">Catalogo</a>
             <a href="#sezione-personalizza" onclick="showSection('sezione-personalizza'); return false;">Personalizza</a>
             <a href="#contatti" onclick="showSection('contatti'); return false;">Contatti</a>
             <a href="#faq" onclick="showSection('faq'); return false;">FAQ</a>
@@ -992,7 +992,7 @@ html { scroll-behavior: smooth; }
         <div id="dettaglio-prodotto" class="content-section">
             <div class="componi-box reveal" style="max-width: 950px; margin: 0 auto; padding: 25px; display: flex; flex-direction: column;">
                <div class="back-to-cat-btn" onclick="chiudiDettaglio()">
-    <i class="fas fa-chevron-down"></i> Chiudi prodotto
+    <i></i>Chiudi prodotto
 </div>
                 <div style="display: flex; flex-wrap: wrap; gap: 30px;">
                     <div style="flex: 1.2; min-width: 300px;">
@@ -2217,164 +2217,244 @@ window.inviaRichiestaProdottoEmail = function(nomeBase, textAreaId, radioName, t
             } catch (e) { console.error("Errore caricamento impostazioni:", e); }
         };
 
-       window.caricaProdottiFirebase = async function(categoria, idContenitore) {
-            const contenitore = document.getElementById(idContenitore);
-            if (!contenitore) return;
-            try {
-                if (!window.fbGetDocs) {
-                    setTimeout(() => window.caricaProdottiFirebase(categoria, idContenitore), 500);
-                    return;
-                }
-                const querySnapshot = await window.fbGetDocs(window.fbCollection(window.db, "prodotti"));
-                contenitore.innerHTML = '';
-                let count = 0;
-                const isAdmin = window.auth?.currentUser && (window.auth.currentUser.email === "mauro7leo10@gmail.com" || window.auth.currentUser.email === "3lcreationsfordogs1@gmail.com");
+      // === CARICA CATALOGO (METODO SICURO) ===
+window.caricaProdottiFirebase = async function(categoria, idContenitore) {
+    const contenitore = document.getElementById(idContenitore);
+    if (!contenitore) return;
+    try {
+        if (!window.fbGetDocs) {
+            setTimeout(() => window.caricaProdottiFirebase(categoria, idContenitore), 500);
+            return;
+        }
+        const querySnapshot = await window.fbGetDocs(window.fbCollection(window.db, "prodotti"));
+        contenitore.innerHTML = '';
+        let count = 0;
+        const isAdmin = window.auth?.currentUser && (window.auth.currentUser.email === "mauro7leo10@gmail.com" || window.auth.currentUser.email === "3lcreationsfordogs1@gmail.com");
+        const categorieShop = ['collane', 'fiocchi', 'bracciali', 'orecchini', 'borse', 'pochette', 'ciondoli_pronti'];
 
-                // Lista delle categorie "Già Fatti"
-                const categorieShop = ['collane', 'fiocchi', 'bracciali', 'orecchini', 'borse', 'pochette', 'ciondoli_pronti'];
+        querySnapshot.forEach((doc) => {
+            const riga = doc.data();
+            if (riga.categoria !== categoria) return;
+            count++;
+            const idProdotto = doc.id;
+            const immagine = riga.immagine || 'logo.png';
+            const prezzoNum = parseFloat(riga.prezzo) || 0;
+            const titolo = riga.titolo || ''; 
+            const inEv = riga.in_evidenza === true;
+            
+            const badgeTesto = riga.badge ? riga.badge : (inEv ? 'In Evidenza' : '');
+            const descrizioneText = riga.descrizione || '';
+            const galleriaStringa = riga.galleria ? riga.galleria.join(',') : '';
+            const htmlBadge = badgeTesto ? `<div class="product-badge">${badgeTesto}</div>` : '';
+            const isFav = (JSON.parse(localStorage.getItem('wishlist')) || []).some(w => w.id === idProdotto);
 
-                querySnapshot.forEach((doc) => {
-                    const riga = doc.data();
-                    if (riga.categoria !== categoria) return;
-                    count++;
-                    const idProdotto = doc.id;
-                    const immagine = riga.immagine || 'logo.png';
-                    const prezzoNum = parseFloat(riga.prezzo) || 0;
-                    const titolo = riga.titolo.replace(/'/g, "\\'");
-                    const inEv = riga.in_evidenza === true;
-                    
-                    const badgeTesto = riga.badge ? riga.badge.replace(/'/g, "\\'") : (inEv ? 'In Evidenza' : '');
-                    let htmlBadge = badgeTesto ? `<div class="product-badge">${badgeTesto}</div>` : '';
-                    const descrizioneText = riga.descrizione ? riga.descrizione.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n') : '';
-                    const galleriaStringa = riga.galleria ? riga.galleria.join(',') : '';
+            const card = document.createElement('div');
+            
+            if (categorieShop.includes(categoria)) {
+                card.className = 'product-card reveal visible';
+                card.style.position = 'relative';
+                card.innerHTML = `
+                    ${htmlBadge}
+                    ${isAdmin ? `<div class="edit-admin-btn"><i class="fas fa-edit"></i> Modifica</div>` : ''}
+                    ${isAdmin ? `<div class="delete-admin-btn"><i class="fas fa-trash-alt"></i> Elimina</div>` : ''}
+                    <div class="wishlist-btn ${isFav ? 'active' : ''}"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>
+                    <img src="${immagine}" alt="Prodotto" class="product-image" onerror="this.src='logo.png'" style="cursor:pointer;">
+                    <h3 style="cursor:pointer;">${titolo}</h3>
+                    <div class="price">€${prezzoNum.toFixed(2)}</div>
+                    <a href="#" class="contact-order-btn" style="text-decoration:none;">Scopri di più <i class="fas fa-arrow-right"></i></a>
+                `;
 
-                    let btnElimina = isAdmin ? `<div class="delete-admin-btn" onclick="eliminaProdotto('${idProdotto}', '${titolo}')"><i class="fas fa-trash-alt"></i> Elimina</div>` : '';
-                    // Passiamo la categoria al modale!
-                    let btnModifica = isAdmin ? `<div class="edit-admin-btn" onclick="apriModaleModifica('${idProdotto}', '${titolo}', ${prezzoNum}, '${(riga.badge || '').replace(/'/g, "\\'")}', '${immagine}', ${inEv}, '${descrizioneText}', '${riga.categoria}')"><i class="fas fa-edit"></i> Modifica</div>` : '';
-                    
-                    let isFav = (JSON.parse(localStorage.getItem('wishlist')) || []).some(w => w.id === idProdotto);
-                    let btnWishlist = `<div class="wishlist-btn ${isFav ? 'active' : ''}" onclick="toggleWishlist(event, '${idProdotto}', '${titolo}', ${prezzoNum}, '${immagine}')"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>`;
+                // Apertura sicura
+                const apri = (e) => {
+                    e.preventDefault();
+                    window.apriDettaglioProdotto(titolo, prezzoNum, badgeTesto, descrizioneText, immagine, galleriaStringa);
+                };
 
-                    // Se è un "Già Fatto", mostra la scheda intera. Se è un "Componente", mostra la scheda piccola
-                    if (categorieShop.includes(categoria)) {
-                        const onClickDettaglio = `apriDettaglioProdotto('${titolo}', ${prezzoNum}, '${badgeTesto}', '${descrizioneText}', '${immagine}', '${galleriaStringa}')`;
-                        contenitore.insertAdjacentHTML('beforeend', `
-                            <div class="product-card reveal visible" style="position:relative;">
-                                ${htmlBadge}${btnModifica}${btnElimina}${btnWishlist}
-                                <img src="${immagine}" alt="${titolo}" class="product-image" onerror="this.src='logo.png'" style="cursor:pointer;" onclick="${onClickDettaglio}">
-                                <h3 style="cursor:pointer;" onclick="${onClickDettaglio}">${riga.titolo}</h3>
-                                <div class="price">€${prezzoNum.toFixed(2)}</div>
-                                <a onclick="${onClickDettaglio}; return false;" href="#" class="contact-order-btn" style="text-decoration:none;">Scopri di più <i class="fas fa-arrow-right"></i></a>
-                            </div>`);
-                    } else {
-                        let chkClass = categoria === 'ciondoli' ? 'charm-checkbox' : 'perlina-checkbox';
-                        contenitore.insertAdjacentHTML('beforeend', `
-                            <div class="charm-card reveal visible" style="position:relative;">
-                                ${htmlBadge}${btnModifica}${btnElimina}
-                                <img src="${immagine}" alt="${titolo}" class="charm-image" onerror="this.src='logo.png'">
-                                <div class="charm-title">${riga.titolo}</div>
-                                <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
-                                <input type="checkbox" class="${chkClass}" data-titolo="${titolo}" data-prezzo="${prezzoNum}" data-immagine="${immagine}" onchange="calcolaTotaleCiondoli(event)">
-                            </div>`);
-                    }
+                card.querySelector('.product-image').addEventListener('click', apri);
+                card.querySelector('h3').addEventListener('click', apri);
+                card.querySelector('.contact-order-btn').addEventListener('click', apri);
+                card.querySelector('.wishlist-btn').addEventListener('click', (e) => {
+                    window.toggleWishlist(e, idProdotto, titolo, prezzoNum, immagine);
                 });
-                if (count === 0) contenitore.innerHTML = "<p class='loading-text'>Nessun prodotto trovato in questa categoria.</p>";
-                observeElements();
-            } catch (e) { console.error("Errore caricamento:", e); }
-        };
 
-        // === CARICA EVIDENZA HOME ===
-               window.caricaEvidenza = async function() {
-            const contenitore = document.getElementById('lista-evidenza');
-            if (!contenitore) return;
-            try {
-                const querySnapshot = await window.fbGetDocs(window.fbCollection(window.db, "prodotti"));
-                contenitore.innerHTML = '';
-                let count = 0;
-                querySnapshot.forEach((doc) => {
-                    const riga = doc.data();
-                    if (riga.in_evidenza !== true) return;
-                    count++;
-                    const idProdotto = doc.id;
-                    const immagine = riga.immagine || 'logo.png';
-                    const prezzoNum = parseFloat(riga.prezzo) || 0;
-                    const titolo = riga.titolo || '';
-                    const badgeTesto = riga.badge || 'In Evidenza';
-                    const descrizione = riga.descrizione || '';
-                    const galleriaStringa = riga.galleria ? riga.galleria.join(',') : '';
-                    const htmlBadge = badgeTesto ? `<div class="product-badge"></div>` : '';
-                    const isFav = (JSON.parse(localStorage.getItem('wishlist')) || []).some(w => w.id === idProdotto);
-
-                    const card = document.createElement('div');
-                    card.className = 'product-card reveal visible';
-                    card.style.position = 'relative';
-                    card.innerHTML = `
-                        ${htmlBadge}
-                        <div class="wishlist-btn ${isFav ? 'active' : ''}"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>
-                        <img class="product-image" onerror="this.src='logo.png'" style="cursor:pointer;">
-                        <h3 style="cursor:pointer;"></h3>
-                        <div class="price">€${prezzoNum.toFixed(2)}</div>
-                        <a href="#" class="contact-order-btn" style="text-decoration:none;">Scopri di più <i class="fas fa-arrow-right"></i></a>
-                    `;
-                    if (htmlBadge) card.querySelector('.product-badge').textContent = badgeTesto;
-                    const img = card.querySelector('img.product-image');
-                    img.src = immagine; img.alt = titolo;
-                    card.querySelector('h3').textContent = titolo;
-
-                    const apri = () => window.apriDettaglioProdotto(titolo, prezzoNum, badgeTesto, descrizione, immagine, galleriaStringa);
-                    img.addEventListener('click', apri);
-                    card.querySelector('h3').addEventListener('click', apri);
-                    card.querySelector('a.contact-order-btn').addEventListener('click', (e) => { e.preventDefault(); apri(); });
-                    card.querySelector('.wishlist-btn').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        window.toggleWishlist(e, idProdotto, titolo, prezzoNum, immagine);
-                    });
-
-                    contenitore.appendChild(card);
-                });
-                if (count === 0) contenitore.innerHTML = "<p style='width:100%; color:var(--testo-chiaro); font-size:14px;'>Nessun prodotto in evidenza.</p>";
-                observeElements();
-            } catch (e) { console.error("Errore evidenza:", e); }
-        };
-
-
-       // === VIEW TRANSITIONS API: APRI E CHIUDI PRODOTTI IN STILE APP NATIVA ===
-        window.apriDettaglioProdotto = function(titolo, prezzoNum, badge, descrizione, immagineCopertina, galleriaStringa) {
-            const eseguiApertura = () => {
-                const prezzo = parseFloat(prezzoNum);
-                const galleria = galleriaStringa ? galleriaStringa.split(',') : [immagineCopertina];
-                document.getElementById('dettaglio-titolo').innerText = titolo;
-                document.getElementById('dettaglio-prezzo').innerText = `€${prezzo.toFixed(2)}`;
-                document.getElementById('dettaglio-descrizione').innerText = descrizione || "Un prodotto unico, realizzato a mano con amore.";
-                const badgeContainer = document.getElementById('dettaglio-badge');
-                badgeContainer.innerHTML = badge && badge !== 'undefined' ? `<span style="background:var(--fucsia);color:white;padding:5px 15px;border-radius:20px;font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">${badge}</span>` : '';
-                document.getElementById('dettaglio-img-principale').src = galleria[0];
-                const galleriaContainer = document.getElementById('dettaglio-galleria');
-                galleriaContainer.innerHTML = '';
-                if (galleria.length > 1) {
-                    galleria.forEach(urlImg => {
-                        galleriaContainer.innerHTML += `<img src="${urlImg}" style="width:80px;height:auto;object-fit:cover;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:0.3s;" onclick="document.getElementById('dettaglio-img-principale').src=this.src" onmouseover="this.style.borderColor='var(--fucsia)'" onmouseout="this.style.borderColor='transparent'">`;
-                    });
+                if (isAdmin) {
+                    card.querySelector('.edit-admin-btn').addEventListener('click', () => { window.apriModaleModifica(idProdotto, titolo, prezzoNum, badgeTesto, immagine, inEv, descrizioneText, riga.categoria); });
+                    card.querySelector('.delete-admin-btn').addEventListener('click', () => { window.eliminaProdotto(idProdotto, titolo); });
                 }
+            } else {
+                let chkClass = categoria === 'ciondoli' ? 'charm-checkbox' : 'perlina-checkbox';
+                card.className = 'charm-card reveal visible';
+                card.style.position = 'relative';
+                card.innerHTML = `
+                    ${htmlBadge}
+                    ${isAdmin ? `<div class="edit-admin-btn"><i class="fas fa-edit"></i></div>` : ''}
+                    ${isAdmin ? `<div class="delete-admin-btn"><i class="fas fa-trash-alt"></i></div>` : ''}
+                    <img src="${immagine}" alt="Componente" class="charm-image" onerror="this.src='logo.png'">
+                    <div class="charm-title">${titolo}</div>
+                    <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
+                    <input type="checkbox" class="${chkClass}">
+                `;
                 
-                // Mostra il popup e blocca lo scorrimento del sito in background
-                document.getElementById('dettaglio-prodotto').classList.add('active');
-                document.body.style.overflow = 'hidden'; 
+                const checkbox = card.querySelector(`.${chkClass}`);
+                checkbox.setAttribute('data-titolo', titolo);
+                checkbox.setAttribute('data-prezzo', prezzoNum);
+                checkbox.setAttribute('data-immagine', immagine);
+                checkbox.addEventListener('change', window.calcolaTotaleCiondoli);
+
+                if (isAdmin) {
+                    card.querySelector('.edit-admin-btn').addEventListener('click', () => { window.apriModaleModifica(idProdotto, titolo, prezzoNum, badgeTesto, immagine, inEv, descrizioneText, riga.categoria); });
+                    card.querySelector('.delete-admin-btn').addEventListener('click', () => { window.eliminaProdotto(idProdotto, titolo); });
+                }
+            }
+            contenitore.appendChild(card);
+        });
+        if (count === 0) contenitore.innerHTML = "<p class='loading-text'>Nessun prodotto trovato in questa categoria.</p>";
+        if (typeof observeElements === "function") observeElements();
+    } catch (e) { console.error("Errore caricamento:", e); }
+};
+        // === CARICA EVIDENZA HOME ===
+       // === CARICA EVIDENZA HOME (METODO SICURO) ===
+window.caricaEvidenza = async function() {
+    const contenitore = document.getElementById('lista-evidenza');
+    if (!contenitore) return;
+    try {
+        const querySnapshot = await window.fbGetDocs(window.fbCollection(window.db, "prodotti"));
+        contenitore.innerHTML = '';
+        let count = 0;
+        
+        querySnapshot.forEach((doc) => {
+            const riga = doc.data();
+            if (riga.in_evidenza !== true) return;
+            count++;
+            const idProdotto = doc.id;
+            const immagine = riga.immagine || 'logo.png';
+            const prezzoNum = parseFloat(riga.prezzo) || 0;
+            const titolo = riga.titolo || '';
+            const badgeTesto = riga.badge || 'In Evidenza';
+            const descrizioneText = riga.descrizione || '';
+            const galleriaStringa = riga.galleria ? riga.galleria.join(',') : '';
+            const htmlBadge = badgeTesto ? `<div class="product-badge">${badgeTesto}</div>` : '';
+            const isFav = (JSON.parse(localStorage.getItem('wishlist')) || []).some(w => w.id === idProdotto);
+
+            const card = document.createElement('div');
+            card.className = 'product-card reveal visible';
+            card.style.position = 'relative';
+            
+            // HTML pulito, nessun onclick che spezza il codice
+            card.innerHTML = `
+                ${htmlBadge}
+                <div class="wishlist-btn ${isFav ? 'active' : ''}"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>
+                <img src="${immagine}" alt="Prodotto" class="product-image" onerror="this.src='logo.png'" style="cursor:pointer;">
+                <h3 style="cursor:pointer;">${titolo}</h3>
+                <div class="price">€${prezzoNum.toFixed(2)}</div>
+                <a href="#" class="contact-order-btn" style="text-decoration:none;">Scopri di più <i class="fas fa-arrow-right"></i></a>
+            `;
+
+            // Colleghiamo i click in modo sicuro!
+            const apri = (e) => {
+                e.preventDefault();
+                window.apriDettaglioProdotto(titolo, prezzoNum, badgeTesto, descrizioneText, immagine, galleriaStringa);
             };
 
-            // Se il browser supporta le transizioni fluide (View Transitions), usale!
-            if (document.startViewTransition) { document.startViewTransition(eseguiApertura); } 
-            else { eseguiApertura(); }
-        };
+            card.querySelector('.product-image').addEventListener('click', apri);
+            card.querySelector('h3').addEventListener('click', apri);
+            card.querySelector('.contact-order-btn').addEventListener('click', apri);
+            card.querySelector('.wishlist-btn').addEventListener('click', (e) => {
+                window.toggleWishlist(e, idProdotto, titolo, prezzoNum, immagine);
+            });
 
-        window.chiudiDettaglio = function() {
-            const eseguiChiusura = () => {
-                document.getElementById('dettaglio-prodotto').classList.remove('active');
-                document.body.style.overflow = ''; // Sblocca lo scorrimento
-            };
-            if (document.startViewTransition) { document.startViewTransition(eseguiChiusura); } 
-            else { eseguiChiusura(); }
-        };
+            contenitore.appendChild(card);
+        });
+        
+        if (count === 0) contenitore.innerHTML = "<p style='width:100%; color:var(--testo-chiaro); font-size:14px;'>Nessun prodotto in evidenza.</p>";
+        if (typeof observeElements === "function") observeElements();
+    } catch (e) { console.error("Errore evidenza:", e); }
+};
+
+
+
+    // === VIEW TRANSITIONS API RIMOSSA PER EVITARE BUG DI POSIZIONAMENTO ===
+window.apriDettaglioProdotto = function(titolo, prezzoNum, badge, descrizione, immagineCopertina, galleriaStringa) {
+    const prezzo = parseFloat(prezzoNum);
+    const galleria = galleriaStringa ? galleriaStringa.split(',') : [immagineCopertina];
+    
+    document.getElementById('dettaglio-titolo').innerText = titolo;
+    document.getElementById('dettaglio-prezzo').innerText = `€${prezzo.toFixed(2)}`;
+    document.getElementById('dettaglio-descrizione').innerText = descrizione || "Un prodotto unico, realizzato a mano con amore.";
+    
+    const badgeContainer = document.getElementById('dettaglio-badge');
+    badgeContainer.innerHTML = badge && badge !== 'undefined' ? `<span style="background:var(--fucsia);color:white;padding:5px 15px;border-radius:20px;font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">${badge}</span>` : '';
+    
+    document.getElementById('dettaglio-img-principale').src = galleria[0];
+    const galleriaContainer = document.getElementById('dettaglio-galleria');
+    galleriaContainer.innerHTML = '';
+    if (galleria.length > 1) {
+        galleria.forEach(urlImg => {
+            galleriaContainer.innerHTML += `<img src="${urlImg}" style="width:80px;height:auto;object-fit:cover;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:0.3s;" onclick="document.getElementById('dettaglio-img-principale').src=this.src" onmouseover="this.style.borderColor='var(--fucsia)'" onmouseout="this.style.borderColor='transparent'">`;
+        });
+    }
+    
+    const dettaglio = document.getElementById('dettaglio-prodotto');
+    
+    // Sposta il popup fuori dagli altri elementi per renderlo un overlay perfetto
+    document.body.appendChild(dettaglio);
+    
+    dettaglio.style.position = 'fixed';
+    dettaglio.style.top = '0';
+    dettaglio.style.left = '0';
+    dettaglio.style.width = '100vw';
+    dettaglio.style.height = '100vh';
+    dettaglio.style.zIndex = '999999';
+    dettaglio.style.display = 'block'; 
+    dettaglio.style.overflowY = 'auto'; 
+    
+    // Mostra il popup e forza lo scroll del popup stesso in alto
+    setTimeout(() => { 
+        dettaglio.classList.add('active'); 
+        dettaglio.scrollTop = 0; 
+    }, 10);
+    
+    // BLOCCO SFONDO: impedisce alla pagina dietro di scrollare o saltare
+    document.body.dataset.scrollY = window.scrollY; 
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${window.scrollY}px`;
+    document.body.style.width = '100%';
+};
+
+window.chiudiDettaglio = function() {
+    const dettaglio = document.getElementById('dettaglio-prodotto');
+    dettaglio.classList.remove('active');
+    setTimeout(() => { dettaglio.style.display = 'none'; }, 400); 
+    
+    // SBLOCCA SFONDO: rimette la visuale esattamente dov'era prima del click
+    const scrollY = document.body.dataset.scrollY;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, parseInt(scrollY || '0'));
+};
+
+// CHIUSURA CLICCANDO FUORI DAL PRODOTTO
+document.addEventListener('click', function(e) {
+    const dettaglio = document.getElementById('dettaglio-prodotto');
+    if (dettaglio && dettaglio.classList.contains('active')) {
+        // Se si clicca proprio sull'area scura e non sul box del prodotto
+        if (e.target === dettaglio) {
+            window.chiudiDettaglio();
+        }
+    }
+});
+
+// PERMETTE DI CHIUDERE IL PRODOTTO CLICCANDO FUORI (SULLO SFONDO)
+document.addEventListener('click', function(e) {
+    const dettaglio = document.getElementById('dettaglio-prodotto');
+    if (dettaglio && dettaglio.classList.contains('active')) {
+        // Se clicchi esattamente sul contenitore principale (lo sfondo sfocato)
+        if (e.target === dettaglio) {
+            window.chiudiDettaglio();
+        }
+    }
+});
 
         // === APRI PRODOTTO DA LINK CONDIVISO ===
         window.apriProdottoCondiviso = async function(nomeProdotto) {
