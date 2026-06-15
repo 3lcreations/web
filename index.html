@@ -843,6 +843,13 @@ html { scroll-behavior: smooth; }
     }
 }
 /* --- FINE FIX SOCIAL --- */
+/* --- NASCONDI FOTO CHI SIAMO SU MOBILE --- */
+@media (max-width: 768px) {
+    .chisiamo-img-col {
+        display: none !important;
+    }
+}
+/* --- FINE NASCONDI FOTO --- */
     </style>
 </head>
 <body>
@@ -1789,12 +1796,20 @@ if (detEl) { detEl.style.display = 'none'; detEl.classList.remove('active'); }
             admin.classList.remove('active'); 
         }
         
-        const y = target.getBoundingClientRect().top + window.scrollY - 90;
-        window.scrollTo({top: y, behavior: 'smooth'});
-    }
+     // --- FIX SCROLL HOME ---
+            if (sectionId === 'home') {
+                // Se andiamo alla home, vai alla cima assoluta della pagina per vedere il banner
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            } else {
+                // Per tutte le altre sezioni, calcola lo spazio per non finire sotto la navbar
+                const y = target.getBoundingClientRect().top + window.scrollY - 90;
+                window.scrollTo({top: y, behavior: 'smooth'});
+            }
+            // --- FINE FIX ---
+        }
 
-    if (updateUrl) history.pushState(null, null, '#' + sectionId);
-};
+        if (updateUrl) history.pushState(null, null, '#' + sectionId);
+    };
 
         // === POPUP PREFERITI E LEGALI ===
         window.apriPreferiti = function() {
