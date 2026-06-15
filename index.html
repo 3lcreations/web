@@ -67,7 +67,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('sw.js?v=2', { scope: '/web/' })
+                navigator.serviceWorker.register('sw.js?v=3', { scope: '/web/' })
                 .then(function(registration) { registration.update(); })
                 .catch(function(err) { console.log('Errore SW:', err); });
             });
@@ -531,7 +531,12 @@
             header { padding: 40px 15px; }
             .header-video { width: 280px; }
             h2 { font-size: 22px; }
-            .product-card { width: 100%; }
+            /* PRODOTTI IN GRIGLIA SU MOBILE */
+            .product-container { gap: 10px; padding: 0 5px; }
+            .product-card { width: calc(50% - 10px); padding: 12px; }
+            .product-card h3 { font-size: 13px; margin: 5px 0; }
+            .product-card .price { font-size: 16px; margin: 8px 0; }
+            .contact-order-btn { font-size: 11px; padding: 8px 5px; }
             #lista-ciondoli, #lista-perline { gap: 10px; }
             .charm-card { width: calc(50% - 5px); padding: 10px; }
             .charm-image { height: 80px; }
@@ -605,18 +610,7 @@ html { scroll-behavior: smooth; }
 
 
 
-/* === 4. BARRA INFERIORE FLUTTUANTE (GLASSMORPHISM) E A SCOMPARSA === */
-@media (max-width: 768px) {
-    .bottom-nav-bar { 
-        bottom: 20px; left: 5%; width: 90%; border-radius: 30px;
-        background: rgba(255,255,255,0.75); backdrop-filter: blur(20px);
-        box-shadow: 0 10px 30px rgba(216, 27, 96, 0.15); border: 1px solid rgba(255,255,255,0.5);
-        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease; 
-    }
-    .bottom-nav-bar.hidden {
-        transform: translateY(150px); opacity: 0; /* Si nasconde quando scorri in giù */
-    }
-}
+
 /* === TASTO PREFERITI FLUTTUANTE === */
 .floating-heart-btn {
     position: fixed;
@@ -758,6 +752,97 @@ html { scroll-behavior: smooth; }
 #sezione-admin.attivo-admin {
     display: block !important;
 }
+/* --- INIZIO NUOVO MENU MOBILE INFALLIBILE --- */
+#menu-mobile-fisso {
+    display: none; /* Nascosto di default su PC */
+}
+
+@media (max-width: 900px) {
+    #menu-mobile-fisso {
+        display: flex !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 70px !important;
+        background: rgba(255, 255, 255, 0.98) !important;
+        backdrop-filter: blur(15px) !important;
+        border-top: 1px solid var(--rosa-chiaro) !important;
+        box-shadow: 0 -5px 25px rgba(216, 27, 96, 0.2) !important;
+        z-index: 2147483647 !important; /* Il livello massimo consentito dal browser */
+        padding-bottom: env(safe-area-inset-bottom) !important;
+    }
+
+    #menu-mobile-fisso .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #aaaaaa;
+        font-size: 10px;
+        width: 20%;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    #menu-mobile-fisso .nav-item i {
+        font-size: 22px;
+        margin-bottom: 4px;
+    }
+
+    #menu-mobile-fisso .nav-item.active,
+    #menu-mobile-fisso .nav-item:active {
+        color: var(--fucsia) !important;
+    }
+}
+/* --- FINE NUOVO MENU MOBILE --- */
+/* --- FIX SOCIAL AFFIANCATI SU MOBILE --- */
+@media (max-width: 768px) {
+    .contacts-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important; /* Costringe i box a stare su una riga */
+        gap: 8px !important;
+        justify-content: center !important;
+    }
+    
+    .contact-box-new {
+        flex: 1 !important; /* Fa in modo che i box si dividano lo spazio equamente */
+        width: 100% !important;
+        min-width: 0 !important; /* Sblocca il restringimento massimo */
+        padding: 15px 5px !important; /* Riduciamo i bordi interni */
+    }
+    
+    /* Rimpiccioliamo l'icona */
+    .contact-icon-wrapper {
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 18px !important;
+        margin-bottom: 8px !important;
+        border-radius: 10px !important;
+    }
+    
+    /* Rimpiccioliamo il titolo (Instagram, Email, ecc.) */
+    .contact-box-new h4 {
+        font-size: 11px !important;
+        margin-bottom: 5px !important;
+        letter-spacing: -0.5px !important;
+    }
+    
+    /* Nascondiamo la frase lunga (es. "Il modo più veloce per ordinare") */
+    .contact-box-new p {
+        display: none !important;
+    }
+    
+    /* Rimpiccioliamo il tag finale (@nome) e permettiamo di spezzare la parola se troppo lunga */
+    .contact-box-new span {
+        font-size: 9px !important;
+        word-break: break-all !important;
+    }
+}
+/* --- FINE FIX SOCIAL --- */
     </style>
 </head>
 <body>
@@ -1560,21 +1645,20 @@ html { scroll-behavior: smooth; }
         2. Seleziona <strong>"Aggiungi alla schermata Home"</strong>.
     </div>
 
-    <!-- BARRA NAVIGAZIONE MOBILE -->
-    <div class="bottom-nav-bar">
-        <div class="bottom-nav-item active" onclick="showSection('home'); vibra();">
+   <div id="menu-mobile-fisso">
+        <div class="nav-item active" onclick="showSection('home'); vibra();">
             <i class="fas fa-home"></i><span>Home</span>
         </div>
-        <div class="bottom-nav-item" onclick="showSection('acquista'); vibra();">
-            <i class="fas fa-search"></i><span>Prodotti</span>
+        <div class="nav-item" onclick="showSection('acquista'); vibra();">
+            <i class="fas fa-search"></i><span>Catalogo</span>
         </div>
-        <div class="bottom-nav-item" onclick="showSection('sezione-personalizza'); cambiaPersonalizzato('componi'); vibra();">
+        <div class="nav-item" onclick="showSection('sezione-personalizza'); cambiaPersonalizzato('componi'); vibra();">
             <i class="fas fa-gem"></i><span>Personalizza</span>
         </div>
-        <div class="bottom-nav-item" onclick="apriPreferiti(); vibra();">
+        <div class="nav-item" onclick="apriPreferiti(); vibra();">
             <i class="fas fa-heart"></i><span>Preferiti</span>
         </div>
-        <div class="bottom-nav-item" onclick="showSection('contatti'); vibra();">
+        <div class="nav-item" onclick="showSection('contatti'); vibra();">
             <i class="fas fa-envelope"></i><span>Contatti</span>
         </div>
     </div>
@@ -2987,6 +3071,15 @@ window.apriAdminDiretto = function() {
             // Apre/Chiude quella cliccata
             element.classList.toggle('active');
         };
+        // --- FIX: SBLOCCO FORZATO DEL MENU MOBILE ---
+        window.addEventListener('DOMContentLoaded', function() {
+            const menuFisso = document.getElementById('menu-mobile-fisso');
+            if (menuFisso) {
+                // Estrae il menu da eventuali "trappole" HTML e lo attacca direttamente allo schermo
+                document.body.appendChild(menuFisso); 
+            }
+        });
+        // --- FINE FIX MENU ---
     </script>
 </body>
 </html>
