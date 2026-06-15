@@ -2611,17 +2611,33 @@ window.caricaProdottiFirebase = async function(categoria, idContenitore) {
             setTimeout(() => window.caricaProdottiFirebase(categoria, idContenitore), 500);
             return;
         }
-        const querySnapshot = await window.fbGetDocs(window.fbCollection(window.db, "prodotti"));
+       const querySnapshot = await window.fbGetDocs(window.fbCollection(window.db, "prodotti"));
         contenitore.innerHTML = '';
-        let count = 0;
+        
         const isAdmin = window.auth?.currentUser && (window.auth.currentUser.email === "mauro7leo10@gmail.com" || window.auth.currentUser.email === "3lcreationsfordogs1@gmail.com");
         const categorieShop = ['collane', 'fiocchi', 'bracciali', 'orecchini', 'borse', 'pochette', 'ciondoli_pronti'];
 
+        // 1. Inseriamo i prodotti in un array temporaneo per poterli organizzare
+        let prodottiArray = [];
         querySnapshot.forEach((doc) => {
             const riga = doc.data();
-            if (riga.categoria !== categoria) return;
-            count++;
-            const idProdotto = doc.id;
+            if (riga.categoria === categoria) {
+                prodottiArray.push({ idProdotto: doc.id, ...riga });
+            }
+        });
+
+        // 2. Ordinamento: chi ha l'etichetta (o è in evidenza) balza in cima!
+        prodottiArray.sort((a, b) => {
+            const haBadgeA = (a.badge && a.badge.trim() !== '') || a.in_evidenza === true ? 1 : 0;
+            const haBadgeB = (b.badge && b.badge.trim() !== '') || b.in_evidenza === true ? 1 : 0;
+            return haBadgeB - haBadgeA;
+        });
+
+        let count = prodottiArray.length;
+
+        // 3. Ora stampiamo a schermo partendo dall'array appena ordinato
+        prodottiArray.forEach((riga) => {
+            const idProdotto = riga.idProdotto;
             const immagine = riga.immagine || 'logo.png';
             const prezzoNum = parseFloat(riga.prezzo) || 0;
             const titolo = riga.titolo || ''; 
@@ -2992,23 +3008,21 @@ document.addEventListener('click', function(e) {
         };
 
         // === MODIFICA PRODOTTO ===
-     window.apriModaleModifica = function(id, titolo, prezzo, badge, immagine, inEvidenza, descrizione, categoria) {
-    try {
-        console.log("Tentativo di apertura modale per:", id);
-        
-        const elId = document.getElementById('edit-id');
-        if (!elId) { console.error("Elemento 'edit-id' non trovato!"); return; }
-        
-        elId.value = id;
-        document.getElementById('edit-titolo').value = titolo;
-        document.getElementById('edit-prezzo').value = prezzo;
-        // ... continua con gli altri ...
-
-        document.getElementById('edit-modal').style.display = "flex";
-        console.log("Modale visualizzato con successo.");
-    } catch (err) {
-        console.error("Errore durante l'apertura del modale:", err);
+    window.apriModaleModifica = function(id, titolo, prezzo, badge, immagine, inEvidenza, descrizione, categoria) {
+    document.getElementById('edit-id').value = id;
+    document.getElementById('edit-titolo').value = titolo;
+    document.getElementById('edit-prezzo').value = prezzo;
+    document.getElementById('edit-badge').value = badge === 'undefined' || !badge ? '' : badge;
+    document.getElementById('edit-evidenza').checked = inEvidenza;
+    document.getElementById('edit-descrizione').value = descrizione && descrizione !== 'undefined' ? descrizione.replace(/\\n/g, '\n') : '';
+    
+    const catSelect = document.getElementById('edit-categoria');
+    if (catSelect) {
+        catSelect.value = categoria || 'collane';
     }
+    
+    document.getElementById('edit-immagine-file').value = '';
+    document.getElementById('edit-modal').style.display = "flex";
 };
         window.chiudiModaleModifica = function() {
             document.getElementById('edit-modal').style.display = 'none';
