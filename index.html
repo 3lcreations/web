@@ -199,8 +199,25 @@
         #menuOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.3); z-index: 96; opacity: 0; transition: opacity 0.4s ease; }
 
         /* MENU LATERALE */
-        .sidebar { height: 100%; width: 0; position: fixed; z-index: 100; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); padding-top: 60px; padding-bottom: 60px; box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); }
-        .sidebar::-webkit-scrollbar { width: 5px; }
+        /* MENU LATERALE */
+.sidebar { 
+    height: 100%; 
+    width: 0; 
+    position: fixed; 
+    z-index: 100; 
+    top: 0; 
+    left: 0; 
+    background-color: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(12px); 
+    overflow-y: auto; 
+    overflow-x: hidden; 
+    -webkit-overflow-scrolling: touch; 
+    transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); 
+    padding-top: 60px; 
+    padding-bottom: 60px; 
+    box-shadow: 4px 0 15px rgba(216, 27, 96, 0.1); 
+    box-sizing: border-box; /* Aggiungi solo questa riga! */
+} .sidebar::-webkit-scrollbar { width: 5px; }
         .sidebar::-webkit-scrollbar-track { background: transparent; }
         .sidebar::-webkit-scrollbar-thumb { background: var(--rosa-chiaro); border-radius: 10px; }
         .sidebar a { padding: 12px 30px; text-decoration: none; font-size: 16px; color: var(--testo-scuro); display: block; transition: all 0.3s; font-weight: 400; }
@@ -360,8 +377,14 @@
         .product-container { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
         .product-card { background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); text-align: center; width: 280px; transition: all 0.4s ease; border: 1px solid transparent; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
         .product-card:not(.skeleton-card):hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(216, 27, 96, 0.15); border-color: var(--rosa-chiaro); }
-        .product-image { width: 100%; height: 220px; object-fit: cover; border-radius: 15px; margin-bottom: 20px; transition: transform 0.4s; }
-        .product-card h3 { margin: 10px 0; font-size: 20px; color: var(--testo-scuro); }
+       .product-image { 
+    width: 100%; 
+    height: auto; 
+    object-fit: contain; /* <-- Cambia cover in contain */
+    border-radius: 15px; 
+    margin-bottom: 20px; 
+    transition: transform 0.4s; 
+}  .product-card h3 { margin: 10px 0; font-size: 20px; color: var(--testo-scuro); }
         .price { font-size: 24px; color: var(--fucsia); font-weight: 600; margin: 15px 0; }
 
         /* BOX PERSONALIZZA */
@@ -374,7 +397,7 @@
         /* CIONDOLI */
         .charm-card { background: white; padding: 15px; border-radius: 15px; width: 150px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; transition: 0.3s; box-sizing: border-box; position: relative; }
         .charm-card:not(.skeleton-charm):hover { border-color: var(--rosa-chiaro); transform: translateY(-5px); }
-        .charm-image { width: 100%; height: 100px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+        .charm-image { width: 100%; height: 100px; object-fit: contain; border-radius: 10px; margin-bottom: 10px; }
         .charm-title { font-size: 14px; margin-bottom: 5px; }
         .charm-price { color: var(--fucsia); font-weight: bold; margin: 10px 0; }
         .charm-checkbox, .perlina-checkbox { transform: scale(1.5); accent-color: var(--fucsia); cursor: pointer; }
@@ -695,8 +718,9 @@
                 </div>
                 <div style="display: flex; flex-wrap: wrap; gap: 30px;">
                     <div style="flex: 1.2; min-width: 300px;">
-                        <img id="dettaglio-img-principale" src="logo.png" class="product-image" style="height: 450px; width: 100%; object-fit: cover; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
-                        <div id="dettaglio-galleria" style="display: flex; gap: 10px; margin-top: 15px; overflow-x: auto; padding-bottom: 10px;"></div>
+                        <div id="zoom-wrapper" style="overflow: hidden; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; cursor: zoom-in;">
+    <img id="dettaglio-img-principale" src="logo.png" style="height: auto; width: 100%; object-fit: contain; display: block; transition: transform 0.15s ease-out, transform-origin 0.1s ease-out;">
+</div> <div id="dettaglio-galleria" style="display: flex; gap: 10px; margin-top: 15px; overflow-x: auto; padding-bottom: 10px;"></div>
                     </div>
                     <div style="flex: 1; min-width: 300px; text-align: left;">
                         <div id="dettaglio-badge" style="margin-bottom: 10px;"></div>
@@ -1447,7 +1471,70 @@
             }
             document.getElementById('prezzo-totale-ciondoli').innerText = totale.toFixed(2);
         };
+// === EFFETTO LENTE D'INGRANDIMENTO (ZOOM) ===
+        const zoomWrapper = document.getElementById('zoom-wrapper');
+        const imgZoom = document.getElementById('dettaglio-img-principale');
+        let zoomBloccato = false; // Flag per attivare/disattivare lo zoom
 
+        if (zoomWrapper && imgZoom) {
+            function applicaZoom(e) {
+                if (zoomBloccato) return; // Se lo zoom è bloccato, fermati
+
+                let clientX = e.clientX;
+                let clientY = e.clientY;
+                
+                if (e.touches && e.touches.length > 0) {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                }
+
+                const rect = zoomWrapper.getBoundingClientRect();
+                const x = ((clientX - rect.left) / rect.width) * 100;
+                const y = ((clientY - rect.top) / rect.height) * 100;
+
+                imgZoom.style.transformOrigin = `${x}% ${y}%`;
+                imgZoom.style.transform = 'scale(2.5)';
+                zoomWrapper.style.cursor = 'zoom-out'; // Mostra la lente con il "meno"
+            }
+
+            function resettaZoom() {
+                imgZoom.style.transform = 'scale(1)';
+                imgZoom.style.transformOrigin = 'center center';
+            }
+
+            // --- Eventi Mouse (Desktop) ---
+            zoomWrapper.addEventListener('mousemove', applicaZoom);
+            
+            zoomWrapper.addEventListener('mouseleave', function() {
+                zoomBloccato = false; // Resetta sempre il blocco quando esci dalla foto
+                resettaZoom();
+                zoomWrapper.style.cursor = 'zoom-in';
+            });
+
+            // --- Eventi Touch (Mobile) ---
+            zoomWrapper.addEventListener('touchmove', function(e) {
+                if(!zoomBloccato) e.preventDefault();
+                applicaZoom(e);
+            }, { passive: false });
+            
+            zoomWrapper.addEventListener('touchend', function() {
+                resettaZoom();
+            });
+
+            // --- Interruttore al Click ---
+            zoomWrapper.addEventListener('click', function(e) {
+                zoomBloccato = !zoomBloccato; // Inverte lo stato: acceso/spento
+                
+                if (zoomBloccato) {
+                    // È appena stato bloccato: chiudiamo lo zoom
+                    resettaZoom();       
+                    zoomWrapper.style.cursor = 'zoom-in'; // Cursore "più" per far capire che si può riattivare
+                } else {
+                    // È appena stato sbloccato: applichiamo subito lo zoom nel punto del mouse
+                    applicaZoom(e); 
+                }
+            });
+        }
         // === LIGHTBOX ===
         document.body.addEventListener('click', function(e) {
             const isInsideCard = e.target.closest('.product-card');
@@ -1769,7 +1856,7 @@
             galleriaContainer.innerHTML = '';
             if (galleria.length > 1) {
                 galleria.forEach(urlImg => {
-                    galleriaContainer.innerHTML += `<img src="${urlImg}" style="width:80px;height:80px;object-fit:cover;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:0.3s;" onclick="document.getElementById('dettaglio-img-principale').src=this.src" onmouseover="this.style.borderColor='var(--fucsia)'" onmouseout="this.style.borderColor='transparent'">`;
+                    galleriaContainer.innerHTML += `<img src="${urlImg}" style="width:80px;height:auto;object-fit:cover;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:0.3s;" onclick="document.getElementById('dettaglio-img-principale').src=this.src" onmouseover="this.style.borderColor='var(--fucsia)'" onmouseout="this.style.borderColor='transparent'">`;
                 });
             }
             showSection('dettaglio-prodotto');
