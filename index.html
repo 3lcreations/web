@@ -603,8 +603,7 @@ html { scroll-behavior: smooth; }
     to { transform: translateY(0); opacity: 1; }
 }
 
-#sezione-admin { display: none; } /* Nascosta finché non serve */
-#sezione-admin.active { display: block; }
+
 
 /* === 4. BARRA INFERIORE FLUTTUANTE (GLASSMORPHISM) E A SCOMPARSA === */
 @media (max-width: 768px) {
@@ -751,6 +750,14 @@ html { scroll-behavior: smooth; }
             display: none; 
         }
         #legale.active { display: block; animation: slideUpModal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  /* Rimuovi eventuali regole precedenti su #sezione-admin e incolla questa: */
+#sezione-admin {
+    display: none;
+    opacity: 1 !important; /* Forza sempre opacità piena */
+}
+#sezione-admin.attivo-admin {
+    display: block !important;
+}
     </style>
 </head>
 <body>
@@ -1487,8 +1494,10 @@ html { scroll-behavior: smooth; }
             <a href="#contatti" onclick="showSection('contatti'); return false;">Contatti</a> |
             <a href="#" onclick="apriLegale(); return false;">Note Legali</a>
         </p>
-               <p style="margin-top: 15px;">© 2026 3L Creations <span onclick="showSection('sezione-admin'); return false;" style="cursor: pointer;">@</span> Tutti i diritti riservati.</p></footer>
-
+   <p style="margin-top: 15px;">© 
+    <span onclick="apriAdminDiretto(); return false;" style="cursor: pointer; text-decoration: underline; color: var(--fucsia);"> 2026 3L Creations</span> 
+    Tutti i diritti riservati.
+</p>
    <!-- MODALE MODIFICA PRODOTTO (ADMIN) -->
     <div id="edit-modal">
         <div class="componi-box">
@@ -1647,55 +1656,56 @@ html { scroll-behavior: smooth; }
         }
 
         // === NAVIGAZIONE A SCORRIMENTO (ONE-PAGE) ===
-        window.showSection = function(sectionId, updateUrl = true) {
-            // Chiudi popup modali aperti (Preferiti e Legali)
-            const pref = document.getElementById('preferiti');
-            if(pref) pref.classList.remove('active');
-            const leg = document.getElementById('legale');
-            if(leg) leg.classList.remove('active');
-            const chiudiBtn = document.getElementById('closePreferitiBtn');
-            if(chiudiBtn) chiudiBtn.style.display = 'none';
+      window.showSection = function(sectionId, updateUrl = true) {
+    // 1. Chiudi popup e dettaglio se aperti
+    const pref = document.getElementById('preferiti');
+    if(pref) pref.classList.remove('active');
+    const det = document.getElementById('dettaglio-prodotto');
+    if(det) det.classList.remove('active');
+    document.body.style.overflow = ''; 
 
-            // Chiudi dettaglio prodotto (senza sballare l'overflow se è aperto altro)
-            const det = document.getElementById('dettaglio-prodotto');
-            if(det && det.classList.contains('active')) det.classList.remove('active');
-            document.body.style.overflow = ''; 
+    const target = document.getElementById(sectionId);
+    if (!target) return;
 
-            if (sectionId === 'dettaglio-prodotto' || sectionId === 'preferiti' || sectionId === 'legale') return;
+    // 2. Logica specifica per Admin
+    if (sectionId === 'sezione-admin') {
+        // Nascondi tutte le altre sezioni
+        document.querySelectorAll('.content-section').forEach(s => {
+            s.style.display = 'none';
+            s.style.opacity = '0';
+            s.classList.remove('active');
+        });
 
-            const target = document.getElementById(sectionId);
-            if (target) {
-                                if (sectionId === 'sezione-admin') {
-                    // Manda via tutte le sezioni TRANNE l'admin, poi mostra l'admin
-                    document.querySelectorAll('.content-section:not(#sezione-admin)').forEach(s => {
-                        s.style.display = 'none';
-                        s.classList.remove('active');
-                    });
-                    target.style.display = 'block';
-                    target.classList.add('active');
-                    target.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
-                    window.scrollTo(0,0);
-                }
+        // Mostra Admin forzando opacità e display
+        target.style.display = 'block';
+        target.style.opacity = '1';
+        target.classList.add('active');
+        
+        // Sblocca i contenuti nascosti con la classe .reveal
+        target.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+        
+        window.scrollTo(0,0);
+    } 
+    // 3. Logica per le altre sezioni
+    else {
+        document.querySelectorAll('.content-section').forEach(s => {
+            s.style.display = 'block';
+            s.style.opacity = '1';
+            s.classList.add('active');
+        });
+        const admin = document.getElementById('sezione-admin');
+        if(admin) { 
+            admin.style.display = 'none'; 
+            admin.style.opacity = '0'; 
+            admin.classList.remove('active'); 
+        }
+        
+        const y = target.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({top: y, behavior: 'smooth'});
+    }
 
-                 else {
-                    // Mostra di nuovo le sezioni
-                    document.querySelectorAll('.content-section:not(#dettaglio-prodotto):not(#sezione-admin)').forEach(s => {
-                        s.style.display = 'block';
-                        s.classList.add('active');
-                    });
-                    const admin = document.getElementById('sezione-admin');
-                    if(admin) { admin.style.display = 'none'; admin.classList.remove('active'); }
-                    
-                    if (sectionId === 'home') {
-                        window.scrollTo({top: 0, behavior: 'smooth'});
-                    } else {
-                        const y = target.getBoundingClientRect().top + window.scrollY - 90;
-                        window.scrollTo({top: y, behavior: 'smooth'});
-                    }
-                }
-                if (updateUrl) history.pushState(null, null, '#' + sectionId);
-            }
-        };
+    if (updateUrl) history.pushState(null, null, '#' + sectionId);
+};
 
         // === POPUP PREFERITI E LEGALI ===
         window.apriPreferiti = function() {
@@ -2795,6 +2805,19 @@ window.inviaRichiestaProdottoEmail = function(nomeBase, textAreaId, radioName, t
                 caricaNotiziePubbliche();
             }
         };
+window.apriAdminDiretto = function() {
+    const admin = document.getElementById('sezione-admin');
+    if (admin) {
+        admin.classList.toggle('attivo-admin');
+        
+        // Se si è appena aperta, scorri verso l'area admin
+        if (admin.classList.contains('attivo-admin')) {
+            setTimeout(() => {
+                admin.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+    }
+};
         // === INIT AL CARICAMENTO ===
         window.addEventListener('load', function() {
             // Nascondi splash
