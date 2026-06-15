@@ -546,7 +546,7 @@
 
         /* OFFLINE */
         #offline-screen { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--sfondo); z-index: 9999999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; }
-        .offline-icon { font-size: 70px; color: #ccc; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
+        .offline-icon { font-size: 70px; color: #ccc; margin-bottom: 20px; animation: float 8s ease-in-out infinite; }
    /* === NEWS SLIDER === */
         .news-slider-container { 
             background: linear-gradient(135deg, rgba(216, 27, 96, 0.80), rgba(255, 117, 140, 0.80)); 
@@ -562,6 +562,8 @@
             display: flex; 
             align-items: center; 
             justify-content: center;
+            transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            
         }        .news-item { display: none; width: 100%; animation: fadeNews 0.5s ease-in-out; }
         .news-item h3 { margin: 0 0 10px 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); border: none; }
         .news-item p { font-size: 15px; line-height: 1.6; margin: 0; }
