@@ -20,7 +20,7 @@
     <meta property="og:type" content="website">
 
     <link rel="icon" type="image/png" href="favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script type="module">
@@ -670,6 +670,87 @@ html { scroll-behavior: smooth; }
     display: block;
     animation: slideUpModal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+/* === NUOVO STILE TIPOGRAFICO (DA IMMAGINI) === */
+        .section-title { font-family: 'Playfair Display', serif; font-size: 42px; color: #2c2c2c; margin-top: 5px; margin-bottom: 10px; border: none; letter-spacing: -0.5px;}
+        .section-title::after { display: none; /* Rimuove la vecchia riga fucsia */ }
+        .section-overline { font-size: 12px; font-weight: 600; color: var(--fucsia); text-transform: uppercase; letter-spacing: 3px; display: block; }
+        
+        /* === GRIGLIA CHI SIAMO === */
+        .chisiamo-wrapper { display: flex; gap: 40px; align-items: center; margin: 40px auto 80px auto; flex-wrap: wrap; }
+        .chisiamo-img-col { flex: 1; min-width: 300px; }
+        .chisiamo-text-col { flex: 1.2; min-width: 300px; text-align: left; }
+        .chisiamo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; margin-bottom: 25px; }
+        .chisiamo-card { border: 1px solid var(--rosa-chiaro); border-radius: 15px; padding: 15px; background: #fff; transition: 0.3s; }
+        .chisiamo-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(216,27,96,0.1); }
+        .chisiamo-card i { color: var(--fucsia); font-size: 20px; margin-bottom: 10px; }
+        .chisiamo-card h4 { font-size: 14px; margin: 0 0 5px 0; color: #2c2c2c; }
+        .chisiamo-card p { font-size: 12px; margin: 0; color: var(--testo-chiaro); line-height: 1.4; }
+        
+       /* === TOOLBAR CATALOGO === */
+        .catalogo-toolbar { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+        .catalogo-toolbar .search-container { margin: 0; width: 100%; max-width: 350px; }
+        .catalogo-toolbar .sort-container { margin: 0; }
+        
+        /* === RECENSIONI === */
+        .reviews-container { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+        .review-card { border: 1px solid var(--rosa-chiaro); border-radius: 20px; padding: 30px; background: #fff; width: 320px; text-align: left; box-shadow: 0 5px 15px rgba(216,27,96,0.03); display: flex; flex-direction: column; transition: 0.3s; box-sizing: border-box;}
+        .review-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(216,27,96,0.1); }
+        .review-stars { color: #d4af37; margin-bottom: 15px; font-size: 14px; letter-spacing: 2px;}
+        .review-text { font-size: 14px; color: var(--testo-scuro); font-style: italic; line-height: 1.6; margin-bottom: 25px; flex-grow: 1; }
+        .review-author { color: var(--fucsia); font-weight: 600; font-size: 16px; margin: 0;}
+        
+       /* === FAQ ACCORDION === */
+        .faq-item { background: white; border: 1px solid var(--rosa-chiaro); border-radius: 15px; margin: 0 auto 15px auto; max-width: 650px; padding: 0; cursor: pointer; transition: 0.3s; box-shadow: none;}
+        .faq-item:hover { border-color: var(--fucsia); }
+        .faq-question { padding: 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: var(--testo-scuro); font-size: 15px; text-align: left; }
+        .faq-question i { color: var(--fucsia); font-size: 12px; transition: transform 0.3s; }
+        .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, padding 0.4s ease-out; color: var(--testo-chiaro); font-size: 14px; line-height: 1.6; text-align: left; opacity: 0; }
+        .faq-item.active .faq-answer { max-height: 300px; padding-bottom: 20px; opacity: 1; }
+        .faq-item.active .faq-question i { transform: rotate(180deg); }
+      /* === NUOVA GRAFICA CONTATTI (DA IMMAGINE) === */
+        .contacts-wrapper { background: #fff5f8; border-radius: 30px; padding: 50px 20px; text-align: center; margin-bottom: 40px; border: 1px solid var(--rosa-chiaro); }
+        .contacts-title { font-family: 'Playfair Display', serif; font-size: 42px; color: #2c2c2c; margin-top: 5px; margin-bottom: 10px; }
+        .contacts-subtitle { font-size: 15px; color: var(--testo-chiaro); max-width: 600px; margin: 0 auto 20px auto; line-height: 1.6; }
+        .contacts-location { font-size: 13px; color: var(--testo-scuro); margin-bottom: 40px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .contacts-grid { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .contact-box-new { background: white; border-radius: 20px; padding: 30px 15px; width: 220px; box-shadow: 0 10px 20px rgba(216,27,96,0.03); text-decoration: none; transition: 0.3s; border: 1px solid transparent; display: flex; flex-direction: column; align-items: center; box-sizing: border-box;}
+        .contact-box-new:hover { transform: translateY(-5px); border-color: var(--rosa-chiaro); box-shadow: 0 15px 30px rgba(216,27,96,0.1); }
+        .contact-icon-wrapper { color: white; width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; }
+        .contact-box-new.ig .contact-icon-wrapper { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .contact-box-new.em .contact-icon-wrapper { background: #d81b60; }
+        .contact-box-new.fb .contact-icon-wrapper { background: #1877F2; }
+        .contact-box-new.tk .contact-icon-wrapper { background: #000000; }
+        .contact-box-new h4 { margin: 0 0 8px 0; font-family: 'Playfair Display', serif; font-size: 18px; color: #2c2c2c; }
+        .contact-box-new p { font-size: 11px; color: var(--testo-chiaro); margin: 0 0 20px 0; line-height: 1.5; }
+        .contact-box-new span { font-size: 13px; font-weight: 600; color: var(--fucsia); margin-top: auto; }
+
+        /* === NUOVA GRAFICA BOX PERSONALIZZA (DA IMMAGINE) === */
+        .componi-box-new { background: #ffffff; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.05); border: 1px solid var(--rosa-chiaro); margin-bottom: 30px; }
+        .componi-box-new h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: #2c2c2c; margin-top: 25px; margin-bottom: 15px; text-align: left; display: flex; align-items: center;}
+        .photo-notice-new { background-color: #fff0f5; padding: 15px 20px; border-radius: 15px; margin-bottom: 25px; font-size: 14px; color: var(--testo-scuro); display: flex; gap: 12px; align-items: flex-start; text-align: left; line-height: 1.5;}
+        .photo-notice-new i { color: #1877F2; font-size: 20px; margin-top: 2px; } 
+        
+        .swatch-label-new { display: inline-flex; align-items: center; gap: 10px; border: 1px solid #ddd; padding: 6px 20px 6px 6px; border-radius: 30px; cursor: pointer; transition: 0.3s; font-size: 14px; color: var(--testo-scuro); }
+        .swatch-label-new input { display: none; }
+        .swatch-circle-new { width: 28px; height: 28px; border-radius: 50%; border: 1px solid #ddd; transition: 0.3s; }
+        .swatch-label-new:has(input:checked) { border-color: var(--fucsia); color: var(--fucsia); background: #fffcfd; }
+        .swatch-label-new:has(input:checked) .swatch-circle-new { border-color: var(--fucsia); }
+
+        .btn-pers-doppio { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-pers-doppio button { flex: 1; margin: 0; padding: 14px 10px; font-size: 14px; border-radius: 30px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        .btn-ig-new { background: linear-gradient(90deg, #f09433, #dc2743, #bc1888); color: white; border: none; box-shadow: 0 4px 15px rgba(220, 39, 67, 0.3); }
+        .btn-em-new { background: white; color: var(--testo-scuro); border: 1px solid #ddd; }
+        .btn-ig-new:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-em-new:hover { border-color: var(--fucsia); color: var(--fucsia); transform: translateY(-2px); }
+
+        /* === POPUP NOTE LEGALI === */
+        #legale {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: var(--sfondo); z-index: 999999;
+            overflow-y: auto; padding: 20px; padding-top: 95px; box-sizing: border-box;
+            display: none; 
+        }
+        #legale.active { display: block; animation: slideUpModal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 </head>
 <body>
@@ -794,28 +875,32 @@ html { scroll-behavior: smooth; }
                 <div id="news-dots" class="news-dots-container"></div>
             </div>
 
-            <!-- CHI SIAMO -->
-            <div class="home-text reveal" style="text-align: center;">
-                <h2>Chi Siamo</h2>
-                <p style="font-size: 15px; color: var(--testo-scuro); margin-bottom: 20px;">
-                    Benvenuti nel mondo di <strong>3L Creations</strong>. Nati dall'amore per i dettagli e dalla profonda passione per la tradizione partenopea, diamo vita a creazioni uniche nel loro genere.
-                    Dall'abbigliamento ricamato ai gioielli componibili, ogni pezzo è realizzato interamente a mano con cura e dedizione.
-                </p>
-                <p style="font-size: 15px; color: var(--testo-scuro);">
-                    Crediamo che l'artigianato debba celebrare l'unicità di ciascuno, compresa quella dei nostri fedeli amici a quattro zampe. Sfoglia il catalogo o divertiti a configurare la tua creazione personalizzata, poi scrivici su Instagram per ordinare!
-                </p>
-                <br>
-                <!-- Contenitore orizzontale Social -->
-                <div style="display: flex; justify-content: center; gap: 10px; width: 100%; max-width: 600px; margin: 0 auto; flex-wrap: wrap;">
-                    <a href="https://www.instagram.com/_3l_creations" target="_blank" class="contact-order-btn instagram" style="flex: 1; min-width: 110px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; font-size: 14px; padding: 12px 5px;">
-                        <i class="fab fa-instagram" style="font-size: 18px;"></i> Instagram
-                    </a>
-                    <a href="https://www.facebook.com/groups/974242766065881" target="_blank" class="contact-order-btn facebook" style="flex: 1; min-width: 110px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; font-size: 14px; padding: 12px 5px;">
-                        <i class="fab fa-facebook-f" style="font-size: 18px;"></i> Facebook
-                    </a>
-                    <a href="https://www.tiktok.com/@3lcreations" target="_blank" class="contact-order-btn tiktok" style="flex: 1; min-width: 110px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; font-size: 14px; padding: 12px 5px;">
-                        <i class="fab fa-tiktok" style="font-size: 18px;"></i> TikTok
-                    </a>
+           <div class="chisiamo-wrapper reveal">
+                <div class="chisiamo-img-col">
+                    <img id="img-chi-siamo" src="chisiamo.jpg" alt="Chi Siamo" style="width: 100%; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); object-fit: cover; aspect-ratio: 4/5;" onerror="this.src='logo.png'">
+                </div>
+                <div class="chisiamo-text-col">
+                    <span class="section-overline">Chi Siamo</span>
+                    <h2 class="section-title">Creazioni nate<br><span style="color: var(--fucsia);">dall'amore</span></h2>
+                    <p style="font-size: 14px; color: var(--testo-chiaro); line-height: 1.7; margin-bottom: 15px;">
+                        Benvenuti nel mondo di <strong>3L Creations</strong>. Nati dall'amore per i dettagli e dalla profonda passione per la tradizione partenopea, diamo vita a creazioni uniche nel loro genere. Dall'abbigliamento ricamato ai gioielli componibili, ogni pezzo è realizzato con cura e dedizione.
+                    </p>
+                    <p style="font-size: 14px; color: var(--testo-chiaro); line-height: 1.7;">
+                        Crediamo che l'artigianato debba celebrare l'unicità di ciascuno, compresa quella dei nostri fedeli amici a quattro zampe.
+                    </p>
+                    
+                    <div class="chisiamo-grid">
+                        <div class="chisiamo-card"><i class="fas fa-hand-sparkles"></i><h4>Fatto a mano</h4><p>Ogni pezzo è realizzato interamente a mano, uno per uno.</p></div>
+                        <div class="chisiamo-card"><i class="fas fa-gift"></i><h4>Personalizzabile</h4><p>Componi e personalizza la tua creazione su misura.</p></div>
+                        <div class="chisiamo-card"><i class="fas fa-dog"></i><h4>Per i pelosetti</h4><p>Accessori e magliette dedicati ai tuoi amici a quattro zampe.</p></div>
+                        <div class="chisiamo-card"><i class="fas fa-pepper-hot"></i><h4>Made in Napoli</h4><p>Nati dalla passione per la tradizione partenopea.</p></div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a href="https://www.instagram.com/_3l_creations" target="_blank" class="contact-order-btn instagram" style="flex: 1; min-width: 110px; padding: 10px; margin: 0;"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="https://www.facebook.com/groups/974242766065881" target="_blank" class="contact-order-btn facebook" style="flex: 1; min-width: 110px; padding: 10px; margin: 0;"><i class="fab fa-facebook-f"></i> Facebook</a>
+                        <a href="https://www.tiktok.com/@3lcreations" target="_blank" class="contact-order-btn tiktok" style="flex: 1; min-width: 110px; padding: 10px; margin: 0;"><i class="fab fa-tiktok"></i> TikTok</a>
+                    </div>
                 </div>
             </div>
 
@@ -853,22 +938,29 @@ html { scroll-behavior: smooth; }
 </div>
         <!-- ACQUISTA -->
         <div id="acquista" class="content-section">
-            <h2 class="reveal" style="display:block; text-align:center;">I Nostri Prodotti</h2>
-
-            <div class="search-container reveal">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchBar" class="search-input" placeholder="Cerca un prodotto (es. Cuore, Azzurro...)" onkeyup="filtraProdotti()">
+            <div style="text-align: center; margin-bottom: 40px;" class="reveal">
+                <span class="section-overline">Catalogo</span>
+                <h2 class="section-title">Le Nostre Creazioni</h2>
+                <p style="color: var(--testo-chiaro); font-size: 15px;">Sfoglia i pezzi disponibili. Ogni creazione è realizzata interamente a mano.</p>
             </div>
 
-            <div class="sort-container reveal" style="text-align: center; margin-bottom: 25px;">
-                <select id="sortProdotti" class="custom-textarea" style="width: auto; padding: 10px 20px; border-radius: 30px; height: auto; cursor: pointer; display: inline-block;" onchange="applicaOrdinamento()">
-                    <option value="">Ordina per...</option>
-                    <option value="prezzo-asc">Prezzo: dal più basso</option>
-                    <option value="prezzo-desc">Prezzo: dal più alto</option>
-                    <option value="nome-asc">Alfabetico: A - Z</option>
-                    <option value="nome-desc">Alfabetico: Z - A</option>
-                </select>
+            <div class="catalogo-toolbar reveal">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchBar" class="search-input" placeholder="Cerca (es. Cuore, Azzurro...)" onkeyup="filtraProdotti()">
+                </div>
+                <div class="sort-container">
+                    <select id="sortProdotti" class="custom-textarea" style="width: auto; padding: 12px 20px; border-radius: 30px; height: auto; cursor: pointer; border: 1px solid #eee; font-weight: 600;" onchange="applicaOrdinamento()">
+                        <option value="">Ordina per...</option>
+                        <option value="prezzo-asc">Prezzo: dal più basso</option>
+                        <option value="prezzo-desc">Prezzo: dal più alto</option>
+                        <option value="nome-asc">Alfabetico: A - Z</option>
+                        <option value="nome-desc">Alfabetico: Z - A</option>
+                    </select>
+                </div>
             </div>
+
+            <div class="category-tabs reveal" style="flex-wrap: wrap;">
 
             <div class="category-tabs reveal" style="flex-wrap: wrap;">
                 <button class="cat-btn active" onclick="cambiaCategoria('collane', this)">📿 Collane</button>
@@ -936,7 +1028,7 @@ html { scroll-behavior: smooth; }
        <!-- ============================================================== -->
         <!-- NUOVA SEZIONE UNICA PERSONALIZZA (Sostituisce le 5 precedenti) -->
         <!-- ============================================================== -->
-        <div id="sezione-personalizza" class="content-section">
+       <div id="sezione-personalizza" class="content-section">
             <h2 class="reveal" style="display:block; text-align:center;">Crea il tuo Personalizzato ✨</h2>
 
             <div class="category-tabs reveal" style="flex-wrap: wrap; margin-bottom: 30px;">
@@ -947,81 +1039,76 @@ html { scroll-behavior: smooth; }
                 <button class="cat-btn cat-btn-pers" onclick="cambiaPersonalizzato('crea-borsa', this)">👜 Borsa</button>
             </div>
 
-            <!-- 1. COMPONI COLLANA -->
             <div id="componi" class="pers-content active">
-                <div class="componi-box reveal">
-                    <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il colore della catenina (Inclusa: €<span id="label-prezzo-catenina">5.00</span>)</h3>
-                    <div class="swatch-container">
-                        <label class="swatch-label">
+                <div class="componi-box-new reveal" style="max-width: 600px; margin: 0 auto;">
+                    <h3>1. Colore catenina (Inclusa: €<span id="label-prezzo-catenina">5.00</span>)</h3>
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+                        <label class="swatch-label-new">
                             <input type="radio" name="catenina" value="Oro" checked onchange="calcolaTotaleCiondoli()">
-                            <div class="swatch-circle" style="background: linear-gradient(135deg, #FFD700, #DAA520);"></div>Oro
+                            <div class="swatch-circle-new" style="background: linear-gradient(135deg, #FFD700, #DAA520);"></div> Oro
                         </label>
-                        <label class="swatch-label">
+                        <label class="swatch-label-new">
                             <input type="radio" name="catenina" value="Argento" onchange="calcolaTotaleCiondoli()">
-                            <div class="swatch-circle" style="background: linear-gradient(135deg, #E0E0E0, #C0C0C0);"></div>Argento
+                            <div class="swatch-circle-new" style="background: linear-gradient(135deg, #E0E0E0, #C0C0C0);"></div> Argento
                         </label>
-                        <label class="swatch-label">
+                        <label class="swatch-label-new">
                             <input type="radio" name="catenina" value="Bronzo" onchange="calcolaTotaleCiondoli()">
-                            <div class="swatch-circle" style="background: linear-gradient(135deg, #CD7F32, #8B4513);"></div>Bronzo
+                            <div class="swatch-circle-new" style="background: linear-gradient(135deg, #CD7F32, #8B4513);"></div> Bronzo
                         </label>
                     </div>
-                </div>
 
-                <div class="componi-box reveal">
-                    <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli i ciondoli (Da 1 a 10)</h3>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+
+                    <h3>2. Scegli i ciondoli (Da 1 a 10)</h3>
                     <div style="text-align: center; margin-bottom: 15px;">
                         <select id="sortComponenti" class="custom-textarea" style="width: auto; padding: 8px 15px; border-radius: 20px; height: auto; font-size: 13px; cursor: pointer;" onchange="applicaOrdinamentoComponenti()">
                             <option value="">Ordina ciondoli e perline...</option>
                             <option value="prezzo-asc">Prezzo: dal più basso</option>
                             <option value="prezzo-desc">Prezzo: dal più alto</option>
-                            <option value="nome-asc">Alfabetico: A - Z</option>
-                            <option value="nome-desc">Alfabetico: Z - A</option>
                         </select>
                     </div>
-                    <div class="product-container" id="lista-ciondoli">
-                        <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
-                        <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
-                    </div>
-                </div>
+                    <div class="product-container" id="lista-ciondoli"></div>
 
-                <div class="componi-box reveal">
-                    <h3 style="text-align: center; color: var(--testo-scuro);">3. Scegli le perline (Max 10)</h3>
-                    <div class="product-container" id="lista-perline">
-                        <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
-                        <div class="skeleton-charm"><div class="skeleton-anim skeleton-charm-img"></div><div class="skeleton-anim skeleton-charm-title"></div><div class="skeleton-anim skeleton-charm-price"></div><div class="skeleton-anim skeleton-charm-box"></div></div>
-                    </div>
-                </div>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
 
-                <div class="totale-box reveal">
-                    <h3>Totale Stimato: €<span id="prezzo-totale-ciondoli">5.00</span></h3>
-                    <p>Seleziona i pezzi che ti piacciono, poi contattaci con la tua configurazione!</p>
-                    <button onclick="richiestaCollanaPersonalizzata(event)" class="contact-order-btn instagram" style="max-width: 300px; margin: 0 auto; padding: 15px 40px; font-size: 16px; display: block;">
-                        <i class="fab fa-instagram"></i> Richiedi su Instagram
-                    </button>
+                    <h3>3. Scegli le perline (Max 10)</h3>
+                    <div class="product-container" id="lista-perline"></div>
+
+                    <div style="font-size: 16px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-top: 40px; margin-bottom: 15px;">
+                        Totale Stimato: <span style="color: var(--fucsia); font-size: 24px;">€<span id="prezzo-totale-ciondoli">5.00</span></span>
+                    </div>
+                    
+                    <div class="btn-pers-doppio">
+                        <button onclick="richiestaCollanaPersonalizzata(event)" class="btn-ig-new">
+                            <i class="fas fa-camera"></i> Richiedi su Instagram
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- 2. CREA MAGLIETTA -->
             <div id="crea-maglietta" class="pers-content">
-                <div class="photo-notice reveal">
-                    <i class="fas fa-info-circle" style="color: var(--fucsia);"></i>
-                    <strong> Come funziona:</strong> Scegli il colore e la taglia, scrivi cosa vuoi ricamare e contattaci su Instagram inviando anche la tua foto di riferimento. Realizzeremo la tua maglietta su misura! 🎨
-                </div>
-                <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
-                    <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
-                    <div class="swatch-container">
-                        <label class="swatch-label">
+                <div class="componi-box-new reveal" style="max-width: 600px; margin: 0 auto;">
+                    <div class="photo-notice-new">
+                        <i class="fas fa-info-square"></i>
+                        <span>Scegli colore e taglia, scrivi cosa ricamare e inviaci la tua <strong>foto di riferimento</strong> su Instagram o via email. La realizzeremo su misura!</span>
+                    </div>
+
+                    <h3>1. Scegli il colore</h3>
+                    <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+                        <label class="swatch-label-new">
                             <input type="radio" name="col-maglia" value="Bianco" checked onchange="aggiornaAnteprima('img-maglia', 'tshirt_bianca')">
-                            <div class="swatch-circle swatch-white"></div>Bianco
+                            <div class="swatch-circle-new swatch-white"></div> Bianco
                         </label>
-                        <label class="swatch-label">
+                        <label class="swatch-label-new">
                             <input type="radio" name="col-maglia" value="Nero" onchange="aggiornaAnteprima('img-maglia', 'tshirt_nera')">
-                            <div class="swatch-circle swatch-black"></div>Nero
+                            <div class="swatch-circle-new swatch-black"></div> Nero
                         </label>
                     </div>
+
                     <img id="img-maglia" src="bianco-tshirt.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
-                    <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia <span onclick="openSizeGuide('umani')" style="font-size: 12px; color: var(--fucsia); cursor: pointer; text-decoration: underline; margin-left: 10px;"><i class="fas fa-ruler"></i> Guida alle taglie</span></h3>
-                    <div class="size-selector">
+                    
+                    <h3>2. Scegli la taglia <span onclick="openSizeGuide('umani')" style="font-size: 11px; color: var(--testo-chiaro); cursor: pointer; font-family:'Poppins', sans-serif; font-weight:400; margin-left:10px;"><i class="fas fa-pencil-alt" style="color:#d4af37;"></i> guida orientativa</span></h3>
+                    <div class="size-selector" style="justify-content: flex-start; gap: 8px;">
                         <label><input type="radio" name="taglia-maglia" value="XS"><div class="size-pill">XS</div></label>
                         <label><input type="radio" name="taglia-maglia" value="S"><div class="size-pill">S</div></label>
                         <label><input type="radio" name="taglia-maglia" value="M" checked><div class="size-pill">M</div></label>
@@ -1029,171 +1116,249 @@ html { scroll-behavior: smooth; }
                         <label><input type="radio" name="taglia-maglia" value="XL"><div class="size-pill">XL</div></label>
                         <label><input type="radio" name="taglia-maglia" value="XXL"><div class="size-pill">XXL</div></label>
                     </div>
-                    <h3 style="text-align: center; color: var(--testo-scuro);">3. Cosa vuoi ricamare?</h3>
-                    <textarea id="nota-maglietta" class="custom-textarea" placeholder="Descrivi il ricamo o il testo che vuoi..."></textarea>
-                    <div style="background: #fff5f8; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro);">
-                        <i class="fas fa-camera" style="color: var(--fucsia);"></i> Ricordati di inviare anche la tua <strong>foto di riferimento</strong> via Instagram o email!
+
+                    <h3>3. Cosa vuoi ricamare?</h3>
+                    <textarea id="nota-maglietta" class="custom-textarea" placeholder="Descrivi il testo o il disegno che vuoi..." style="background: #fffcfd; border-color: var(--rosa-chiaro);"></textarea>
+                    
+                    <div style="background: #fffcfd; padding: 15px; border-radius: 12px; margin-bottom: 25px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro); text-align: center;">
+                        <i class="fas fa-camera"></i> Ricordati di inviare anche la tua foto di riferimento!
                     </div>
-                    <div style="font-size: 14px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 15px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 20px;">€<span id="label-prezzo-maglietta">20.00</span></span></div>
-                    <button onclick="inviaRichiestaProdotto('Maglietta', 'nota-maglietta', 'col-maglia', 'taglia-maglia')" class="contact-order-btn instagram">
-                        <i class="fab fa-instagram"></i> Richiedi su Instagram
-                    </button>
+
+                    <div style="font-size: 15px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 10px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 22px;">€<span id="label-prezzo-maglietta">20.00</span></span></div>
+                    
+                    <div class="btn-pers-doppio">
+                        <button onclick="inviaRichiestaProdotto('Maglietta', 'nota-maglietta', 'col-maglia', 'taglia-maglia')" class="btn-ig-new">
+                            <i class="fas fa-camera"></i> Richiedi su Instagram
+                        </button>
+                        <button onclick="inviaRichiestaProdottoEmail('Maglietta', 'nota-maglietta', 'col-maglia', 'taglia-maglia')" class="btn-em-new">
+                            <i class="far fa-envelope"></i> Via Email
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- 3. CREA PELOSETTO -->
             <div id="crea-pelosetto" class="pers-content">
-                <div class="photo-notice reveal">
-                    <i class="fas fa-info-circle" style="color: var(--fucsia);"></i>
-                    <strong> Come funziona:</strong> Scegli colore e taglia per il tuo amico a quattro zampe, scrivi cosa vuoi ricamare e contattaci su Instagram con la foto del tuo pelosetto! 🐶
-                </div>
-                <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
-                    <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
-                    <div class="swatch-container">
-                        <label class="swatch-label">
+                <div class="componi-box-new reveal" style="max-width: 600px; margin: 0 auto;">
+                    <div class="photo-notice-new">
+                        <i class="fas fa-info-square"></i>
+                        <span>Scegli colore e taglia per il tuo amico a quattro zampe, scrivi cosa vuoi ricamare e inviaci la sua <strong>foto</strong>. Realizzeremo il ricamo su misura!</span>
+                    </div>
+
+                    <h3>1. Scegli il colore</h3>
+                    <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+                        <label class="swatch-label-new">
                             <input type="radio" name="col-pelosetto" value="Bianco" checked onchange="aggiornaAnteprima('img-pelosetto', 'pelosetto_bianco')">
-                            <div class="swatch-circle swatch-white"></div>Bianco
+                            <div class="swatch-circle-new swatch-white"></div> Bianco
                         </label>
-                        <label class="swatch-label">
+                        <label class="swatch-label-new">
                             <input type="radio" name="col-pelosetto" value="Nero" onchange="aggiornaAnteprima('img-pelosetto', 'pelosetto_nero')">
-                            <div class="swatch-circle swatch-black"></div>Nero
+                            <div class="swatch-circle-new swatch-black"></div> Nero
                         </label>
                     </div>
+
                     <img id="img-pelosetto" src="bianco-pelosetto.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
-                    <h3 style="text-align: center; color: var(--testo-scuro);">2. Scegli la Taglia <span onclick="openSizeGuide('cani')" style="font-size: 12px; color: var(--fucsia); cursor: pointer; text-decoration: underline; margin-left: 10px;"><i class="fas fa-ruler"></i> Guida alle taglie</span></h3>
-                    <div class="size-selector">
+                    
+                    <h3>2. Scegli la taglia <span onclick="openSizeGuide('cani')" style="font-size: 11px; color: var(--testo-chiaro); cursor: pointer; font-family:'Poppins', sans-serif; font-weight:400; margin-left:10px;"><i class="fas fa-pencil-alt" style="color:#d4af37;"></i> guida orientativa</span></h3>
+                    <div class="size-selector" style="justify-content: flex-start; gap: 8px;">
                         <label><input type="radio" name="taglia-pelosetto" value="XS"><div class="size-pill">XS</div></label>
                         <label><input type="radio" name="taglia-pelosetto" value="S"><div class="size-pill">S</div></label>
                         <label><input type="radio" name="taglia-pelosetto" value="M" checked><div class="size-pill">M</div></label>
                         <label><input type="radio" name="taglia-pelosetto" value="L"><div class="size-pill">L</div></label>
                         <label><input type="radio" name="taglia-pelosetto" value="XL"><div class="size-pill">XL</div></label>
                     </div>
-                    <h3 style="text-align: center; color: var(--testo-scuro);">3. Cosa vuoi ricamare?</h3>
-                    <textarea id="nota-pelosetto" class="custom-textarea" placeholder="Descrivi il ricamo o testo..."></textarea>
-                    <div style="background: #fff5f8; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro);">
-                        <i class="fas fa-camera" style="color: var(--fucsia);"></i> Manda anche una <strong>foto del tuo pelosetto</strong> via Instagram!
+
+                    <h3>3. Cosa vuoi ricamare?</h3>
+                    <textarea id="nota-pelosetto" class="custom-textarea" placeholder="Descrivi il testo o il disegno..." style="background: #fffcfd; border-color: var(--rosa-chiaro);"></textarea>
+                    
+                    <div style="background: #fffcfd; padding: 15px; border-radius: 12px; margin-bottom: 25px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro); text-align: center;">
+                        <i class="fas fa-camera"></i> Ricordati di inviare anche la foto del tuo pelosetto!
                     </div>
-                    <div style="font-size: 14px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 15px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 20px;">€<span id="label-prezzo-pelosetto">18.00</span></span></div>
-                    <button onclick="inviaRichiestaProdotto('Maglia Pelosetto', 'nota-pelosetto', 'col-pelosetto', 'taglia-pelosetto')" class="contact-order-btn instagram">
-                        <i class="fab fa-instagram"></i> Richiedi su Instagram
-                    </button>
+
+                    <div style="font-size: 15px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 10px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 22px;">€<span id="label-prezzo-pelosetto">18.00</span></span></div>
+                    
+                    <div class="btn-pers-doppio">
+                        <button onclick="inviaRichiestaProdotto('Maglia Pelosetto', 'nota-pelosetto', 'col-pelosetto', 'taglia-pelosetto')" class="btn-ig-new">
+                            <i class="fas fa-camera"></i> Richiedi su Instagram
+                        </button>
+                        <button onclick="inviaRichiestaProdottoEmail('Maglia Pelosetto', 'nota-pelosetto', 'col-pelosetto', 'taglia-pelosetto')" class="btn-em-new">
+                            <i class="far fa-envelope"></i> Via Email
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- 4. CREA POCHETTE -->
             <div id="crea-pochette" class="pers-content">
-                <div class="photo-notice reveal">
-                    <i class="fas fa-info-circle" style="color: var(--fucsia);"></i>
-                    <strong> Come funziona:</strong> Scegli il colore, descrivi il tuo ricamo e contattaci! Inviaci anche un'immagine di riferimento per il disegno. 🎨
-                </div>
-                <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
-                    <h3 style="text-align: center; color: var(--testo-scuro);">1. Scegli il Colore</h3>
-                    <div class="swatch-container">
-                        <label class="swatch-label">
+                <div class="componi-box-new reveal" style="max-width: 600px; margin: 0 auto;">
+                    <div class="photo-notice-new">
+                        <i class="fas fa-info-square"></i>
+                        <span>Scegli il colore, descrivi il tuo ricamo e contattaci inviando la tua <strong>immagine di riferimento</strong>.</span>
+                    </div>
+
+                    <h3>1. Scegli il Colore</h3>
+                    <div style="display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;">
+                        <label class="swatch-label-new">
                             <input type="radio" name="col-pochette" value="Azzurro" checked onchange="aggiornaAnteprima('img-pochette', 'pochette_azzurra')">
-                            <div class="swatch-circle swatch-blue"></div>Azzurro
+                            <div class="swatch-circle-new swatch-blue"></div> Azzurro
                         </label>
-                        <label class="swatch-label">
+                        <label class="swatch-label-new">
                             <input type="radio" name="col-pochette" value="Rosa" onchange="aggiornaAnteprima('img-pochette', 'pochette_rosa')">
-                            <div class="swatch-circle swatch-pink"></div>Rosa
+                            <div class="swatch-circle-new swatch-pink"></div> Rosa
                         </label>
-                        <label class="swatch-label">
+                        <label class="swatch-label-new">
                             <input type="radio" name="col-pochette" value="Nero" onchange="aggiornaAnteprima('img-pochette', 'pochette_nera')">
-                            <div class="swatch-circle swatch-black"></div>Nero
+                            <div class="swatch-circle-new swatch-black"></div> Nero
                         </label>
                     </div>
+
                     <img id="img-pochette" src="azzurro-p.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
-                    <h3 style="text-align: center; color: var(--testo-scuro);">2. Descrivi la personalizzazione</h3>
-                    <textarea id="nota-pochette" class="custom-textarea" placeholder="Descrivi il tuo ricamo qui..."></textarea>
-                    <div style="background: #fff5f8; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro);">
-                        <i class="fas fa-camera" style="color: var(--fucsia);"></i> Invia la tua <strong>immagine di riferimento</strong> su Instagram!
+                    
+                    <h3>2. Descrivi la personalizzazione</h3>
+                    <textarea id="nota-pochette" class="custom-textarea" placeholder="Descrivi il tuo ricamo qui..." style="background: #fffcfd; border-color: var(--rosa-chiaro);"></textarea>
+                    
+                    <div style="background: #fffcfd; padding: 15px; border-radius: 12px; margin-bottom: 25px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro); text-align: center;">
+                        <i class="fas fa-camera"></i> Ricordati l'immagine di riferimento!
                     </div>
-                    <div style="font-size: 14px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 15px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 20px;">€<span id="label-prezzo-pochette">15.00</span></span></div>
-                    <button onclick="inviaRichiestaProdotto('Pochette', 'nota-pochette', 'col-pochette', null)" class="contact-order-btn instagram">
-                        <i class="fab fa-instagram"></i> Richiedi su Instagram
-                    </button>
+
+                    <div style="font-size: 15px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 10px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 22px;">€<span id="label-prezzo-pochette">15.00</span></span></div>
+                    
+                    <div class="btn-pers-doppio">
+                        <button onclick="inviaRichiestaProdotto('Pochette', 'nota-pochette', 'col-pochette', null)" class="btn-ig-new">
+                            <i class="fas fa-camera"></i> Richiedi su Instagram
+                        </button>
+                        <button onclick="inviaRichiestaProdottoEmail('Pochette', 'nota-pochette', 'col-pochette', null)" class="btn-em-new">
+                            <i class="far fa-envelope"></i> Via Email
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- 5. CREA BORSA -->
             <div id="crea-borsa" class="pers-content">
-                <div class="photo-notice reveal">
-                    <i class="fas fa-info-circle" style="color: var(--fucsia);"></i>
-                    <strong> Come funziona:</strong> Descrivi il ricamo che vuoi e contattaci su Instagram inviando anche la tua immagine di riferimento!
-                </div>
-                <div class="componi-box reveal" style="max-width: 500px; margin: 0 auto;">
-                    <h3 style="text-align: center; color: var(--testo-scuro);">Colore Unico: Bianco</h3>
-                    <img id="img-borsa" src="bianco-borsa.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
-                    <h3 style="text-align: center; color: var(--testo-scuro);">Descrivi la personalizzazione</h3>
-                    <textarea id="nota-borsa" class="custom-textarea" placeholder="Descrivi il tuo ricamo per la borsa..."></textarea>
-                    <div style="background: #fff5f8; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro);">
-                        <i class="fas fa-camera" style="color: var(--fucsia);"></i> Invia la tua <strong>immagine di riferimento</strong> su Instagram!
+                <div class="componi-box-new reveal" style="max-width: 600px; margin: 0 auto;">
+                    <div class="photo-notice-new">
+                        <i class="fas fa-info-square"></i>
+                        <span>Descrivi il ricamo che desideri e inviaci l'<strong>immagine di riferimento</strong>. Il colore della borsa è unico: Bianco.</span>
                     </div>
-                    <div style="font-size: 14px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 15px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 20px;">€<span id="label-prezzo-borsa">25.00</span></span></div>
-                    <button onclick="inviaRichiestaProdotto('Borsa', 'nota-borsa', null, null)" class="contact-order-btn instagram">
-                        <i class="fab fa-instagram"></i> Richiedi su Instagram
-                    </button>
+
+                    <img id="img-borsa" src="bianco-borsa.png" class="product-image" style="display:block; margin:20px auto; width:180px; height:auto;" onerror="this.src='logo.png'">
+                    
+                    <h3>Descrivi la personalizzazione</h3>
+                    <textarea id="nota-borsa" class="custom-textarea" placeholder="Descrivi il tuo ricamo per la borsa..." style="background: #fffcfd; border-color: var(--rosa-chiaro);"></textarea>
+                    
+                    <div style="background: #fffcfd; padding: 15px; border-radius: 12px; margin-bottom: 25px; font-size: 13px; color: var(--testo-chiaro); border: 1px dashed var(--rosa-chiaro); text-align: center;">
+                        <i class="fas fa-camera"></i> Ricordati l'immagine di riferimento!
+                    </div>
+
+                    <div style="font-size: 15px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 10px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 22px;">€<span id="label-prezzo-borsa">25.00</span></span></div>
+                    
+                    <div class="btn-pers-doppio">
+                        <button onclick="inviaRichiestaProdotto('Borsa', 'nota-borsa', null, null)" class="btn-ig-new">
+                            <i class="fas fa-camera"></i> Richiedi su Instagram
+                        </button>
+                        <button onclick="inviaRichiestaProdottoEmail('Borsa', 'nota-borsa', null, null)" class="btn-em-new">
+                            <i class="far fa-envelope"></i> Via Email
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- CONTATTI -->
         <div id="contatti" class="content-section">
-            <h2 class="reveal" style="display:block; text-align:center;">Mettiti in Contatto</h2>
-            <div class="contact-card reveal">
-                <p>Seguici sui nostri canali social o contattaci per ordinare, personalizzare o inviare foto di riferimento:</p>
-                <br>
-                <a href="https://www.instagram.com/_3l_creations" target="_blank" class="social-link"><i class="fab fa-instagram social-icon"></i><span><strong>Instagram:</strong> @_3l_creations</span></a>
-                <a href="https://www.facebook.com/groups/974242766065881" target="_blank" class="social-link"><i class="fab fa-facebook social-icon"></i><span><strong>Facebook:</strong> 3L Creations</span></a>
-                <a href="https://www.tiktok.com/@3lcreations" target="_blank" class="social-link"><i class="fab fa-tiktok social-icon"></i><span><strong>TikTok:</strong> @3lcreations</span></a>
-                <a href="mailto:3lcreationsfordogs1@gmail.com" class="social-link"><i class="fas fa-envelope social-icon"></i><span><strong>Email:</strong> 3lcreationsfordogs1@gmail.com</span></a>
-                <br>
-                <div style="background: #fff0f5; padding: 20px; border-radius: 15px; border-left: 4px solid var(--fucsia); text-align: left; font-size: 14px; line-height: 1.7; color: var(--testo-scuro);">
-                    <strong><i class="fas fa-info-circle" style="color: var(--fucsia);"></i> Come ordinare:</strong><br>
-                    1. Scegli il prodotto nella sezione "Prodotti" o configura il tuo personalizzato<br>
-                    2. Scrivici su Instagram o email indicando cosa vuoi ordinare<br>
-                    3. Invia la tua foto di riferimento (per prodotti con ricamo)<br>
-                    4. Riceverai conferma e dettagli di pagamento direttamente in chat!
+            <div class="contacts-wrapper reveal">
+                <span class="section-overline">Contatti</span>
+                <h2 class="contacts-title">Parliamone! 💌</h2>
+                <p class="contacts-subtitle">Hai un'idea o vuoi ordinare? Scrivici dove preferisci, ti rispondiamo con il sorriso.</p>
+                <div class="contacts-location"><i class="fas fa-map-marker-alt" style="color:var(--fucsia);"></i> Napoli, Italia</div>
+                
+                <div class="contacts-grid">
+                    <a href="https://www.instagram.com/_3l_creations" target="_blank" class="contact-box-new ig">
+                        <div class="contact-icon-wrapper"><i class="fas fa-camera"></i></div>
+                        <h4>Instagram</h4>
+                        <p>Il modo più veloce per ordinare</p>
+                        <span>@_3l_creations</span>
+                    </a>
+                    <a href="mailto:3lcreationsfordogs1@gmail.com" class="contact-box-new em">
+                        <div class="contact-icon-wrapper"><i class="fas fa-envelope"></i></div>
+                        <h4>Email</h4>
+                        <p>Scrivici per richieste speciali</p>
+                        <span>3lcreationsfordogs1@gmail.com</span>
+                    </a>
+                    <a href="https://www.facebook.com/groups/974242766065881" target="_blank" class="contact-box-new fb">
+                        <div class="contact-icon-wrapper"><i class="fas fa-thumbs-up"></i></div>
+                        <h4>Facebook</h4>
+                        <p>Unisciti al nostro gruppo</p>
+                        <span>Gruppo 3L Creations</span>
+                    </a>
+                    <a href="https://www.tiktok.com/@3lcreations" target="_blank" class="contact-box-new tk">
+                        <div class="contact-icon-wrapper"><i class="fas fa-music"></i></div>
+                        <h4>TikTok</h4>
+                        <p>Guarda le nostre creazioni</p>
+                        <span>@3lcreations</span>
+                    </a>
                 </div>
             </div>
         </div>
 
         <!-- FAQ -->
-        <div id="faq" class="content-section">
-            <h2 class="reveal" style="display:block; text-align:center;">Domande Frequenti</h2>
-            <div class="home-text">
-                <div class="faq-item reveal">
-                    <div class="faq-question"><i class="fas fa-tshirt"></i> Come devo lavare i capi e i ricami?</div>
-                    <div class="faq-answer">Consigliamo di lavare i prodotti a rovescio, a mano in acqua fredda, avendo cura di togliere eventuali spille. Non asciugare con l'asciugatrice e stirare sempre a rovescio per proteggere le lavorazioni.</div>
+        <div id="recensioni" class="content-section reveal">
+            <div style="text-align: center;">
+                <span class="section-overline">Recensioni</span>
+                <h2 class="section-title">Dicono di Noi</h2>
+            </div>
+            <div class="reviews-container">
+                <div class="review-card">
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <div class="review-text">"Collana stupenda, lavorazione impeccabile! Si vede tutto l'amore nei dettagli. La consiglio a tutti."</div>
+                    <p class="review-author">Giulia M.</p>
                 </div>
-                <div class="faq-item reveal">
-                    <div class="faq-question"><i class="fas fa-box-open"></i> Quali sono i tempi di spedizione?</div>
-                    <div class="faq-answer">Essendo prodotti realizzati interamente a mano e spesso su misura, dal momento dell'ordine e del pagamento il pezzo verrà preparato e spedito entro 1 settimana.</div>
+                <div class="review-card">
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <div class="review-text">"Ho fatto fare una maglia per il mio cane ed è venuta perfetta. Gentilissimi e disponibili."</div>
+                    <p class="review-author">Marco R.</p>
                 </div>
-                <div class="faq-item reveal">
-                    <div class="faq-question"><i class="fas fa-gem"></i> I materiali perdono colore o qualità nel tempo?</div>
-                    <div class="faq-answer">Assolutamente no! Selezioniamo accuratamente le materie prime. Con le giuste accortezze (evitare profumi diretti sui ciondoli, ecc.), il prodotto non perde assolutamente di qualità nel tempo.</div>
-                </div>
-                <div class="faq-item reveal">
-                    <div class="faq-question"><i class="fas fa-credit-card"></i> Come si paga?</div>
-                    <div class="faq-answer">Dopo aver concordato l'ordine via Instagram o email, vi invieremo le istruzioni per il pagamento. Accettiamo bonifico bancario e PayPal. La lavorazione parte a pagamento confermato.</div>
-                </div>
-                <div class="faq-item reveal">
-                    <div class="faq-question"><i class="fas fa-undo"></i> Posso richiedere un reso?</div>
-                    <div class="faq-answer">Essendo la maggior parte dei prodotti realizzati su misura e personalizzati, i resi non sono previsti se non per evidente difetto di fabbricazione. Contattaci subito in caso di problemi: troveremo sempre una soluzione!</div>
+                <div class="review-card">
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <div class="review-text">"Regalo personalizzato per la mia migliore amica: è rimasta senza parole. Qualità top!"</div>
+                    <p class="review-author">Serena P.</p>
                 </div>
             </div>
         </div>
 
-        <!-- LEGALE -->
-        <div id="legale" class="content-section">
-            <h2 class="reveal" style="display:block; text-align:center;">Note Legali e Condizioni</h2>
-            <div class="home-text reveal">
-                <p class="legal-text"><strong>Condizioni di Vendita:</strong> Opero nel pieno rispetto della normativa come hobbista (vendita occasionale di opere del proprio ingegno creativo) e non possiedo Partita IVA. I prodotti proposti sono frutto di lavoro artigianale e possono presentare lievi imperfezioni che ne garantiscono l'unicità.</p>
-                <p class="legal-text"><strong>Privacy e Cookie Policy:</strong> La tua privacy è importante. I dati forniti per l'ordine (nome, indirizzo, cellulare) vengono utilizzati esclusivamente per la gestione e la spedizione e non verranno mai ceduti a terzi. Questo sito utilizza solo cookie tecnici strettamente necessari per il funzionamento.</p>
-                <p class="legal-text"><strong>Assistenza e Resi:</strong> Per qualsiasi problema con il tuo ordine, contattaci subito alla nostra email <a href="mailto:3lcreationsfordogs1@gmail.com">3lcreationsfordogs1@gmail.com</a> o sui nostri canali social. Essendo la maggior parte dei prodotti realizzati su misura e personalizzati, i resi non sono previsti se non per evidente difetto di fabbricazione, ma troveremo in ogni caso una soluzione insieme!</p>
+        <div id="faq" class="content-section">
+            <div style="text-align: center; margin-bottom: 40px;" class="reveal">
+                <span class="section-overline">FAQ</span>
+                <h2 class="section-title">Domande Frequenti</h2>
+            </div>
+            <div class="home-text" style="background: transparent; border: none; box-shadow: none; padding: 0;">
+                
+                <div class="faq-item reveal" onclick="toggleFaq(this)">
+                    <div class="faq-question">Come faccio a ordinare? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer">Tutti i prodotti si ordinano scrivendoci su Instagram o via email. Scegli la creazione che ti piace, clicca su 'Ordina' e ti seguiremo passo passo.</div>
+                </div>
+                
+                <div class="faq-item reveal" onclick="toggleFaq(this)">
+                    <div class="faq-question">Le creazioni sono davvero fatte a mano? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer">Assolutamente sì! Ogni singolo pezzo, dai ricami ai gioielli, è realizzato artigianalmente nel nostro laboratorio a Napoli.</div>
+                </div>
+
+                <div class="faq-item reveal" onclick="toggleFaq(this)">
+                    <div class="faq-question">Posso personalizzare un prodotto? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer">Certamente. Abbiamo un'intera sezione dedicata alla personalizzazione. Se hai richieste particolari, inviaci un messaggio su Instagram!</div>
+                </div>
+
+                <div class="faq-item reveal" onclick="toggleFaq(this)">
+                    <div class="faq-question">Fate spedizioni? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer">Sì, spediamo in tutta Italia. I tempi di lavorazione e spedizione solitamente si aggirano intorno a 1 settimana, essendo prodotti artigianali.</div>
+                </div>
+
+                <div class="faq-item reveal" onclick="toggleFaq(this)">
+                    <div class="faq-question">Come si lavano i capi ricamati? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer">Consigliamo di lavare i prodotti a rovescio, a mano in acqua fredda, togliendo eventuali spille. Non asciugare con l'asciugatrice e stirare sempre a rovescio.</div>
+                </div>
+
             </div>
         </div>
+
+      
 
         <!-- AREA ADMIN (nascosta) -->
         <div id="sezione-admin" class="content-section">
@@ -1249,6 +1414,7 @@ html { scroll-behavior: smooth; }
                     <option value="pelosetto_bianco">Base: Pelosetto Bianco</option><option value="pelosetto_nero">Base: Pelosetto Nero</option>
                     <option value="pochette_azzurra">Base: Pochette Azzurra</option><option value="pochette_rosa">Base: Pochette Rosa</option>
                     <option value="pochette_nera">Base: Pochette Nera</option><option value="borsa_bianca">Base: Borsa Bianca</option>
+                    <option value="chi_siamo">Foto Sezione "Chi Siamo"</option>
                 </select>
                 <label class="label-admin">Nuova Foto</label>
                 <div class="file-upload-wrapper" style="margin-top: 5px;">
@@ -1288,7 +1454,17 @@ html { scroll-behavior: smooth; }
                 <button onclick="salvaTestoBanner()" class="checkout-btn" style="margin-bottom: 25px; background-color: #ff9800;">Aggiorna Banner <i class="fas fa-edit"></i></button>
                 <button onclick="logoutAdmin()" class="checkout-btn" style="background-color: #777; box-shadow: none;">Esci in sicurezza <i class="fas fa-sign-out-alt"></i></button>
             </div>
+        </div><div id="legale">
+        <div onclick="chiudiLegale()" style="position: fixed; top: 20px; right: 20px; font-size: 24px; cursor: pointer; color: var(--fucsia); background: white; width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.15); z-index: 9999999; transition: 0.3s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+            <i class="fas fa-times"></i>
         </div>
+        <h2 style="display:block; text-align:center; margin-top: 35px;">Note Legali e Condizioni</h2>
+        <div class="home-text" style="max-width: 800px; margin: 0 auto; text-align: left;">
+            <p class="legal-text"><strong>Condizioni di Vendita:</strong> Opero nel pieno rispetto della normativa come hobbista (vendita occasionale di opere del proprio ingegno creativo) e non possiedo Partita IVA. I prodotti proposti sono frutto di lavoro artigianale e possono presentare lievi imperfezioni che ne garantiscono l'unicità.</p>
+            <p class="legal-text"><strong>Privacy e Cookie Policy:</strong> La tua privacy è importante. I dati forniti per l'ordine (nome, indirizzo, cellulare) vengono utilizzati esclusivamente per la gestione e la spedizione e non verranno mai ceduti a terzi. Questo sito utilizza solo cookie tecnici strettamente necessari per il funzionamento.</p>
+            <p class="legal-text"><strong>Assistenza e Resi:</strong> Per qualsiasi problema con il tuo ordine, contattaci subito alla nostra email <a href="mailto:3lcreationsfordogs1@gmail.com" style="color: var(--fucsia); text-decoration: underline;">3lcreationsfordogs1@gmail.com</a> o sui nostri canali social. Essendo la maggior parte dei prodotti realizzati su misura e personalizzati, i resi non sono previsti se non per evidente difetto di fabbricazione, ma troveremo in ogni caso una soluzione insieme!</p>
+        </div>
+    
 
     </div><!-- fine #main -->
 
@@ -1309,10 +1485,9 @@ html { scroll-behavior: smooth; }
         <p>
             <a href="#faq" onclick="showSection('faq'); return false;">FAQ</a> |
             <a href="#contatti" onclick="showSection('contatti'); return false;">Contatti</a> |
-            <a href="#legale" onclick="showSection('legale'); return false;">Note Legali</a>
+            <a href="#" onclick="apriLegale(); return false;">Note Legali</a>
         </p>
-        <p style="margin-top: 15px;"><span onclick="showSection('sezione-admin')" style="cursor: default;">©</span> 2026 3L Creations. Tutti i diritti riservati.</p>
-    </footer>
+               <p style="margin-top: 15px;">© 2026 3L Creations <span onclick="showSection('sezione-admin'); return false;" style="cursor: pointer;">@</span> Tutti i diritti riservati.</p></footer>
 
    <!-- MODALE MODIFICA PRODOTTO (ADMIN) -->
     <div id="edit-modal">
@@ -1409,14 +1584,12 @@ html { scroll-behavior: smooth; }
                 for (let r of regs) r.update();
             });
         }
-// === TABS PERSONALIZZATI ===
+
+        // === TABS PERSONALIZZATI ===
         window.cambiaPersonalizzato = function(tabId, btnElement) {
-            // Deseleziona tutti i bottoni
             document.querySelectorAll('.cat-btn-pers').forEach(btn => btn.classList.remove('active'));
-            // Nascondi tutte le sezioni
             document.querySelectorAll('.pers-content').forEach(content => content.classList.remove('active'));
             
-            // Attiva il bottone corretto
             if (btnElement) {
                 btnElement.classList.add('active');
             } else { 
@@ -1424,14 +1597,13 @@ html { scroll-behavior: smooth; }
                 if(b) b.classList.add('active'); 
             }
             
-            // Mostra la sezione
             const targetTab = document.getElementById(tabId);
             if(targetTab) {
                 targetTab.classList.add('active');
-                // Forza l'apparizione delle animazioni interne
                 targetTab.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
             }
         };
+
         // === CURSORE MAGICO ===
         if (window.matchMedia("(pointer: fine)").matches) {
             const cursor = document.createElement('div');
@@ -1442,17 +1614,17 @@ html { scroll-behavior: smooth; }
                 cursor.style.top = e.clientY + 'px';
             });
             document.addEventListener('mouseover', e => {
-                if (e.target.closest('a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label, .wishlist-btn'))
+                if (e.target.closest('a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label, .wishlist-btn, .close-preferiti-btn'))
                     cursor.classList.add('hover');
             });
             document.addEventListener('mouseout', e => {
-                if (e.target.closest('a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label, .wishlist-btn'))
+                if (e.target.closest('a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label, .wishlist-btn, .close-preferiti-btn'))
                     cursor.classList.remove('hover');
             });
         }
 
         // === GUIDA TAGLIE ===
-        function openSizeGuide(tipo) {
+        window.openSizeGuide = function(tipo) {
             const modal = document.getElementById('sizeGuideModal');
             const title = document.getElementById('sizeGuideTitle');
             const body = document.getElementById('sizeGuideBody');
@@ -1466,7 +1638,7 @@ html { scroll-behavior: smooth; }
             modal.style.display = 'flex';
             setTimeout(() => modal.classList.add('active'), 10);
         }
-        function closeSizeGuide(e, force = false) {
+        window.closeSizeGuide = function(e, force = false) {
             const modal = document.getElementById('sizeGuideModal');
             if (force || e.target === modal) {
                 modal.classList.remove('active');
@@ -1474,41 +1646,45 @@ html { scroll-behavior: smooth; }
             }
         }
 
-        // === MENU E NAVIGAZIONE ===
-        function openNav() {
-            document.getElementById("mySidebar").style.width = "250px";
-            document.getElementById("menuOverlay").style.display = "block";
-            setTimeout(() => { document.getElementById("menuOverlay").style.opacity = "1"; }, 10);
-        }
-        function closeNav() {
-            document.getElementById("mySidebar").style.width = "0";
-            document.getElementById("menuOverlay").style.opacity = "0";
-            setTimeout(() => { document.getElementById("menuOverlay").style.display = "none"; }, 400);
-        }
+        // === NAVIGAZIONE A SCORRIMENTO (ONE-PAGE) ===
+        window.showSection = function(sectionId, updateUrl = true) {
+            // Chiudi popup modali aperti (Preferiti e Legali)
+            const pref = document.getElementById('preferiti');
+            if(pref) pref.classList.remove('active');
+            const leg = document.getElementById('legale');
+            if(leg) leg.classList.remove('active');
+            const chiudiBtn = document.getElementById('closePreferitiBtn');
+            if(chiudiBtn) chiudiBtn.style.display = 'none';
 
-     // === LA NUOVA NAVIGAZIONE A SCORRIMENTO (ONE-PAGE) ===
-        function showSection(sectionId, updateUrl = true) {
-            // 1. FORZA LA CHIUSURA DI QUALSIASI POPUP APERTO
-            document.getElementById('preferiti').classList.remove('active');
-            document.getElementById('dettaglio-prodotto').classList.remove('active');
-            document.body.style.overflow = ''; // Sblocca lo scorrimento
-            
-            // Nasconde il tasto fluttuante dei preferiti se era aperto
-            const btnChiudiPref = document.getElementById('closePreferitiBtn');
-            if(btnChiudiPref) btnChiudiPref.style.display = 'none';
+            // Chiudi dettaglio prodotto (senza sballare l'overflow se è aperto altro)
+            const det = document.getElementById('dettaglio-prodotto');
+            if(det && det.classList.contains('active')) det.classList.remove('active');
+            document.body.style.overflow = ''; 
 
-            // 2. Ignora le sezioni popup per non far sballare lo scroll
-            if (sectionId === 'dettaglio-prodotto' || sectionId === 'preferiti') return;
+            if (sectionId === 'dettaglio-prodotto' || sectionId === 'preferiti' || sectionId === 'legale') return;
 
             const target = document.getElementById(sectionId);
             if (target) {
-                if (sectionId === 'sezione-admin') {
-                    document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+                                if (sectionId === 'sezione-admin') {
+                    // Manda via tutte le sezioni TRANNE l'admin, poi mostra l'admin
+                    document.querySelectorAll('.content-section:not(#sezione-admin)').forEach(s => {
+                        s.style.display = 'none';
+                        s.classList.remove('active');
+                    });
                     target.style.display = 'block';
+                    target.classList.add('active');
+                    target.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
                     window.scrollTo(0,0);
-                } else {
-                    document.querySelectorAll('.content-section:not(#dettaglio-prodotto):not(#sezione-admin)').forEach(s => s.style.display = 'block');
-                    document.getElementById('sezione-admin').style.display = 'none';
+                }
+
+                 else {
+                    // Mostra di nuovo le sezioni
+                    document.querySelectorAll('.content-section:not(#dettaglio-prodotto):not(#sezione-admin)').forEach(s => {
+                        s.style.display = 'block';
+                        s.classList.add('active');
+                    });
+                    const admin = document.getElementById('sezione-admin');
+                    if(admin) { admin.style.display = 'none'; admin.classList.remove('active'); }
                     
                     if (sectionId === 'home') {
                         window.scrollTo({top: 0, behavior: 'smooth'});
@@ -1519,50 +1695,49 @@ html { scroll-behavior: smooth; }
                 }
                 if (updateUrl) history.pushState(null, null, '#' + sectionId);
             }
-        }
+        };
 
-        // === POPUP PREFERITI ===
+        // === POPUP PREFERITI E LEGALI ===
         window.apriPreferiti = function() {
             const eseguiApertura = () => {
                 document.getElementById('preferiti').classList.add('active');
-                document.body.style.overflow = 'hidden'; // Blocca il sito
-                // Mostra il tastino per chiudere
+                document.body.style.overflow = 'hidden'; 
                 document.getElementById('closePreferitiBtn').style.display = 'flex';
             };
-            if (document.startViewTransition) { document.startViewTransition(eseguiApertura); } 
-            else { eseguiApertura(); }
+            if (document.startViewTransition) { document.startViewTransition(eseguiApertura); } else { eseguiApertura(); }
         };
 
         window.chiudiPreferiti = function() {
             const eseguiChiusura = () => {
                 document.getElementById('preferiti').classList.remove('active');
-                document.body.style.overflow = ''; // Sblocca il sito
-                // Nascondi il tastino per chiudere
+                document.body.style.overflow = ''; 
                 document.getElementById('closePreferitiBtn').style.display = 'none';
             };
-            if (document.startViewTransition) { document.startViewTransition(eseguiChiusura); } 
-            else { eseguiChiusura(); }
+            if (document.startViewTransition) { document.startViewTransition(eseguiChiusura); } else { eseguiChiusura(); }
         };
-       function activateNewSection(targetSection, sectionId, updateUrl) {
-    targetSection.classList.add('active');
-    window.scrollTo(0, 0);
-    if (updateUrl) history.pushState(null, null, '#' + sectionId);
-    // FIX: rendi subito visibili i .reveal della sezione appena aperta
-    targetSection.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
-    setTimeout(observeElements, 100);
-}
 
+        window.apriLegale = function() {
+            document.getElementById('legale').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
 
-        function cambiaCategoria(catId, btnElement) {
+        window.chiudiLegale = function() {
+            document.getElementById('legale').classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        window.cambiaCategoria = function(catId, btnElement) {
             document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.cat-content').forEach(content => content.classList.remove('active'));
             if (btnElement) btnElement.classList.add('active');
             else { const b = document.querySelector(`.cat-btn[onclick*="${catId}"]`); if(b) b.classList.add('active'); }
             document.getElementById('cat-' + catId).classList.add('active');
             let searchBar = document.getElementById('searchBar');
-            if (searchBar) { searchBar.value = ''; filtraProdotti(); }
-            applicaOrdinamento();
-        }
+            if (searchBar) { searchBar.value = ''; window.filtraProdotti(); }
+            window.applicaOrdinamento();
+        };
+
+     
 
         // === RICERCA ===
         function filtraProdotti() {
@@ -1658,7 +1833,20 @@ html { scroll-behavior: smooth; }
             }
             setTimeout(() => window.open('https://www.instagram.com/_3l_creations', '_blank'), 400);
         };
+window.inviaRichiestaProdottoEmail = function(nomeBase, textAreaId, radioName, tagliaId) {
+            let note = document.getElementById(textAreaId)?.value.trim() || '';
+            let colore = radioName ? (document.querySelector(`input[name="${radioName}"]:checked`)?.value || '') : '';
+            let taglia = tagliaId ? (document.querySelector(`input[name="${tagliaId}"]:checked`)?.value || '') : '';
+            
+            let oggetto = `Nuovo ordine: ${nomeBase}`;
+            let messaggio = `Ciao! Vorrei ordinare: ${nomeBase}\n\n`;
+            if (colore) messaggio += `- Colore: ${colore}\n`;
+            if (taglia) messaggio += `- Taglia: ${taglia}\n`;
+            if (note) messaggio += `- Note e personalizzazione: ${note}\n`;
+            messaggio += `\nAllego a questa mail la foto/immagine di riferimento.\n\nResto in attesa, grazie!`;
 
+            window.location.href = `mailto:3lcreationsfordogs1@gmail.com?subject=${encodeURIComponent(oggetto)}&body=${encodeURIComponent(messaggio)}`;
+        };
         // === RICHIESTA COLLANA PERSONALIZZATA ===
         window.richiestaCollanaPersonalizzata = function(event) {
             event.preventDefault();
@@ -2000,6 +2188,8 @@ html { scroll-behavior: smooth; }
                 const pelo = document.getElementById('img-pelosetto'); if (pelo) pelo.src = window.immaginiSitoDinamiche['pelosetto_bianco'];
                 const pochette = document.getElementById('img-pochette'); if (pochette) pochette.src = window.immaginiSitoDinamiche['pochette_azzurra'];
                 const borsa = document.getElementById('img-borsa'); if (borsa) borsa.src = window.immaginiSitoDinamiche['borsa_bianca'];
+                const imgChiSiamo = document.getElementById('img-chi-siamo'); 
+                if (imgChiSiamo && window.immaginiSitoDinamiche['chi_siamo']) imgChiSiamo.src = window.immaginiSitoDinamiche['chi_siamo'];
 
                 // Applica prezzi
                 const lCat = document.getElementById('label-prezzo-catenina'); if (lCat) lCat.innerText = window.prezziBase.catenina.toFixed(2);
@@ -2079,7 +2269,7 @@ html { scroll-behavior: smooth; }
         };
 
         // === CARICA EVIDENZA HOME ===
-        window.caricaEvidenza = async function() {
+               window.caricaEvidenza = async function() {
             const contenitore = document.getElementById('lista-evidenza');
             if (!contenitore) return;
             try {
@@ -2093,34 +2283,45 @@ html { scroll-behavior: smooth; }
                     const idProdotto = doc.id;
                     const immagine = riga.immagine || 'logo.png';
                     const prezzoNum = parseFloat(riga.prezzo) || 0;
-                    const titolo = riga.titolo.replace(/'/g, "\\'");
-                    
-                    // --- MODIFICA TARGHETTA QUI ---
-                    const badgeTesto = riga.badge ? riga.badge.replace(/'/g, "\\'") : 'In Evidenza';
-                    let htmlBadge = badgeTesto ? `<div class="product-badge">${badgeTesto}</div>` : '';
-                    
-                    const descrizioneText = riga.descrizione ? riga.descrizione.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n') : '';
+                    const titolo = riga.titolo || '';
+                    const badgeTesto = riga.badge || 'In Evidenza';
+                    const descrizione = riga.descrizione || '';
                     const galleriaStringa = riga.galleria ? riga.galleria.join(',') : '';
-                    
-                    let isFav = (JSON.parse(localStorage.getItem('wishlist')) || []).some(w => w.id === idProdotto);
-                    let btnWishlist = `<div class="wishlist-btn ${isFav ? 'active' : ''}" onclick="toggleWishlist(event, '${idProdotto}', '${titolo}', ${prezzoNum}, '${immagine}')"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>`;
-                    const onClickDettaglio = `apriDettaglioProdotto('${titolo}', ${prezzoNum}, '${badgeTesto}', '${descrizioneText}', '${immagine}', '${galleriaStringa}')`;
-                    
-                    contenitore.insertAdjacentHTML('beforeend', `
-                        <div class="product-card reveal visible" style="position:relative;">
-                            ${htmlBadge}${btnWishlist}
-                            <img src="${immagine}" alt="${titolo}" class="product-image" onerror="this.src='logo.png'" style="cursor:pointer;" onclick="${onClickDettaglio}">
-                            <h3 style="cursor:pointer;" onclick="${onClickDettaglio}">${riga.titolo}</h3>
-                            <div class="price">€${prezzoNum.toFixed(2)}</div>
-                            <a onclick="${onClickDettaglio}; return false;" href="#" class="contact-order-btn" style="text-decoration:none;">
-                                Scopri di più <i class="fas fa-arrow-right"></i>
-                            </a>
-                        </div>`);
+                    const htmlBadge = badgeTesto ? `<div class="product-badge"></div>` : '';
+                    const isFav = (JSON.parse(localStorage.getItem('wishlist')) || []).some(w => w.id === idProdotto);
+
+                    const card = document.createElement('div');
+                    card.className = 'product-card reveal visible';
+                    card.style.position = 'relative';
+                    card.innerHTML = `
+                        ${htmlBadge}
+                        <div class="wishlist-btn ${isFav ? 'active' : ''}"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>
+                        <img class="product-image" onerror="this.src='logo.png'" style="cursor:pointer;">
+                        <h3 style="cursor:pointer;"></h3>
+                        <div class="price">€${prezzoNum.toFixed(2)}</div>
+                        <a href="#" class="contact-order-btn" style="text-decoration:none;">Scopri di più <i class="fas fa-arrow-right"></i></a>
+                    `;
+                    if (htmlBadge) card.querySelector('.product-badge').textContent = badgeTesto;
+                    const img = card.querySelector('img.product-image');
+                    img.src = immagine; img.alt = titolo;
+                    card.querySelector('h3').textContent = titolo;
+
+                    const apri = () => window.apriDettaglioProdotto(titolo, prezzoNum, badgeTesto, descrizione, immagine, galleriaStringa);
+                    img.addEventListener('click', apri);
+                    card.querySelector('h3').addEventListener('click', apri);
+                    card.querySelector('a.contact-order-btn').addEventListener('click', (e) => { e.preventDefault(); apri(); });
+                    card.querySelector('.wishlist-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        window.toggleWishlist(e, idProdotto, titolo, prezzoNum, immagine);
+                    });
+
+                    contenitore.appendChild(card);
                 });
                 if (count === 0) contenitore.innerHTML = "<p style='width:100%; color:var(--testo-chiaro); font-size:14px;'>Nessun prodotto in evidenza.</p>";
                 observeElements();
             } catch (e) { console.error("Errore evidenza:", e); }
         };
+
 
        // === VIEW TRANSITIONS API: APRI E CHIUDI PRODOTTI IN STILE APP NATIVA ===
         window.apriDettaglioProdotto = function(titolo, prezzoNum, badge, descrizione, immagineCopertina, galleriaStringa) {
@@ -2669,6 +2870,15 @@ html { scroll-behavior: smooth; }
                 showSection((hash ? hash.substring(1) : 'home'), false);
             }
         });
+        // === FAQ ACCORDION ===
+        window.toggleFaq = function(element) {
+            // Chiude tutte le altre FAQ prima di aprire questa (opzionale ma pulito)
+            document.querySelectorAll('.faq-item').forEach(item => {
+                if(item !== element) item.classList.remove('active');
+            });
+            // Apre/Chiude quella cliccata
+            element.classList.toggle('active');
+        };
     </script>
 </body>
 </html>
