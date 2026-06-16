@@ -710,6 +710,15 @@ html { scroll-behavior: smooth; }
     transform: scale(1.1) rotate(5deg);
     box-shadow: 0 8px 25px rgba(216, 27, 96, 0.5);
 }
+.floating-heart-btn .badge-count {
+    position: absolute;
+    top: -5px; right: -5px;
+    background: white; color: var(--fucsia);
+    border-radius: 50%; width: 20px; height: 20px;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
 
 /* Regoliamo il vecchio tasto "Torna Su" per non sovrapporsi al cuoricino */
 .back-to-top { bottom: 95px; right: 30px; }
@@ -919,12 +928,7 @@ html { scroll-behavior: smooth; }
     }
 }
 /* --- FINE FIX SOCIAL --- */
-/* --- NASCONDI FOTO CHI SIAMO SU MOBILE --- */
-@media (max-width: 768px) {
-    .chisiamo-img-col {
-        display: none !important;
-    }
-}
+
 /* --- FINE NASCONDI FOTO --- */
 /* --- NUOVA TOOLBAR CATALOGO (RICERCA E ORDINAMENTO) --- */
 .catalogo-toolbar { 
@@ -1139,6 +1143,24 @@ html { scroll-behavior: smooth; }
     height: auto !important; /* Si adatta al testo */
 }
 /* --- FINE FIX --- */
+/* --- LAYOUT MOBILE CHI SIAMO (Testo sopra, Foto sotto) --- */
+@media (max-width: 768px) {
+    .chisiamo-wrapper {
+        flex-direction: column !important; /* Dispone gli elementi in verticale */
+        gap: 30px !important; /* Spazio tra testo e foto */
+    }
+    
+    .chisiamo-text-col {
+        order: 1 !important; /* Forza il testo a stare in alto */
+        width: 100% !important;
+    }
+    
+    .chisiamo-img-col {
+        display: block !important; /* Assicura che la foto sia visibile */
+        order: 2 !important; /* Forza la foto a stare in basso */
+        width: 100% !important;
+    }
+}
     </style>
 </head>
 <body>
@@ -1316,13 +1338,14 @@ html { scroll-behavior: smooth; }
     <i class="fas fa-heart"></i>
 </div>
 
+
+</div>
 <!-- PREFERITI (MODAL A SCOMPARSA) -->
 <div id="preferiti">
     <h2 style="display:block; text-align:center; margin-top: 20px;">I Miei Preferiti ❤️</h2>
     <div class="product-container" id="lista-preferiti">
         <!-- I prodotti preferiti appariranno qui -->
     </div>
-</div>
 </div>
         <!-- ACQUISTA -->
         <div id="acquista" class="content-section">
@@ -2140,7 +2163,7 @@ if (detEl) { detEl.style.display = 'none'; detEl.classList.remove('active'); }
      
 
         // === RICERCA ===
-        function filtraProdotti() {
+        window.filtraProdotti=function() {
             let input = document.getElementById('searchBar').value.toLowerCase();
             let activeTab = document.querySelector('.cat-content.active');
             if (!activeTab) return;
@@ -2658,7 +2681,7 @@ window.caricaProdottiFirebase = async function(categoria, idContenitore) {
                     ${htmlBadge}
                     ${isAdmin ? `<div class="edit-admin-btn"><i class="fas fa-edit"></i> Modifica</div>` : ''}
                     ${isAdmin ? `<div class="delete-admin-btn"><i class="fas fa-trash-alt"></i> Elimina</div>` : ''}
-                    <div class="wishlist-btn ${isFav ? 'active' : ''}"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>
+                    <div class="wishlist-btn ${isFav ? 'active' : ''}" data-id="${idProdotto}"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>
                     <img src="${immagine}" alt="Prodotto" class="product-image" onerror="this.src='logo.png'" style="cursor:pointer;">
                     <h3 style="cursor:pointer;">${titolo}</h3>
                     <div class="price">€${prezzoNum.toFixed(2)}</div>
@@ -2735,7 +2758,11 @@ window.caricaProdottiFirebase = async function(categoria, idContenitore) {
             }
             contenitore.appendChild(card);
         });
-        if (count === 0) contenitore.innerHTML = "<p class='loading-text'>Nessun prodotto trovato in questa categoria.</p>";
+        if (count === 0) contenitore.innerHTML = `
+  <div style="width:100%; text-align:center; padding:60px 20px; color:var(--testo-chiaro);">
+    <i class="fas fa-gem" style="font-size:48px; margin-bottom:20px; opacity:0.2;"></i>
+    <p style="font-size:16px; margin:0;">Nuove creazioni in arrivo...</p>
+  </div>`;
         if (typeof observeElements === "function") observeElements();
     } catch (e) { console.error("Errore caricamento:", e); }
 };
@@ -2770,7 +2797,7 @@ window.caricaEvidenza = async function() {
             // HTML pulito, nessun onclick che spezza il codice
             card.innerHTML = `
                 ${htmlBadge}
-                <div class="wishlist-btn ${isFav ? 'active' : ''}"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>
+                <div class="wishlist-btn ${isFav ? 'active' : ''}" data-id="${idProdotto}"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>
                 <img src="${immagine}" alt="Prodotto" class="product-image" onerror="this.src='logo.png'" style="cursor:pointer;">
                 <h3 style="cursor:pointer;">${titolo}</h3>
                 <div class="price">€${prezzoNum.toFixed(2)}</div>
@@ -2869,7 +2896,16 @@ window.chiudiDettaglio = function(event) {
         window.scrollTo(0, parseInt(scrollY));
     }
 };
-
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        if (document.getElementById('dettaglio-prodotto').classList.contains('active'))
+            window.chiudiDettaglio();
+        if (document.getElementById('preferiti').classList.contains('active'))
+            window.chiudiPreferiti();
+        if (document.getElementById('legale').classList.contains('active'))
+            window.chiudiLegale();
+    }
+});
 // CHIUSURA CLICCANDO FUORI DAL PRODOTTO
 document.addEventListener('click', function(e) {
     const dettaglio = document.getElementById('dettaglio-prodotto');
@@ -3134,26 +3170,66 @@ document.addEventListener('click', function(e) {
             } catch (e) { console.error(e); showToast("Errore aggiornamento. ❌"); }
         };
 // === GESTIONE PREFERITI ===
-        window.toggleWishlist = function(event, id, titolo, prezzo, immagine) {
-            event.stopPropagation(); // Evita di aprire il dettaglio prodotto
-            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-            const index = wishlist.findIndex(item => item.id === id);
-            const icon = event.currentTarget.querySelector('i');
+     window.toggleWishlist = function(event, id, titolo, prezzo, immagine) {
+    event.stopPropagation(); // Evita di aprire il dettaglio prodotto
+    
+    // 1. Leggiamo i preferiti salvati nel telefono/PC
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const index = wishlist.findIndex(item => item.id === id);
 
-            if (index === -1) {
-                wishlist.push({ id, titolo, prezzo, immagine });
-                event.currentTarget.classList.add('active');
-                icon.classList.remove('far'); icon.classList.add('fas');
-                showToast("Aggiunto ai preferiti! ❤️");
-            } else {
-                wishlist.splice(index, 1);
-                event.currentTarget.classList.remove('active');
-                icon.classList.remove('fas'); icon.classList.add('far');
-                showToast("Rimosso dai preferiti. 💔");
-            }
-            localStorage.setItem('wishlist', JSON.stringify(wishlist));
-            caricaPreferitiHTML(); // Aggiorna la vista istantaneamente
-        };
+    // 2. Capiamo se stiamo aggiungendo o rimuovendo il prodotto
+    const stiamoAggiungendo = (index === -1);
+
+    if (stiamoAggiungendo) {
+        // Se non c'era, lo aggiungiamo
+        wishlist.push({ id, titolo, prezzo, immagine });
+        showToast("Aggiunto ai preferiti! ❤️");
+    } else {
+        // Se c'era già, lo rimuoviamo
+        wishlist.splice(index, 1);
+        showToast("Rimosso dai preferiti. 💔");
+    }
+
+    // 3. Salviamo le modifiche nel telefono/PC
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+
+    // --- LA MAGIA INIZIA QUI ---
+    // 4. Cerchiamo TUTTI i cuoricini nella pagina che hanno questo ID prodotto
+    const tuttiICuori = document.querySelectorAll(`.wishlist-btn[data-id="${id}"]`);
+    
+    // 5. Aggiorniamo la grafica di ogni cuoricino trovato
+    tuttiICuori.forEach(btn => {
+        const icona = btn.querySelector('i');
+        
+        if (stiamoAggiungendo) {
+            btn.classList.add('active'); // Diventa rosso
+            icona.classList.remove('far'); // Togliamo il cuore vuoto
+            icona.classList.add('fas');    // Mettiamo il cuore pieno
+        } else {
+            btn.classList.remove('active'); // Torna grigio
+            icona.classList.remove('fas');  // Togliamo il cuore pieno
+            icona.classList.add('far');     // Mettiamo il cuore vuoto
+        }
+    });
+
+    // 6. Ricarichiamo la lista nel popup dei preferiti
+    caricaPreferitiHTML(); 
+
+    // 7. Aggiorniamo il numeretto sul bottone fluttuante
+    const count = wishlist.length;
+    const badge = document.querySelector('.floating-heart-btn');
+    if (badge) {
+        badge.style.position = 'fixed';
+        let b = badge.querySelector('.badge-count');
+        if (!b && count > 0) { 
+            b = document.createElement('div'); 
+            b.className = 'badge-count'; 
+            badge.appendChild(b); 
+        }
+        if (b) b.textContent = count > 0 ? count : '';
+        if (b && count === 0) b.remove();
+    }
+};
 
         window.caricaPreferitiHTML = function() {
             const contenitore = document.getElementById('lista-preferiti');
@@ -3170,12 +3246,21 @@ document.addEventListener('click', function(e) {
                 const onClickDettaglio = `apriProdottoCondiviso('${item.titolo}')`;
                 contenitore.insertAdjacentHTML('beforeend', `
                     <div class="product-card reveal visible" style="position:relative;">
-                        <div class="wishlist-btn active" onclick="toggleWishlist(event, '${item.id}', '${item.titolo}', ${item.prezzo}, '${item.immagine}')"><i class="fas fa-heart"></i></div>
+                       <div class="wishlist-btn active" data-id="${item.id}" onclick="toggleWishlist(event, '${item.id}', '${item.titolo}', ${item.prezzo}, '${item.immagine}')"><i class="fas fa-heart"></i></div>
                         <img src="${item.immagine}" alt="${item.titolo}" class="product-image" onerror="this.src='logo.png'" style="cursor:pointer;" onclick="${onClickDettaglio}">
                         <h3 style="cursor:pointer;" onclick="${onClickDettaglio}">${item.titolo}</h3>
                         <div class="price">€${parseFloat(item.prezzo).toFixed(2)}</div>
                     </div>`);
             });
+            const count = (JSON.parse(localStorage.getItem('wishlist')) || []).length;
+const badge = document.querySelector('.floating-heart-btn');
+if (badge) {
+    badge.style.position = 'fixed'; // già impostato
+    let b = badge.querySelector('.badge-count');
+    if (!b && count > 0) { b = document.createElement('div'); b.className = 'badge-count'; badge.appendChild(b); }
+    if (b) b.textContent = count > 0 ? count : '';
+    if (b && count === 0) b.remove();
+}
         };
 
         // === GESTIONE NOVITÀ (SLIDER E ADMIN) ===
@@ -3456,6 +3541,7 @@ window.apriAdminDiretto = function() {
             }
         });
         // --- FINE FIX MENU ---
+     
     </script>
 </body>
 </html>
