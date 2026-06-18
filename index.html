@@ -19,7 +19,22 @@
     <meta property="og:image" content="https://3lcreations.it/logo.png">
     <meta property="og:url" content="https://3lcreations.it/">
     <meta property="og:type" content="website">
-
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "3L Creations",
+  "url": "https://3lcreations.it/",
+  "logo": "https://3lcreations.it/logo.png",
+  "image": "https://3lcreations.it/logo.png",
+  "description": "L'eleganza del fatto a mano, per te e per i tuoi amici a quattro zampe.",
+  "sameAs": [
+    "https://www.instagram.com/_3l_creations",
+    "https://www.tiktok.com/@3lcreations",
+    "https://www.facebook.com/groups/974242766065881"
+  ]
+}
+</script>
     <link rel="icon" type="image/png" href="https://3lcreations.it/favicon.png?v=2" sizes="192x192">
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -345,8 +360,14 @@
 /* --- FINE STILE TOAST --- */
 
         /* COOKIE */
-        #cookie-banner { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); box-shadow: 0 -10px 30px rgba(216, 27, 96, 0.15); padding: 15px 20px; padding-bottom: calc(15px + env(safe-area-inset-bottom)); z-index: 99999999; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid var(--fucsia); transform: translateY(100%); transition: transform 0.5s ease; box-sizing: border-box; flex-wrap: wrap; gap: 15px; }
-        #cookie-banner.show { transform: translateY(0); }
+        #cookie-banner { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); box-shadow: 0 -10px 30px rgba(216, 27, 96, 0.15); padding: 15px 20px; padding-bottom: calc(35px + env(safe-area-inset-bottom)); z-index: 99999999; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid var(--fucsia); transform: translateY(100%); transition: transform 0.5s ease; box-sizing: border-box; flex-wrap: wrap; gap: 15px; }
+        #cookie-banner.show {
+        opacity: 1 !important;
+        transform: translateY(0) scale(1) !important;
+        visibility: visible !important;
+        /* Entrata con effetto "rimbalzo" elastico e morbidissimo */
+        transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important; 
+    }
         .cookie-text { font-size: 13px; color: var(--testo-scuro); flex: 1; min-width: 250px; }
         .cookie-btn { background-color: var(--fucsia); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px; transition: 0.3s; white-space: nowrap; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); }
         .cookie-btn:hover { background-color: #ad144d; transform: scale(1.05); }
@@ -843,8 +864,8 @@ html { scroll-behavior: smooth; }
 #menu-mobile-fisso {
     display: none; /* Nascosto di default su PC */
 }
-
 @media (max-width: 900px) {
+    /* 1. STATO INIZIALE MENU */
     #menu-mobile-fisso {
         display: flex !important;
         justify-content: space-around !important;
@@ -853,13 +874,16 @@ html { scroll-behavior: smooth; }
         bottom: 0 !important;
         left: 0 !important;
         width: 100vw !important;
-        height: 70px !important;
+        height: calc(70px + env(safe-area-inset-bottom)) !important;
+        padding-bottom: env(safe-area-inset-bottom) !important;
         background: rgba(255, 255, 255, 0.98) !important;
         backdrop-filter: blur(15px) !important;
         border-top: 1px solid var(--rosa-chiaro) !important;
         box-shadow: 0 -5px 25px rgba(216, 27, 96, 0.2) !important;
-        z-index: 2147483647 !important; /* Il livello massimo consentito dal browser */
-        padding-bottom: env(safe-area-inset-bottom) !important;
+        /* Livello alto, ma inferiore a quello dei cookie */
+        z-index: 999998 !important; 
+        border-radius: 0 !important;
+        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important; 
     }
 
     #menu-mobile-fisso .nav-item {
@@ -883,7 +907,19 @@ html { scroll-behavior: smooth; }
     #menu-mobile-fisso .nav-item:active {
         color: var(--fucsia) !important;
     }
-}
+
+    /* 2. STATO IN SCORRIMENTO MENU */
+    #menu-mobile-fisso.menu-fluttuante {
+        bottom: 25px !important;
+        width: 92vw !important;
+        left: 4vw !important;
+        height: 70px !important;
+        padding-bottom: 0 !important;
+        border-radius: 40px !important;
+        border: 1px solid var(--rosa-chiaro) !important;
+        border-top: 1px solid var(--rosa-chiaro) !important;
+        box-shadow: 0 10px 30px rgba(216, 27, 96, 0.25) !important;
+    }
 /* --- FINE NUOVO MENU MOBILE --- */
 /* --- FIX SOCIAL AFFIANCATI SU MOBILE --- */
 @media (max-width: 768px) {
@@ -1164,9 +1200,30 @@ html { scroll-behavior: smooth; }
     }
 }
 @media (max-width: 900px) {
-    #cookie-banner {
-        bottom: 70px !important; /* L'altezza esatta del tuo menu mobile */
-        border-radius: 20px 20px 0 0; /* Opzionale: arrotonda gli angoli per estetica */
+    /* ... (qui c'è il codice del menu mobile che non devi toccare) ... */
+
+    /* STATO INIZIALE: Nuvoletta sopra al menu */
+ #cookie-banner {
+        bottom: calc(95px + env(safe-area-inset-bottom)) !important; 
+        width: 92vw !important;
+        left: 4vw !important;
+        border-radius: 20px !important;
+        padding: 15px 20px !important; 
+        z-index: 2147483647 !important; 
+        pointer-events: auto !important; 
+        
+        /* Nuova Animazione: Nascosto, rimpicciolito e spostato un po' in giù */
+        opacity: 0 !important;
+        transform: translateY(30px) scale(0.90) !important;
+        visibility: hidden !important;
+        /* Uscita veloce e pulita */
+        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    }
+
+    /* 4. STATO IN SCORRIMENTO COOKIE: Si alza insieme al menu */
+    #cookie-banner.banner-fluttuante {
+        /* Lo alziamo ancora di più mantenendo la stessa distanza dal menu */
+        bottom: 120px !important; 
     }
 }
     </style>
@@ -2125,7 +2182,19 @@ if (detEl) { detEl.style.display = 'none'; detEl.classList.remove('active'); }
             // --- FINE FIX ---
         }
 
-        if (updateUrl) history.pushState(null, null, '#' + sectionId);
+        // Mappa i nomi del codice con i nomi belli per l'URL
+        const mappaUrl = {
+            'home': '/home',
+            'acquista': '/catalogo',
+            'sezione-personalizza': '/personalizza',
+            'contatti': '/contatti',
+            'faq': '/faq',
+            'sezione-admin': '/admin'
+        };
+
+        if (updateUrl && mappaUrl[sectionId]) {
+            history.pushState(null, null, mappaUrl[sectionId]);
+        }
     };
 
         // === POPUP PREFERITI E LEGALI ===
@@ -2420,35 +2489,56 @@ window.inviaRichiestaProdottoEmail = function(nomeBase, textAreaId, radioName, t
             setTimeout(() => lb.style.display = 'none', 300);
         }
 
-        // === SCROLL ===
+       // === EFFETTO PARALLASSE E NAVBAR SMART ===
         window.addEventListener('scroll', function() {
-            const btn = document.getElementById('backToTopBtn');
-            if (window.scrollY > 300) btn.classList.add('show');
-            else btn.classList.remove('show');
+            // 1. Tasto Torna Su
+            const btnTop = document.getElementById('backToTopBtn');
+            if (window.scrollY > 300) btnTop.classList.add('show');
+            else btnTop.classList.remove('show');
+            
+          // 2. Menu Mobile e Cookie: Effetto "Pillola Fluttuante" sincronizzato
+            const menuFisso = document.getElementById('menu-mobile-fisso');
+            const cookieBanner = document.getElementById('cookie-banner');
+            
+            if (menuFisso) {
+                if (window.scrollY > 50) {
+                    menuFisso.classList.add('menu-fluttuante');
+                    if (cookieBanner) cookieBanner.classList.add('banner-fluttuante');
+                } else {
+                    menuFisso.classList.remove('menu-fluttuante');
+                    if (cookieBanner) cookieBanner.classList.remove('banner-fluttuante');
+                }
+            }
+
+            // 3. Barra di avanzamento in alto
             let scrolled = ((document.body.scrollTop || document.documentElement.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight)) * 100;
             const scrollBar = document.getElementById("scroll-progress-bar");
             if (scrollBar) scrollBar.style.width = scrolled + "%";
         });
-        function scrollToTop() { window.scrollTo({top: 0, behavior: 'smooth'}); }
-
-      // === COOKIE ===
-        function checkCookies() {
-            if (!localStorage.getItem('cookiesAccepted')) {
-                setTimeout(() => document.getElementById('cookie-banner').classList.add('show'), 2000);
-            } else {
-                // Se sono già accettati, lo nascondiamo del tutto all'avvio
-                document.getElementById('cookie-banner').style.display = 'none';
-            }
-        }
-        function acceptCookies() {
-            localStorage.setItem('cookiesAccepted', 'true');
-            const banner = document.getElementById('cookie-banner');
-            banner.classList.remove('show');
-            // Aspetta che finisca l'animazione (0.5s) e poi spegne fisicamente l'elemento
-            setTimeout(() => { banner.style.display = 'none'; }, 500);
-        }
 
         // === TOAST ===
+        // === GESTIONE SICURA COOKIE ===
+window.checkCookies = function() {
+    if (!localStorage.getItem('cookiesAccepted')) {
+        setTimeout(() => {
+            const banner = document.getElementById('cookie-banner');
+            if (banner) banner.classList.add('show');
+        }, 2000);
+    } else {
+        const banner = document.getElementById('cookie-banner');
+        if (banner) banner.style.display = 'none';
+    }
+};
+
+window.acceptCookies = function() {
+    localStorage.setItem('cookiesAccepted', 'true');
+    const banner = document.getElementById('cookie-banner');
+    if (banner) {
+        banner.classList.remove('show');
+        // Aspetta che l'animazione finisca, poi lo spegne fisicamente
+        setTimeout(() => { banner.style.display = 'none'; }, 500);
+    }
+};
         window.showToast = function(message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -2881,6 +2971,11 @@ window.apriDettaglioProdotto = function(titolo, prezzoNum, badge, descrizione, i
     document.body.style.position = 'fixed';
     document.body.style.top = `-${window.scrollY}px`;
     document.body.style.width = '100%';
+    // Trasforma il titolo in un URL pulito (es. "Fiocco Rosso" -> "fiocco-rosso")
+let urlPulito = titolo.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+
+// Cambia l'URL nella barra in alto senza ricaricare la pagina
+window.history.pushState({ prodotto: titolo }, '', '/prodotto/' + urlPulito);
 };
 
 window.chiudiDettaglio = function(event) {
@@ -2903,6 +2998,8 @@ window.chiudiDettaglio = function(event) {
     if (scrollY) {
         window.scrollTo(0, parseInt(scrollY));
     }
+    // Riporta l'URL a quello della pagina principale
+window.history.pushState(null, '', '/');
 };
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
@@ -2944,7 +3041,8 @@ document.addEventListener('click', function(e) {
                 let trovato = false;
                 querySnapshot.forEach((doc) => {
                     const riga = doc.data();
-                    if (riga.titolo === nomeProdotto) {
+                   // Confronta trasformando tutto in minuscolo
+if (riga.titolo.toLowerCase() === nomeProdotto.toLowerCase()) {
                         trovato = true;
                         const immagine = riga.immagine || 'logo.png';
                         const prezzoNum = parseFloat(riga.prezzo) || 0;
@@ -3465,18 +3563,43 @@ window.apriAdminDiretto = function() {
             }, 800);
 
             // Naviga all'hash o home
-            const hash = window.location.hash;
-            if (hash.startsWith('#prodotto=')) {
-                window.apriProdottoCondiviso(decodeURIComponent(hash.replace('#prodotto=', '')));
-            } else if (hash && hash !== '#dettaglio-prodotto') {
-                showSection(hash.substring(1), false);
-            } else {
-                showSection('home', false);
-            }
-// Forza lo scroll in alto se siamo sulla home per evitare che la barra copra il logo al ricaricamento
-            if (!hash || hash === '#home') {
-                setTimeout(() => window.scrollTo(0, 0), 10);
-            }
+           // Naviga usando il nuovo URL o il vecchio Hash
+       const path = window.location.pathname;
+        const hash = window.location.hash;
+
+        // Mappa inversa: dall'URL capiamo quale sezione aprire
+        const mappaSezioni = {
+            '/': 'home',
+            '/home': 'home',
+            '/catalogo': 'acquista',
+            '/personalizza': 'sezione-personalizza',
+            '/contatti': 'contatti',
+            '/faq': 'faq',
+            '/admin': 'sezione-admin'
+        };
+
+        if (path.startsWith('/prodotto/')) {
+            // Estrae "fiocco-rosso" e lo fa diventare "fiocco rosso"
+            let nomeDalLink = decodeURIComponent(path.replace('/prodotto/', '')).replace(/-/g, ' ');
+            showSection('acquista', false); 
+            window.apriProdottoCondiviso(nomeDalLink);
+        } else if (hash.startsWith('#prodotto=')) {
+            // Per supportare i vecchi link
+            window.apriProdottoCondiviso(decodeURIComponent(hash.replace('#prodotto=', '')));
+        } else if (mappaSezioni[path]) {
+            // Seleziona la sezione corretta basandosi sull'URL pulito (es. /catalogo)
+            showSection(mappaSezioni[path], false);
+        } else if (hash && hash !== '#dettaglio-prodotto') {
+            // Fallback per i vecchi hash
+            showSection(hash.substring(1), false);
+        } else {
+            showSection('home', false);
+        }
+
+        // Forza lo scroll in alto se siamo sulla home
+        if ((!hash && (path === '/' || path === '/home')) || hash === '#home') {
+            setTimeout(() => window.scrollTo(0, 0), 10);
+        }
             // Installa App
             const installBtn = document.getElementById('btn-installa-app-top');
             const iosPrompt = document.getElementById('ios-install-prompt');
@@ -3513,7 +3636,7 @@ window.apriAdminDiretto = function() {
             // Caricamenti
             initHomeSlider();
             observeElements();
-            checkCookies();
+            window.checkCookies();
             window.caricaEvidenza();
             window.caricaImpostazioniSito();
           window.caricaTuttiIProdotti();
@@ -3523,12 +3646,25 @@ window.apriAdminDiretto = function() {
         });
 
         // Gestione tasti Avanti/Indietro
-        window.addEventListener('popstate', function() {
+      window.addEventListener('popstate', function() {
+            const path = window.location.pathname;
             const hash = window.location.hash;
-            if (hash.startsWith('#prodotto=')) {
+
+            const mappaSezioni = {
+                '/': 'home', '/home': 'home', '/catalogo': 'acquista',
+                '/personalizza': 'sezione-personalizza', '/contatti': 'contatti',
+                '/faq': 'faq', '/admin': 'sezione-admin'
+            };
+
+            if (path.startsWith('/prodotto/')) {
+                let nomeProdotto = decodeURIComponent(path.replace('/prodotto/', '')).replace(/-/g, ' ');
+                window.apriProdottoCondiviso(nomeProdotto);
+            } else if (hash.startsWith('#prodotto=')) {
                 window.apriProdottoCondiviso(decodeURIComponent(hash.replace('#prodotto=', '')));
             } else {
-                showSection((hash ? hash.substring(1) : 'home'), false);
+                window.chiudiDettaglio(); // Assicurati che il prodotto si chiuda
+                let sezione = mappaSezioni[path] || (hash ? hash.substring(1) : 'home');
+                showSection(sezione, false);
             }
         });
         // === FAQ ACCORDION ===
