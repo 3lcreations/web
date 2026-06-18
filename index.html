@@ -2136,6 +2136,17 @@ html { scroll-behavior: smooth; }
 
     const target = document.getElementById(sectionId);
     if (!target) return;
+    const titoliSEO = {
+        'home': '3L Creations - Handmade con Amore',
+        'acquista': 'Catalogo Prodotti - 3L Creations',
+        'sezione-personalizza': 'Crea il tuo Personalizzato - 3L Creations',
+        'contatti': 'Contattaci - 3L Creations',
+        'faq': 'Domande Frequenti - 3L Creations',
+        'sezione-admin': 'Area Riservata - 3L Creations'
+    };
+    if (titoliSEO[sectionId]) {
+        document.title = titoliSEO[sectionId];
+    }
 
     // 2. Logica specifica per Admin
     if (sectionId === 'sezione-admin') {
