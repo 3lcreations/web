@@ -3701,7 +3701,44 @@ window.apriAdminDiretto = function() {
             }
         });
         // --- FINE FIX MENU ---
-     
+     // === ScrollSpy per aggiornare URL automaticamente ===
+window.addEventListener('DOMContentLoaded', () => {
+    const observerOptions = {
+        root: null, // Osserva rispetto alla finestra del browser
+        rootMargin: '-20% 0px -70% 0px', // Attiva quando l'elemento arriva al 30% superiore dello schermo
+        threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const sectionId = entry.target.id;
+                
+                // Mappa le sezioni agli URL puliti
+                const mappaUrl = {
+                    'home': '/home',
+                    'acquista': '/catalogo',
+                    'sezione-personalizza': '/personalizza',
+                    'contatti': '/contatti',
+                    'faq': '/faq'
+                };
+
+                // Aggiorna l'URL solo se è una sezione mappata e se è diverso dall'attuale
+                if (mappaUrl[sectionId] && window.location.pathname !== mappaUrl[sectionId]) {
+                    window.history.replaceState(null, null, mappaUrl[sectionId]);
+                    
+                    // Opzionale: aggiunge la classe .active al menu mobile se vuoi
+                    // aggiornoMenuAttivo(sectionId); 
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Collega l'observer a tutte le sezioni che hanno un id
+    document.querySelectorAll('.content-section').forEach(section => {
+        observer.observe(section);
+    });
+});
     </script>
 </body>
 </html>
