@@ -920,6 +920,7 @@ html { scroll-behavior: smooth; }
         border-top: 1px solid var(--rosa-chiaro) !important;
         box-shadow: 0 10px 30px rgba(216, 27, 96, 0.25) !important;
     }
+}
 /* --- FINE NUOVO MENU MOBILE --- */
 /* --- FIX SOCIAL AFFIANCATI SU MOBILE --- */
 @media (max-width: 768px) {
@@ -1101,23 +1102,27 @@ html { scroll-behavior: smooth; }
 }
 
 .cat-btn-pers {
-    background: transparent;
-    border: 2px solid #ddd; /* <-- Ecco il nuovo bordo visibile (grigio chiaro) */
-    color: var(--testo-chiaro);
-    padding: 12px 20px;
-    border-radius: 25px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    background: transparent !important; /* Forza lo sfondo trasparente */
+    border: 2px solid var(--rosa-chiaro) !important; /* Colore rosa come volevi */
+    color: var(--fucsia) !important; /* Testo fucsia */
+    padding: 12px 20px !important;
+    border-radius: 25px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    /* Forza l'aspetto moderno eliminando i bordi grigi di default */
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    outline: none !important;
 }
 
 .cat-btn-pers.active {
-    background: white;
-    color: var(--fucsia);
-    box-shadow: 0 4px 15px rgba(216, 27, 96, 0.15);
+    background: var(--fucsia) !important; /* Fondo fucsia quando attivo */
+    color: white !important; /* Testo bianco quando attivo */
+    box-shadow: 0 4px 15px rgba(216, 27, 96, 0.15) !important;
     transform: translateY(-2px);
-    border: 2px solid var(--rosa-chiaro);
+    border: 2px solid var(--fucsia) !important;
 }
 
 /* 2. Menu a tendina "Ordina per" (Fix sovrapposizione freccia) */
@@ -1865,7 +1870,7 @@ html { scroll-behavior: smooth; }
                 <textarea id="new-descrizione" class="custom-textarea" placeholder="Descrizione prodotto..." style="height: 80px; margin-bottom: 15px;"></textarea>
                 <label class="label-admin">Foto Prodotto</label>
                 <div class="file-upload-wrapper" style="margin-top: 5px;">
-                    <input type="file" id="new-immagine-file" class="file-upload-input" accept="image/*" multiple onchange="aggiornaNomeFile(this, 'nome-new-prodotto')">
+                    <input type="file" id="new-immagine-file" class="file-upload-input" accept="image/" multiple onchange="aggiornaNomeFile(this, 'nome-new-prodotto')">
                     <label for="new-immagine-file" class="file-upload-btn" style="background-color: var(--rosa-chiaro); color: var(--testo-scuro);"><i class="fas fa-images"></i> Seleziona Foto</label>
                     <span id="nome-new-prodotto" class="file-upload-name">Nessuna foto selezionata</span>
                 </div>
@@ -1886,7 +1891,7 @@ html { scroll-behavior: smooth; }
                 </select>
                 <label class="label-admin">Nuova Foto</label>
                 <div class="file-upload-wrapper" style="margin-top: 5px;">
-                    <input type="file" id="admin-site-img-file" class="file-upload-input" accept="image/*" onchange="aggiornaNomeFile(this, 'nome-site-img')">
+                    <input type="file" id="admin-site-img-file" class="file-upload-input" accept="image/" onchange="aggiornaNomeFile(this, 'nome-site-img')">
                     <label for="admin-site-img-file" class="file-upload-btn" style="background-color: var(--rosa-chiaro); color: var(--testo-scuro);"><i class="fas fa-camera"></i> Cambia Immagine</label>
                     <span id="nome-site-img" class="file-upload-name">Nessuna immagine selezionata</span>
                 </div>
@@ -1901,7 +1906,7 @@ html { scroll-behavior: smooth; }
 
 <label class="label-admin">Foto Notizia</label>
 <div class="file-upload-wrapper" style="margin-top: 5px;">
-    <input type="file" id="new-news-immagine-file" class="file-upload-input" accept="image/*" onchange="aggiornaNomeFile(this, 'nome-new-news-foto')">
+    <input type="file" id="new-news-immagine-file" class="file-upload-input" accept="image/" onchange="aggiornaNomeFile(this, 'nome-new-news-foto')">
     <label for="new-news-immagine-file" class="file-upload-btn" style="background-color: var(--rosa-chiaro); color: var(--testo-scuro);"><i class="fas fa-camera"></i> Aggiungi/Cambia Foto</label>
     <span id="nome-new-news-foto" class="file-upload-name">Nessuna foto selezionata</span>
 </div>
