@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <script>
+        // Prende l'URL che ha generato l'errore (es: /prodotto/fiocco-rosso)
+        const path = window.location.pathname;
+        
+        // Se il link contiene "/prodotto/", reindirizza alla home passando il nome del prodotto
+        if (path.startsWith('/prodotto/')) {
+            const nomeProdotto = path.replace('/prodotto/', '');
+            window.location.href = '/#' + nomeProdotto;
+        } else {
+            // Se è un errore 404 reale, manda alla home
+            window.location.href = '/';
+        }
+    </script>
+</head>
+<body>
+    <p>Caricamento in corso...</p>
+</body>
+</html>
