@@ -3650,7 +3650,14 @@ window.apriAdminDiretto = function() {
            // Naviga usando il nuovo URL o il vecchio Hash
        const path = window.location.pathname;
         const hash = window.location.hash;
-
+if (hash && hash !== '#home') {
+    const nomeProdotto = decodeURIComponent(hash.substring(1).replace(/-/g, ' '));
+    showSection('acquista', false); 
+    // Ora chiama la funzione per aprire il dettaglio
+    setTimeout(() => {
+        window.apriProdottoCondiviso(nomeProdotto);
+    }, 1000); // Un piccolo ritardo per dare tempo al catalogo di caricarsi
+}
         // Mappa inversa: dall'URL capiamo quale sezione aprire
         const mappaSezioni = {
             '/': 'home', 
@@ -3728,6 +3735,7 @@ window.apriAdminDiretto = function() {
             window.caricaNotiziePubbliche();
             if (window.auth?.currentUser) window.caricaNotizieAdmin(); // Se sei loggato
         });
+        
 
         // Gestione tasti Avanti/Indietro
       window.addEventListener('popstate', function() {
