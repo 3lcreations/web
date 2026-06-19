@@ -3739,5 +3739,37 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 });
     </script>
+    <script>
+// === Autoscroll al caricamento della pagina ===
+window.addEventListener('DOMContentLoaded', () => {
+    // Mappa esatta degli URL e dei relativi ID delle sezioni HTML
+    const atterraggioSezioni = {
+        '/catalogo': 'acquista', 
+        '/catalogo/': 'acquista',
+        '/personalizza': 'sezione-personalizza', 
+        '/personalizza/': 'sezione-personalizza',
+        '/contatti': 'contatti', 
+        '/contatti/': 'contatti',
+        '/faq': 'faq', 
+        '/faq/': 'faq'
+    };
+
+    // Leggi l'URL attuale
+    const pathAttuale = window.location.pathname;
+    const sezioneTarget = atterraggioSezioni[pathAttuale];
+
+    // Se l'URL corrisponde a una sezione (e non è la Home)
+    if (sezioneTarget) {
+        const elementoTarget = document.getElementById(sezioneTarget);
+        
+        if (elementoTarget) {
+            // Aspetta mezzo secondo che il layout e le foto si carichino, poi scorri giù
+            setTimeout(() => {
+                elementoTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 500);
+        }
+    }
+});
+</script>
 </body>
 </html>
