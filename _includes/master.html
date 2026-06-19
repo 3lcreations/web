@@ -2310,16 +2310,23 @@ if (detEl) { detEl.style.display = 'none'; detEl.classList.remove('active'); }
 
         // === CONDIVISIONE ===
         window.condividiProdotto = function() {
-            const titolo = document.getElementById('dettaglio-titolo').innerText;
-            const linkPersonale = window.location.origin + window.location.pathname + '#prodotto=' + encodeURIComponent(titolo);
-            if (navigator.share) {
-                navigator.share({ title: 'Guarda su 3L Creations', text: `Ho trovato questa creazione stupenda fatta a mano: ${titolo}! 😍`, url: linkPersonale })
-                    .catch(err => console.log('Condivisione annullata', err));
-            } else {
-                navigator.clipboard.writeText(linkPersonale).catch(() => {});
-                showToast("Link copiato! Pronta per condividerlo. 🔗");
-            }
-        };
+    const titolo = document.getElementById('dettaglio-titolo').innerText;
+    // Trasforma il titolo in URL pulito (es. "Fiocco Rosso" -> "fiocco-rosso")
+    let urlPulito = titolo.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+    const linkPersonale = window.location.origin + '/prodotto/' + urlPulito;
+
+    if (navigator.share) {
+        navigator.share({ 
+            title: titolo + ' - 3L Creations', 
+            text: `Guarda questa creazione stupenda: ${titolo}! 😍`, 
+            url: linkPersonale 
+        }).catch(err => console.log('Condivisione annullata', err));
+    } else {
+        navigator.clipboard.writeText(linkPersonale).then(() => {
+            showToast("Link diretto copiato! 🔗");
+        });
+    }
+};
 
         // === RICHIESTA PRODOTTI PERSONALIZZATI ===
         window.inviaRichiestaProdotto = function(nomeBase, textAreaId, radioName, tagliaId) {
@@ -2945,6 +2952,21 @@ window.caricaEvidenza = async function() {
 
     // === VIEW TRANSITIONS API RIMOSSA PER EVITARE BUG DI POSIZIONAMENTO ===
 window.apriDettaglioProdotto = function(titolo, prezzoNum, badge, descrizione, immagineCopertina, galleriaStringa) {
+const messaggio = encodeURIComponent(`Ciao! Vorrei ordinare questo prodotto: ${titolo}.`);
+
+    // 2. Troviamo i bottoni nel popup e aggiorniamo il loro indirizzo (href)
+    const btnIg = document.querySelector('.order-contact-box .contact-order-btn.instagram');
+    const btnMail = document.querySelector('.order-contact-box .contact-order-btn.secondary');
+
+    // 3. Il link Instagram (dm-diretto)
+    if(btnIg) {
+        btnIg.href = `https://ig.me/m/_3l_creations?text=${messaggio}`;
+    }
+
+    // 4. Il link Email (con oggetto e corpo del messaggio già pronti)
+    if(btnMail) {
+        btnMail.href = `mailto:3lcreationsfordogs1@gmail.com?subject=Ordine: ${encodeURIComponent(titolo)}&body=${messaggio}`;
+    }
     const prezzo = parseFloat(prezzoNum);
     const galleria = galleriaStringa ? galleriaStringa.split(',') : [immagineCopertina];
     
