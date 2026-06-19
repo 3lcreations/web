@@ -3756,7 +3756,23 @@ if (hash && hash !== '#home') {
             window.caricaPreferitiHTML();
             window.caricaNotiziePubbliche();
             if (window.auth?.currentUser) window.caricaNotizieAdmin(); // Se sei loggato
-        });
+            const prodottoSalvato = localStorage.getItem('prodottoDaAprire');
+    if (prodottoSalvato) {
+        localStorage.removeItem('prodottoDaAprire'); // Pulisce la memoria
+        
+        // Aspetta che i prodotti siano caricati dal database prima di aprire
+        const checkProdotti = setInterval(() => {
+            const titoloDecodificato = decodeURIComponent(prodottoSalvato.replace(/-/g, ' '));
+            // Cerca se esiste almeno una card prodotto
+            if (document.querySelectorAll('.product-card').length > 0) {
+                clearInterval(checkProdotti);
+                showSection('acquista', false);
+                window.apriProdottoCondiviso(titoloDecodificato);
+            }
+        }, 500); // Controlla ogni mezzo secondo
+    }
+});
+        
         
 
         // Gestione tasti Avanti/Indietro
