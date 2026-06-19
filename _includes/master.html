@@ -1237,7 +1237,7 @@ html { scroll-behavior: smooth; }
 
     <!-- SPLASH SCREEN -->
     <div id="splash-screen">
-        <img src="logo.png" alt="3L Creations" class="splash-logo" onerror="this.style.display='none'">
+        <img src="/logo.png" alt="3L Creations" class="splash-logo" onerror="this.style.display='none'">
         <div class="splash-text">Benvenuti da 3L Creations...</div>
     </div>
 
@@ -1340,7 +1340,7 @@ html { scroll-behavior: smooth; }
         <!-- HOME -->
         <div id="home" class="content-section active">
             <header class="reveal">
-                <video src="logoanm.mp4" autoplay loop muted playsinline class="header-video"></video>
+                <video src="/logoanm.mp4?v=2" autoplay loop muted playsinline class="header-video"></video>
                 <p>L'eleganza del fatto a mano, per te e per i tuoi amici a quattro zampe.</p>
             </header>
 
@@ -1357,8 +1357,8 @@ html { scroll-behavior: smooth; }
 
            <div class="chisiamo-wrapper reveal">
                 <div class="chisiamo-img-col">
-                    <img id="img-chi-siamo" src="chisiamo.jpg" alt="Chi Siamo" style="width: 100%; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); object-fit: cover; aspect-ratio: 4/5;" onerror="this.src='logo.png'">
-                </div>
+    <img id="img-chi-siamo" src="/chisiamo.jpg" alt="Chi Siamo" loading="lazy" style="width: 100%; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); object-fit: cover; aspect-ratio: 4/5;" onerror="this.src='logo.png'">
+</div>
                 <div class="chisiamo-text-col">
                     <span class="section-overline">Chi Siamo</span>
                     <h2 class="section-title">Creazioni nate<br><span style="color: var(--fucsia);">dall'amore</span></h2>
@@ -1392,15 +1392,15 @@ html { scroll-behavior: smooth; }
 
             <!-- SLIDER HOME FOTO (Spostato in fondo) -->
             <div class="home-slider-area reveal" style="margin-top: 50px;">
-                <div class="home-slider-track" id="home-slider-track">
-                    <div class="home-slide"><img id="home-img-1" src="menu1.jpg" alt="Vetrina 1" onerror="this.src='logo.png'"></div>
-                    <div class="home-slide"><img id="home-img-2" src="menu2.jpg" alt="Vetrina 2" onerror="this.src='logo.png'"></div>
-                    <div class="home-slide"><img id="home-img-3" src="menu3.jpg" alt="Vetrina 3" onerror="this.src='logo.png'"></div>
-                    <div class="home-slide"><img id="home-img-4" src="menu4.jpg" alt="Vetrina 4" onerror="this.src='logo.png'"></div>
-                    <div class="home-slide"><img id="home-img-5" src="menu5.jpg" alt="Vetrina 5" onerror="this.src='logo.png'"></div>
-                    <div class="home-slide"><img id="home-img-6" src="menu6.jpg" alt="Vetrina 6" onerror="this.src='logo.png'"></div>
-                    <div class="home-slide"><img id="home-img-7" src="menu7.jpg" alt="Vetrina 7" onerror="this.src='logo.png'"></div>
-                </div>
+               <div class="home-slider-track" id="home-slider-track">
+    <div class="home-slide"><img id="home-img-1" src="/menu1.jpg" alt="Vetrina 1" loading="lazy" onerror="this.src='logo.png'"></div>
+    <div class="home-slide"><img id="home-img-2" src="/menu2.jpg" alt="Vetrina 2" loading="lazy" onerror="this.src='logo.png'"></div>
+    <div class="home-slide"><img id="home-img-3" src="/menu3.jpg" alt="Vetrina 3" loading="lazy" onerror="this.src='logo.png'"></div>
+    <div class="home-slide"><img id="home-img-4" src="/menu4.jpg" alt="Vetrina 4" loading="lazy" onerror="this.src='logo.png'"></div>
+    <div class="home-slide"><img id="home-img-5" src="/menu5.jpg" alt="Vetrina 5" loading="lazy" onerror="this.src='logo.png'"></div>
+    <div class="home-slide"><img id="home-img-6" src="/menu6.jpg" alt="Vetrina 6" loading="lazy" onerror="this.src='logo.png'"></div>
+    <div class="home-slide"><img id="home-img-7" src="/menu7.jpg" alt="Vetrina 7" loading="lazy" onerror="this.src='logo.png'"></div>
+</div>
             </div>
         </div>
 <!-- TASTO PREFERITI FLUTTUANTE -->
@@ -2796,7 +2796,7 @@ window.caricaProdottiFirebase = async function(categoria, idContenitore) {
                     ${isAdmin ? `<div class="edit-admin-btn"><i class="fas fa-edit"></i> Modifica</div>` : ''}
                     ${isAdmin ? `<div class="delete-admin-btn"><i class="fas fa-trash-alt"></i> Elimina</div>` : ''}
                     <div class="wishlist-btn ${isFav ? 'active' : ''}" data-id="${idProdotto}"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>
-                    <img src="${immagine}" alt="Prodotto" class="product-image" onerror="this.src='logo.png'" style="cursor:pointer;">
+                   <img src="${immagine}" alt="Prodotto" class="product-image" loading="lazy" onerror="this.src='logo.png'" style="cursor:pointer;">
                     <h3 style="cursor:pointer;">${titolo}</h3>
                     <div class="price">€${prezzoNum.toFixed(2)}</div>
                     <a href="#" class="contact-order-btn" style="text-decoration:none;">Scopri di più <i class="fas fa-arrow-right"></i></a>
@@ -2840,7 +2840,7 @@ window.caricaProdottiFirebase = async function(categoria, idContenitore) {
                     ${htmlBadge}
                     ${isAdmin ? `<div class="edit-admin-btn"><i class="fas fa-edit"></i></div>` : ''}
                     ${isAdmin ? `<div class="delete-admin-btn"><i class="fas fa-trash-alt"></i></div>` : ''}
-                    <img src="${immagine}" alt="Componente" class="charm-image" onerror="this.src='logo.png'">
+                    <img src="${immagine}" alt="Componente" class="charm-image" loading="lazy" onerror="this.src='logo.png'">
                     <div class="charm-title">${titolo}</div>
                     <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
                     <input type="checkbox" class="${chkClass}">
