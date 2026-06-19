@@ -1,20 +1,17 @@
 <!DOCTYPE html>
-<html lang="it">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Redirecting...</title>
     <script>
-    const path = window.location.pathname;
-    if (path.startsWith('/prodotto/')) {
-        const nomeProdotto = path.replace('/prodotto/', '');
-        // Usiamo un parametro di ricerca invece dell'hash, è più pulito
-        window.location.href = '/?prodotto=' + nomeProdotto;
-    } else {
-        window.location.href = '/';
-    }
-</script>
+        const path = window.location.pathname;
+        if (path.startsWith('/prodotto/')) {
+            const nomeProdotto = path.replace('/prodotto/', '');
+            // Salva il nome del prodotto nella memoria del browser prima di uscire
+            localStorage.setItem('prodottoDaAprire', nomeProdotto);
+            window.location.href = '/';
+        } else {
+            window.location.href = '/';
+        }
+    </script>
 </head>
-<body>
-    <p>Caricamento in corso...</p>
-</body>
+<body></body>
 </html>
