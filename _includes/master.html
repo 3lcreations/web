@@ -82,7 +82,29 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="3L Creations">
     <link rel="apple-touch-icon" href="iconapp.png">
+<script>
+    window.addEventListener('load', () => {
+    // Funzione per leggere i parametri dall'URL
+    const params = new URLSearchParams(window.location.search);
+    const nomeProdotto = params.get('prodotto');
 
+    if (nomeProdotto) {
+        // DECIFRA il nome (sostituisce i trattini con spazi)
+        const nomeDecodificato = decodeURIComponent(nomeProdotto.replace(/-/g, ' '));
+        
+        // ASPETTA che il catalogo sia caricato
+        // Se hai una funzione che carica i prodotti, chiamala qui
+        // Esempio: caricaProdotti().then(() => { cercaEApri(nomeDecodificato); });
+        
+        // Se non hai una promessa, usiamo un piccolo ritardo (il trucco del timeout)
+        setTimeout(() => {
+            console.log("Cerco il prodotto:", nomeDecodificato);
+            // Qui chiama la funzione che trova il prodotto e apre il popup
+            cercaEApriProdotto(nomeDecodificato); 
+        }, 1500); // 1500 millisecondi (1.5 secondi) di attesa
+    }
+});
+</script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
