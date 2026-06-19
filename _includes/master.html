@@ -1872,7 +1872,7 @@ html { scroll-behavior: smooth; }
                 <textarea id="new-descrizione" class="custom-textarea" placeholder="Descrizione prodotto..." style="height: 80px; margin-bottom: 15px;"></textarea>
                 <label class="label-admin">Foto Prodotto</label>
                 <div class="file-upload-wrapper" style="margin-top: 5px;">
-                    <input type="file" id="new-immagine-file" class="file-upload-input" accept="image/" multiple onchange="aggiornaNomeFile(this, 'nome-new-prodotto')">
+                    <input type="file" id="new-immagine-file" class="file-upload-input" accept=".jpg, .jpeg, .png, .webp, .heic" multiple onchange="aggiornaNomeFile(this, 'nome-new-prodotto')">
                     <label for="new-immagine-file" class="file-upload-btn" style="background-color: var(--rosa-chiaro); color: var(--testo-scuro);"><i class="fas fa-images"></i> Seleziona Foto</label>
                     <span id="nome-new-prodotto" class="file-upload-name">Nessuna foto selezionata</span>
                 </div>
@@ -1893,7 +1893,7 @@ html { scroll-behavior: smooth; }
                 </select>
                 <label class="label-admin">Nuova Foto</label>
                 <div class="file-upload-wrapper" style="margin-top: 5px;">
-                    <input type="file" id="admin-site-img-file" class="file-upload-input" accept="image/" onchange="aggiornaNomeFile(this, 'nome-site-img')">
+                    <input type="file" id="admin-site-img-file" class="file-upload-input" accept=".jpg, .jpeg, .png, .webp, .heic" onchange="aggiornaNomeFile(this, 'nome-site-img')">
                     <label for="admin-site-img-file" class="file-upload-btn" style="background-color: var(--rosa-chiaro); color: var(--testo-scuro);"><i class="fas fa-camera"></i> Cambia Immagine</label>
                     <span id="nome-site-img" class="file-upload-name">Nessuna immagine selezionata</span>
                 </div>
@@ -1908,7 +1908,7 @@ html { scroll-behavior: smooth; }
 
 <label class="label-admin">Foto Notizia</label>
 <div class="file-upload-wrapper" style="margin-top: 5px;">
-    <input type="file" id="new-news-immagine-file" class="file-upload-input" accept="image/" onchange="aggiornaNomeFile(this, 'nome-new-news-foto')">
+    <input type="file" id="new-news-immagine-file" class="file-upload-input" accept=".jpg, .jpeg, .png, .webp, .heic" onchange="aggiornaNomeFile(this, 'nome-new-news-foto')">
     <label for="new-news-immagine-file" class="file-upload-btn" style="background-color: var(--rosa-chiaro); color: var(--testo-scuro);"><i class="fas fa-camera"></i> Aggiungi/Cambia Foto</label>
     <span id="nome-new-news-foto" class="file-upload-name">Nessuna foto selezionata</span>
 </div>
@@ -2017,7 +2017,7 @@ html { scroll-behavior: smooth; }
             
             <label class="label-admin">Aggiorna Foto</label>
             <div class="file-upload-wrapper" style="margin-top: 5px;">
-                <input type="file" id="edit-immagine-file" class="file-upload-input" accept="image/*" multiple onchange="aggiornaNomeFile(this, 'nome-edit-foto')">
+                <input type="file" id="edit-immagine-file" class="file-upload-input" accept=".jpg, .jpeg, .png, .webp, .heic" multiple onchange="aggiornaNomeFile(this, 'nome-edit-foto')">
                 <label for="edit-immagine-file" class="file-upload-btn" style="background-color: var(--rosa-chiaro); color: var(--testo-scuro);"><i class="fas fa-sync-alt"></i> Scegli nuove foto</label>
                 <span id="nome-edit-foto" class="file-upload-name">Lascia vuoto per non cambiare</span>
             </div>
