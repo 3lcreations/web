@@ -1530,7 +1530,7 @@ html { scroll-behavior: smooth; }
         <!-- NUOVA SEZIONE UNICA PERSONALIZZA (Sostituisce le 5 precedenti) -->
         <!-- ============================================================== -->
        <div id="sezione-personalizza" class="content-section">
-            <h2 class="reveal" style="display:block; text-align:center;">Crea il tuo Personalizzato ✨</h2>
+            <h2 class="reveal" style="display:block; text-align:center;">Personalizza ✨</h2>
 
             <!-- NUOVA BARRA TAB PERSONALIZZATA -->
            <div class="tabs-personalizza reveal">
@@ -2155,7 +2155,7 @@ html { scroll-behavior: smooth; }
     const titoliSEO = {
         'home': '3L Creations - Handmade con Amore',
         'acquista': 'Portfolio - 3L Creations',
-        'sezione-personalizza': 'Crea il tuo Personalizzato - 3L Creations',
+        'sezione-personalizza': 'Personalizza - 3L Creations',
         'contatti': 'Contattaci - 3L Creations',
         'faq': 'Domande Frequenti - 3L Creations',
         'sezione-admin': 'Area Riservata - 3L Creations'
@@ -3806,7 +3806,7 @@ if (hash && hash !== '#home') {
             }
         });
         // --- FINE FIX MENU ---
-     // === ScrollSpy per aggiornare URL automaticamente ===
+    // === ScrollSpy per aggiornare URL e TITOLO automaticamente ===
 window.addEventListener('DOMContentLoaded', () => {
     const observerOptions = {
         root: null, // Osserva rispetto alla finestra del browser
@@ -3825,15 +3825,28 @@ window.addEventListener('DOMContentLoaded', () => {
                     'acquista': '/portfolio',
                     'sezione-personalizza': '/personalizza',
                     'contatti': '/contatti',
-                    'faq': '/faq'
+                    'faq': '/faq',
+                    'sezione-admin': '/admin'
                 };
 
-                // Aggiorna l'URL solo se è una sezione mappata e se è diverso dall'attuale
+                // Mappa i titoli della scheda del browser
+                const titoliSEO = {
+                    'home': '3L Creations - Handmade con Amore',
+                    'acquista': 'Le mie Creazioni - 3L Creations',
+                    'sezione-personalizza': 'Personalizza - 3L Creations',
+                    'contatti': 'Contattaci - 3L Creations',
+                    'faq': 'Domande Frequenti - 3L Creations',
+                    'sezione-admin': 'Area Riservata - 3L Creations'
+                };
+
+                // 1. Aggiorna l'URL in alto
                 if (mappaUrl[sectionId] && window.location.pathname !== mappaUrl[sectionId]) {
                     window.history.replaceState(null, null, mappaUrl[sectionId]);
-                    
-                    // Opzionale: aggiunge la classe .active al menu mobile se vuoi
-                    // aggiornoMenuAttivo(sectionId); 
+                }
+
+                // 2. Aggiorna il Titolo della scheda in alto
+                if (titoliSEO[sectionId] && document.title !== titoliSEO[sectionId]) {
+                    document.title = titoliSEO[sectionId];
                 }
             }
         });
