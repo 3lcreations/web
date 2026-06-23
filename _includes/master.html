@@ -13,6 +13,8 @@
     </script>
 
         <meta charset="UTF-8">
+        <link rel="preconnect" href="https://firestore.googleapis.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.titolo | default: "3L Creations - Handmade con Amore" }}</title>
 <link rel="canonical" href="{{ page.link_seo | default: "https://3lcreations.it/" }}" />    <meta name="description" content="L'eleganza del fatto a mano, per te e per i tuoi amici a quattro zampe. Creazioni personalizzate e tradizione partenopea.">
@@ -421,7 +423,7 @@
 
         /* SKELETON */
         .skeleton-card { border: none !important; box-shadow: 0 10px 30px rgba(0,0,0,0.02) !important; cursor: default !important; transform: none !important; }
-        .skeleton-anim { background: linear-gradient(90deg, #f9f9f9 25%, #ececec 50%, #f9f9f9 75%); background-size: 200% 100%; animation: skeletonLoading 1.5s infinite; border-radius: 10px; }
+        .skeleton-anim { background: linear-gradient(90deg, #fffcfd 25%, #ffe4ec 50%, #fffcfd 75%); background-size: 200% 100%; animation: skeletonLoading 1.5s infinite; border-radius: 10px; }
         .skeleton-img { width: 100%; height: 220px; border-radius: 15px; margin-bottom: 20px; }
         .skeleton-title { height: 24px; width: 70%; margin: 10px auto; }
         .skeleton-price { height: 28px; width: 40%; margin: 15px auto; }
@@ -436,7 +438,15 @@
         /* WISHLIST BTN (kept as visual favourite) */
         .wishlist-btn { position: absolute; top: 15px; right: 15px; font-size: 22px; color: #ccc; cursor: pointer; transition: 0.3s; z-index: 10; background: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .wishlist-btn.active { color: var(--fucsia); }
-        .wishlist-btn.active i { font-weight: 900; }
+        @keyframes heartPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); color: #ff0055; }
+            100% { transform: scale(1); }
+        }
+        .wishlist-btn.active i { 
+            font-weight: 900; 
+            animation: heartPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+        }
         .wishlist-btn:hover { transform: scale(1.1); }
 
         /* TASTI ADMIN */
@@ -710,7 +720,10 @@
         .admin-news-card { background: white; border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         @media (max-width: 768px) { .news-slider-container { padding: 25px 20px; } .news-item h3 { font-size: 20px; } .news-prev, .news-next { display: none; /* Su mobile usiamo i puntini */ } }
         /* === 1. SCORRIMENTO MORBIDO E TRANSIZIONI NATIVE === */
-html { scroll-behavior: smooth; }
+html { 
+    scroll-behavior: smooth; 
+    scroll-padding-top: 95px; /* Crea un "cuscinetto" invisibile così i titoli non finiscono sotto la navbar */
+}
 
 ::view-transition-old(*),
 ::view-transition-new(*) {
