@@ -1294,7 +1294,7 @@ html { scroll-behavior: smooth; }
         <!-- Link centrali (Visibili su Desktop) -->
         <div class="nav-links">
             <a href="#home" onclick="showSection('home'); return false;">Home</a>
-            <a href="#acquista" onclick="showSection('acquista'); return false;">Catalogo</a>
+            <a href="#acquista" onclick="showSection('acquista'); return false;">Portfolio</a>
             <a href="#sezione-personalizza" onclick="showSection('sezione-personalizza'); return false;">Personalizza</a>
             <a href="#contatti" onclick="showSection('contatti'); return false;">Contatti</a>
             <a href="#faq" onclick="showSection('faq'); return false;">FAQ</a>
@@ -1456,12 +1456,10 @@ html { scroll-behavior: smooth; }
                 </div>
                 <div class="sort-container">
                     <select id="sortProdotti" class="sort-select-custom" onchange="applicaOrdinamento()">
-                        <option value="">✨ Ordina per...</option>
-                        <option value="prezzo-asc">Prezzo: dal più basso</option>
-                        <option value="prezzo-desc">Prezzo: dal più alto</option>
-                        <option value="nome-asc">Alfabetico: A - Z</option>
-                        <option value="nome-desc">Alfabetico: Z - A</option>
-                    </select>
+    <option value="">✨ Ordina per...</option>
+    <option value="nome-asc">Alfabetico: A - Z</option>
+    <option value="nome-desc">Alfabetico: Z - A</option>
+</select>
                 </div>
             </div>
 
@@ -1499,7 +1497,7 @@ html { scroll-behavior: smooth; }
                     <div style="flex: 1; min-width: 300px; text-align: left;">
                         <div id="dettaglio-badge" style="margin-bottom: 10px;"></div>
                         <h2 id="dettaglio-titolo" style="text-align: left; margin-bottom: 5px; border: none; font-size: 28px;">Nome Prodotto</h2>
-                        <div id="dettaglio-prezzo" class="price" style="font-size: 26px; margin-bottom: 20px;">€0.00</div>
+                        
                         <p id="dettaglio-descrizione" style="font-size: 14px; color: var(--testo-chiaro); line-height: 1.6; margin-bottom: 25px; background: #fff9fb; padding: 15px; border-radius: 12px; border-left: 3px solid var(--fucsia);">
                             Descrizione...
                         </p>
@@ -1508,14 +1506,14 @@ html { scroll-behavior: smooth; }
                         <div class="order-contact-box">
                             <p>
                                 <i class="fas fa-hand-sparkles" style="color: var(--fucsia);"></i>
-                                Ti piace questo prodotto? <strong>Scrivici su Instagram</strong> o inviaci un'email per ordinarlo!
+                               Ti piace questa creazione? <strong>Scrivici su Instagram</strong> o inviaci un'email per maggiori informazioni!
                             </p>
                             <div class="btn-row">
                                 <a href="https://www.instagram.com/_3l_creations" target="_blank" class="contact-order-btn instagram">
-                                    <i class="fab fa-instagram"></i> Ordina su Instagram
+                                    <i class="fab fa-instagram"></i> Contattami su Instagram
                                 </a>
                                 <a href="mailto:3lcreationsfordogs1@gmail.com" class="contact-order-btn secondary">
-                                    <i class="fas fa-envelope"></i> Scrivi via Email
+                                    <i class="fas fa-envelope"></i> Scrivimi via Email
                                 </a>
                             </div>
                         </div>
@@ -1545,7 +1543,7 @@ html { scroll-behavior: smooth; }
 
             <div id="componi" class="pers-content active">
                 <div class="componi-box-new reveal" style="max-width: 600px; margin: 0 auto;">
-                    <h3>1. Colore catenina (Inclusa: €<span id="label-prezzo-catenina">5.00</span>)</h3>
+                    <h3>1. Colore catenina</h3>
                     <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
                         <label class="swatch-label-new">
                             <input type="radio" name="catenina" value="Oro" checked onchange="calcolaTotaleCiondoli()">
@@ -1559,10 +1557,10 @@ html { scroll-behavior: smooth; }
                     <h3>2. Scegli i ciondoli (Da 1 a 10)</h3>
                     <div style="text-align: center; margin-bottom: 15px;">
                         <select id="sortComponenti" class="sort-select-custom" style="width: auto; padding: 8px 15px; border-radius: 20px; height: auto; font-size: 13px; cursor: pointer;" onchange="applicaOrdinamentoComponenti()">
-                            <option value="">Ordina ciondoli e perline...       </option>
-                            <option value="prezzo-asc">Prezzo: dal più basso</option>
-                            <option value="prezzo-desc">Prezzo: dal più alto</option>
-                        </select>
+    <option value="">✨ Ordina ciondoli e perline...</option>
+    <option value="nome-asc">Alfabetico: A - Z</option>
+    <option value="nome-desc">Alfabetico: Z - A</option>
+</select>
                     </div>
                     <div class="product-container" id="lista-ciondoli"></div>
 
@@ -1571,9 +1569,7 @@ html { scroll-behavior: smooth; }
                     <h3>3. Scegli le perline (Max 10)</h3>
                     <div class="product-container" id="lista-perline"></div>
 
-                    <div style="font-size: 16px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-top: 40px; margin-bottom: 15px;">
-                        Totale Stimato: <span style="color: var(--fucsia); font-size: 24px;">€<span id="prezzo-totale-ciondoli">5.00</span></span>
-                    </div>
+                    
                     
                     <div class="btn-pers-doppio">
                         <button onclick="richiestaCollanaPersonalizzata(event)" class="btn-ig-new">
@@ -1621,7 +1617,6 @@ html { scroll-behavior: smooth; }
                         <i class="fas fa-camera"></i> Ricordati di inviare anche la tua foto di riferimento!
                     </div>
 
-                    <div style="font-size: 15px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 10px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 22px;">€<span id="label-prezzo-maglietta">20.00</span></span></div>
                     
                     <div class="btn-pers-doppio">
                         <button onclick="inviaRichiestaProdotto('Maglietta', 'nota-maglietta', 'col-maglia', 'taglia-maglia')" class="btn-ig-new">
@@ -1671,7 +1666,6 @@ html { scroll-behavior: smooth; }
                         <i class="fas fa-camera"></i> Ricordati di inviare anche la foto del tuo pelosetto!
                     </div>
 
-                    <div style="font-size: 15px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 10px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 22px;">€<span id="label-prezzo-pelosetto">18.00</span></span></div>
                     
                     <div class="btn-pers-doppio">
                         <button onclick="inviaRichiestaProdotto('Maglia Pelosetto', 'nota-pelosetto', 'col-pelosetto', 'taglia-pelosetto')" class="btn-ig-new">
@@ -1716,7 +1710,6 @@ html { scroll-behavior: smooth; }
                         <i class="fas fa-camera"></i> Ricordati l'immagine di riferimento!
                     </div>
 
-                    <div style="font-size: 15px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 10px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 22px;">€<span id="label-prezzo-pochette">15.00</span></span></div>
                     
                     <div class="btn-pers-doppio">
                         <button onclick="inviaRichiestaProdotto('Pochette', 'nota-pochette', 'col-pochette', null)" class="btn-ig-new">
@@ -1745,7 +1738,6 @@ html { scroll-behavior: smooth; }
                         <i class="fas fa-camera"></i> Ricordati l'immagine di riferimento!
                     </div>
 
-                    <div style="font-size: 15px; font-weight: 600; text-align: center; color: var(--testo-scuro); margin-bottom: 10px;">Prezzo a partire da <span style="color: var(--fucsia); font-size: 22px;">€<span id="label-prezzo-borsa">25.00</span></span></div>
                     
                     <div class="btn-pers-doppio">
                         <button onclick="inviaRichiestaProdotto('Borsa', 'nota-borsa', null, null)" class="btn-ig-new">
@@ -1828,8 +1820,8 @@ html { scroll-behavior: smooth; }
             <div class="home-text" style="background: transparent; border: none; box-shadow: none; padding: 0;">
                 
                 <div class="faq-item reveal" onclick="toggleFaq(this)">
-                    <div class="faq-question">Come faccio a ordinare? <i class="fas fa-chevron-down"></i></div>
-                    <div class="faq-answer">Tutti i prodotti si ordinano scrivendoci su Instagram o via email. Scegli la creazione che ti piace, clicca su 'Ordina' e ti seguiremo passo passo.</div>
+                    <div class="faq-question">Realizzi lavori su richiesta? <i class="fas fa-chevron-down"></i></div>
+<div class="faq-answer">Poiché questo è un hobby che coltivo nel tempo libero, non gestisco veri e propri "ordini" automatizzati. Se ti innamori di una creazione o hai un'idea personalizzata, scrivimi un messaggio su Instagram! Ne parleremo insieme e, compatibilmente con i miei impegni, sarò felice di realizzarla per te.</div>
                 </div>
                 
                 <div class="faq-item reveal" onclick="toggleFaq(this)">
@@ -1961,10 +1953,10 @@ html { scroll-behavior: smooth; }
         </div>
         <h2 style="display:block; text-align:center; margin-top: 35px;">Note Legali e Condizioni</h2>
         <div class="home-text" style="max-width: 800px; margin: 0 auto; text-align: left;">
-            <p class="legal-text"><strong>Condizioni di Vendita:</strong> Opero nel pieno rispetto della normativa come hobbista (vendita occasionale di opere del proprio ingegno creativo) e non possiedo Partita IVA. I prodotti proposti sono frutto di lavoro artigianale e possono presentare lievi imperfezioni che ne garantiscono l'unicità.</p>
-            <p class="legal-text"><strong>Privacy e Cookie Policy:</strong> La tua privacy è importante. I dati forniti per l'ordine (nome, indirizzo, cellulare) vengono utilizzati esclusivamente per la gestione e la spedizione e non verranno mai ceduti a terzi. Questo sito utilizza solo cookie tecnici strettamente necessari per il funzionamento.</p>
-            <p class="legal-text"><strong>Assistenza e Resi:</strong> Per qualsiasi problema con il tuo ordine, contattaci subito alla nostra email <a href="mailto:3lcreationsfordogs1@gmail.com" style="color: var(--fucsia); text-decoration: underline;">3lcreationsfordogs1@gmail.com</a> o sui nostri canali social. Essendo la maggior parte dei prodotti realizzati su misura e personalizzati, i resi non sono previsti se non per evidente difetto di fabbricazione, ma troveremo in ogni caso una soluzione insieme!</p>
-        </div>
+    <p class="legal-text"><strong>Natura del Sito e dell'Attività:</strong> Questo sito rappresenta esclusivamente un portfolio personale ed espositivo. Tutte le creazioni qui mostrate sono opere uniche, realizzate interamente a mano nel mio tempo libero. L'attività è svolta in modo del tutto amatoriale, occasionale e saltuaria (ai sensi dell'art. 4 comma 2 lettera h del D.Lgs. 114/1998).</p>
+    <p class="legal-text"><strong>Nessun E-commerce:</strong> Questo sito non rappresenta un'attività d'impresa, non contiene listini prezzi vincolanti e non è consentito l'acquisto diretto online. Le informazioni presenti hanno il solo scopo di condividere la mia passione per l'artigianato partenopeo.</p>
+    <p class="legal-text"><strong>Privacy:</strong> I dati forniti volontariamente tramite i canali social o email vengono utilizzati esclusivamente per rispondere alle vostre richieste informative.</p>
+</div>
     
 
     </div><!-- fine #main -->
@@ -2060,8 +2052,8 @@ html { scroll-behavior: smooth; }
             <i class="fas fa-home"></i><span>Home</span>
         </div>
         <div class="nav-item" onclick="showSection('acquista'); vibra();">
-            <i class="fas fa-search"></i><span>Catalogo</span>
-        </div>
+    <i class="fas fa-search"></i><span>Portfolio</span>
+</div>
         <div class="nav-item" onclick="showSection('sezione-personalizza'); cambiaPersonalizzato('componi'); vibra();">
             <i class="fas fa-gem"></i><span>Personalizza</span>
         </div>
@@ -2162,7 +2154,7 @@ html { scroll-behavior: smooth; }
     if (!target) return;
     const titoliSEO = {
         'home': '3L Creations - Handmade con Amore',
-        'acquista': 'Catalogo Prodotti - 3L Creations',
+        'acquista': 'Portfolio - 3L Creations',
         'sezione-personalizza': 'Crea il tuo Personalizzato - 3L Creations',
         'contatti': 'Contattaci - 3L Creations',
         'faq': 'Domande Frequenti - 3L Creations',
@@ -2225,7 +2217,7 @@ if (detEl) { detEl.style.display = 'none'; detEl.classList.remove('active'); }
         // Mappa i nomi del codice con i nomi belli per l'URL
         const mappaUrl = {
             'home': '/home',
-            'acquista': '/catalogo',
+            'acquista': '/portfolio',
             'sezione-personalizza': '/personalizza',
             'contatti': '/contatti',
             'faq': '/faq',
@@ -2829,7 +2821,7 @@ window.caricaProdottiFirebase = async function(categoria, idContenitore) {
                     <div class="wishlist-btn ${isFav ? 'active' : ''}" data-id="${idProdotto}"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>
                    <img src="${immagine}" alt="Prodotto" class="product-image" loading="lazy" onerror="this.src='logo.png'" style="cursor:pointer;">
                     <h3 style="cursor:pointer;">${titolo}</h3>
-                    <div class="price">€${prezzoNum.toFixed(2)}</div>
+                    
                     <a href="#" class="contact-order-btn" style="text-decoration:none;">Scopri di più <i class="fas fa-arrow-right"></i></a>
                 `;
 
@@ -2873,7 +2865,7 @@ window.caricaProdottiFirebase = async function(categoria, idContenitore) {
                     ${isAdmin ? `<div class="delete-admin-btn"><i class="fas fa-trash-alt"></i></div>` : ''}
                     <img src="${immagine}" alt="Componente" class="charm-image" loading="lazy" onerror="this.src='logo.png'">
                     <div class="charm-title">${titolo}</div>
-                    <div class="charm-price">+ €${prezzoNum.toFixed(2)}</div>
+                    
                     <input type="checkbox" class="${chkClass}">
                 `;
                 
@@ -2945,7 +2937,7 @@ window.caricaEvidenza = async function() {
                 <div class="wishlist-btn ${isFav ? 'active' : ''}" data-id="${idProdotto}"><i class="${isFav ? 'fas' : 'far'} fa-heart"></i></div>
                 <img src="${immagine}" alt="Prodotto" class="product-image" onerror="this.src='logo.png'" style="cursor:pointer;">
                 <h3 style="cursor:pointer;">${titolo}</h3>
-                <div class="price">€${prezzoNum.toFixed(2)}</div>
+                
                 <a href="#" class="contact-order-btn" style="text-decoration:none;">Scopri di più <i class="fas fa-arrow-right"></i></a>
             `;
 
@@ -2993,7 +2985,6 @@ const messaggio = encodeURIComponent(`Ciao! Vorrei ordinare questo prodotto: ${t
     const galleria = galleriaStringa ? galleriaStringa.split(',') : [immagineCopertina];
     
     document.getElementById('dettaglio-titolo').innerText = titolo;
-    document.getElementById('dettaglio-prezzo').innerText = `€${prezzo.toFixed(2)}`;
     document.getElementById('dettaglio-descrizione').innerText = descrizione || "Un prodotto unico, realizzato a mano con amore.";
     
     const badgeContainer = document.getElementById('dettaglio-badge');
@@ -3684,7 +3675,7 @@ if (hash && hash !== '#home') {
         const mappaSezioni = {
             '/': 'home', 
             '/home': 'home', '/home/': 'home',
-            '/catalogo': 'acquista', '/catalogo/': 'acquista',
+            '/portfolio': 'acquista', '/portfolio/': 'acquista',
             '/personalizza': 'sezione-personalizza', '/personalizza/': 'sezione-personalizza',
             '/contatti': 'contatti', '/contatti/': 'contatti',
             '/faq': 'faq', '/faq/': 'faq',
@@ -3781,7 +3772,7 @@ if (hash && hash !== '#home') {
             const hash = window.location.hash;
 
             const mappaSezioni = {
-                '/': 'home', '/home': 'home', '/catalogo': 'acquista',
+                '/': 'home', '/home': 'home', '/portfolio': 'acquista',
                 '/personalizza': 'sezione-personalizza', '/contatti': 'contatti',
                 '/faq': 'faq', '/admin': 'sezione-admin'
             };
@@ -3831,7 +3822,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 // Mappa le sezioni agli URL puliti
                 const mappaUrl = {
                     'home': '/home',
-                    'acquista': '/catalogo',
+                    'acquista': '/portfolio',
                     'sezione-personalizza': '/personalizza',
                     'contatti': '/contatti',
                     'faq': '/faq'
@@ -3859,8 +3850,8 @@ window.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('DOMContentLoaded', () => {
     // Mappa esatta degli URL e dei relativi ID delle sezioni HTML
     const atterraggioSezioni = {
-        '/catalogo': 'acquista', 
-        '/catalogo/': 'acquista',
+        '/portfolio': 'acquista', 
+        '/portfolio/': 'acquista',
         '/personalizza': 'sezione-personalizza', 
         '/personalizza/': 'sezione-personalizza',
         '/contatti': 'contatti', 
