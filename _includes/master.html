@@ -1867,7 +1867,7 @@ html { scroll-behavior: smooth; }
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
                 <h4 style="text-align: center; margin-bottom: 10px; color: var(--testo-scuro);">Aggiungi Nuovo Prodotto</h4>
                 <input type="text" id="new-titolo" placeholder="Nome Prodotto" class="custom-textarea" style="height:40px;">
-                <input type="number" id="new-prezzo" placeholder="Prezzo (es. 15.50)" class="custom-textarea" style="height:40px;">
+                
                <select id="new-categoria" class="custom-textarea" style="height: auto; min-height: 48px; padding: 10px 15px; margin-bottom: 15px;">
                     <optgroup label="Già Fatti">
                         <option value="collane">📿 Collane</option>
@@ -1930,17 +1930,7 @@ html { scroll-behavior: smooth; }
 <button id="btn-pubblica-news" onclick="salvaNotiziaSuFirebase()" class="checkout-btn" style="margin-bottom: 15px; background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: var(--fucsia);">Pubblica Notizia <i class="fas fa-bullhorn"></i></button>
 <button id="btn-annulla-edit" onclick="annullaModificaNotizia()" class="checkout-btn" style="display:none; background-color: #777;">Annulla Modifica</button>
 <div id="admin-news-list" style="margin-bottom: 20px;"></div>
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
-                <h4 style="text-align: center; margin-bottom: 10px; color: var(--testo-scuro);">Modifica Prezzi Base</h4>
-                <select id="admin-base-price-key" class="custom-textarea" style="height: auto; min-height: 48px; padding: 10px 15px; margin-bottom: 15px;">
-                    <option value="catenina">Catenina Base Collana</option>
-                    <option value="maglietta">Maglietta Umani</option>
-                    <option value="pelosetto">Maglia Pelosetto</option>
-                    <option value="pochette">Pochette</option>
-                    <option value="borsa">Borsa</option>
-                </select>
-                <input type="number" id="admin-base-price-val" class="custom-textarea" style="height: 40px; margin-bottom: 15px;" step="0.01" placeholder="Nuovo prezzo (es. 22.50)">
-                <button onclick="salvaPrezzoBase()" class="checkout-btn" style="margin-bottom: 25px; background-color: #ff9800;">Aggiorna Prezzo <i class="fas fa-euro-sign"></i></button>
+                
 <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
                 <h4 style="text-align: center; margin-bottom: 10px; color: var(--testo-scuro);">Modifica Banner in Alto</h4>
                 <input type="text" id="admin-banner-text" class="custom-textarea" style="height: 40px; margin-bottom: 15px;" placeholder="Es: ✨ Spedizione gratuita oggi! ✨">
@@ -2008,16 +1998,8 @@ html { scroll-behavior: smooth; }
                 <option value="perline">🟡 Perline (Componi Collana)</option>
             </select>
 
-            <div style="display:flex; gap:10px;">
-                <div style="flex:1;">
-                    <label class="label-admin">Prezzo (€)</label>
-                    <input type="number" id="edit-prezzo" step="0.01" class="custom-textarea" style="height: 40px;">
-                </div>
-                <div style="flex:1;">
-                    <label class="label-admin">Badge</label>
-                    <input type="text" id="edit-badge" class="custom-textarea" style="height: 40px;" placeholder="Novità...">
-                </div>
-            </div>
+            <label class="label-admin">Badge</label>
+            <input type="text" id="edit-badge" class="custom-textarea" style="height: 40px;" placeholder="Novità...">
             
             <label class="label-admin">Descrizione</label>
             <textarea id="edit-descrizione" class="custom-textarea" style="height: 70px;"></textarea>
@@ -3163,7 +3145,7 @@ if (riga.titolo.toLowerCase() === nomeProdotto.toLowerCase()) {
             const descrizione = document.getElementById('new-descrizione').value;
             const fileInput = document.getElementById('new-immagine-file');
             const files = fileInput.files;
-            if (!titolo || !prezzo || files.length === 0) { showToast("Compila Titolo, Prezzo e seleziona almeno una foto!"); return; }
+            if (!titolo || files.length === 0) { showToast("Compila Titolo e seleziona almeno una foto!"); return; }
             showToast(`Caricamento di ${files.length} foto in corso... ⏳`);
             try {
                 const apiKey = "083194e5388c019411d6fc6f0ea35b20";
@@ -3177,7 +3159,7 @@ if (riga.titolo.toLowerCase() === nomeProdotto.toLowerCase()) {
                     galleriaUrls.push(data.data.url);
                 }
                 await window.fbAddDoc(window.fbCollection(window.db, "prodotti"), {
-                    titolo, prezzo: parseFloat(prezzo), categoria,
+                    titolo, prezzo: 0, categoria,
                     descrizione: descrizione || "Nessuna descrizione disponibile.",
                     immagine: galleriaUrls[0], galleria: galleriaUrls,
                     data_creazione: new Date()
@@ -3206,7 +3188,6 @@ if (riga.titolo.toLowerCase() === nomeProdotto.toLowerCase()) {
     window.apriModaleModifica = function(id, titolo, prezzo, badge, immagine, inEvidenza, descrizione, categoria) {
     document.getElementById('edit-id').value = id;
     document.getElementById('edit-titolo').value = titolo;
-    document.getElementById('edit-prezzo').value = prezzo;
     document.getElementById('edit-badge').value = badge === 'undefined' || !badge ? '' : badge;
     document.getElementById('edit-evidenza').checked = inEvidenza;
     document.getElementById('edit-descrizione').value = descrizione && descrizione !== 'undefined' ? descrizione.replace(/\\n/g, '\n') : '';
@@ -3226,7 +3207,6 @@ if (riga.titolo.toLowerCase() === nomeProdotto.toLowerCase()) {
         window.salvaModificaSuFirebase = async function() {
             const id = document.getElementById('edit-id').value;
             const titolo = document.getElementById('edit-titolo').value;
-            const prezzo = document.getElementById('edit-prezzo').value;
             const badge = document.getElementById('edit-badge').value;
             const descrizione = document.getElementById('edit-descrizione').value;
             const inEvidenza = document.getElementById('edit-evidenza').checked;
@@ -3235,13 +3215,12 @@ if (riga.titolo.toLowerCase() === nomeProdotto.toLowerCase()) {
             const fileInput = document.getElementById('edit-immagine-file');
             const files = fileInput.files;
             
-            if (!titolo || !prezzo) { window.showToast("Titolo e Prezzo obbligatori!"); return; }
+            if (!titolo) { window.showToast("Titolo obbligatorio!"); return; }
             window.showToast("Aggiornamento in corso... ⏳");
             document.querySelector('#edit-modal .checkout-btn').disabled = true;
             
             try {
-                let datiAggiornati = { titolo, prezzo: parseFloat(prezzo), badge: badge || "", descrizione: descrizione || "Nessuna descrizione.", in_evidenza: inEvidenza, categoria: categoriaSel, data_modifica: new Date() };
-                
+               let datiAggiornati = { titolo, prezzo: 0, badge: badge || "", descrizione: descrizione || "Nessuna descrizione.", in_evidenza: inEvidenza, categoria: categoriaSel, data_modifica: new Date() };  
                 if (files.length > 0) {
                     const apiKey = "083194e5388c019411d6fc6f0ea35b20";
                     let galleriaUrls = [];
