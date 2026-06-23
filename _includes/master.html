@@ -1255,6 +1255,18 @@ html { scroll-behavior: smooth; }
         bottom: 120px !important; 
     }
 }
+/* === OTTIMIZZAZIONE PRESTAZIONI GRAFICHE E HARDWARE === */
+#edit-modal, #dettaglio-prodotto, #preferiti, .top-navbar, #menu-mobile-fisso {
+    transform: translateZ(0); /* Accende l'accelerazione 3D della scheda video */
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+}
+.product-card, .charm-card {
+    will-change: transform; /* Dice al telefono di tenersi pronto all'animazione */
+}
+#edit-modal .componi-box {
+    will-change: contents;
+}
     </style>
 </head>
 <body>
@@ -2081,15 +2093,25 @@ html { scroll-behavior: smooth; }
                 targetTab.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
             }
         };
-        // === CURSORE MAGICO ===
+        // === CURSORE MAGICO OTTIMIZZATO ===
         if (window.matchMedia("(pointer: fine)").matches) {
             const cursor = document.createElement('div');
             cursor.id = 'magic-cursor';
             document.body.appendChild(cursor);
+            let mouseX = 0, mouseY = 0;
+            let cursorRequested = false;
+            
             document.addEventListener('mousemove', e => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            });
+                mouseX = e.clientX; mouseY = e.clientY;
+                if (!cursorRequested) {
+                    cursorRequested = true;
+                    requestAnimationFrame(() => {
+                        cursor.style.left = mouseX + 'px';
+                        cursor.style.top = mouseY + 'px';
+                        cursorRequested = false;
+                    });
+                }
+            }, { passive: true });
             document.addEventListener('mouseover', e => {
                 if (e.target.closest('a, button, input, select, textarea, .product-image, .charm-image, .home-slide img, .back-to-top, .closebtn, .cat-btn, .charm-checkbox, .perlina-checkbox, label, span[onclick], .swatch-label, .wishlist-btn, .close-preferiti-btn'))
                     cursor.classList.add('hover');
@@ -2745,15 +2767,16 @@ window.acceptCookies = function() {
         };
 
       // === CARICA CATALOGO (METODO SICURO) ===
-window.caricaProdottiFirebase = async function(categoria, idContenitore) {
+window.caricaProdottiFirebase = async function(categoria, idContenitore, snapshotEsterna = null) {
     const contenitore = document.getElementById(idContenitore);
     if (!contenitore) return;
     try {
         if (!window.fbGetDocs) {
-            setTimeout(() => window.caricaProdottiFirebase(categoria, idContenitore), 500);
+            setTimeout(() => window.caricaProdottiFirebase(categoria, idContenitore, snapshotEsterna), 500);
             return;
         }
-       const querySnapshot = await window.fbGetDocs(window.fbCollection(window.db, "prodotti"));
+       // Usa i dati già scaricati se ci sono, risparmiando l'80% della fatica al sito!
+       const querySnapshot = snapshotEsterna || await window.fbGetDocs(window.fbCollection(window.db, "prodotti"));
         contenitore.innerHTML = '';
         
         const isAdmin = window.auth?.currentUser && (window.auth.currentUser.email === "mauro7leo10@gmail.com" || window.auth.currentUser.email === "3lcreationsfordogs1@gmail.com");
@@ -3243,10 +3266,16 @@ if (riga.titolo.toLowerCase() === nomeProdotto.toLowerCase()) {
             } catch (e) { console.error(e); window.showToast("Errore aggiornamento ❌"); }
             finally { document.querySelector('#edit-modal .checkout-btn').disabled = false; }
         };
-        // NUOVO CARICATORE UNIVERSALE
-        window.caricaTuttiIProdotti = function() {
-            const categorie = ['collane', 'fiocchi', 'bracciali', 'orecchini', 'borse', 'pochette', 'ciondoli_pronti', 'ciondoli', 'perline'];
-            categorie.forEach(cat => window.caricaProdottiFirebase(cat, 'lista-' + cat));
+        // NUOVO CARICATORE UNIVERSALE OTTIMIZZATO 🚀
+        window.caricaTuttiIProdotti = async function() {
+            try {
+                // CHIAMATA UNICA: Scarica tutto 1 sola volta!
+                const snapshotUnica = await window.fbGetDocs(window.fbCollection(window.db, "prodotti"));
+                const categorie = ['collane', 'fiocchi', 'bracciali', 'orecchini', 'borse', 'pochette', 'ciondoli_pronti', 'ciondoli', 'perline'];
+                
+                // Distribuisce i dati senza intaccare la rete
+                categorie.forEach(cat => window.caricaProdottiFirebase(cat, 'lista-' + cat, snapshotUnica));
+            } catch(e) { console.error("Errore caricamento massivo:", e); }
         };
 
         // === SALVA IMMAGINE SITO (CON COMPRESSIONE AUTOMATICA) ===
